@@ -23,7 +23,7 @@ import { FORM_INPUT_UPDATE, formReducer } from "../../utils/formReducer";
 const ResetPasswordScreen = props => {
   const dispatch = useDispatch();
   [isLoading, setLoading] = useState(false);
-  [resetPasswordError, setresetPasswordError] = useState();
+  [resetPasswordError, setResetPasswordError] = useState();
 
   const [formState, dispatchFormState] = useReducer(formReducer, {
     inputValues: {
@@ -43,17 +43,17 @@ const ResetPasswordScreen = props => {
     }
   }, [resetPasswordError]);
 
-  const submitHandler = async event => {
+  const submitHandler = event => {
     event.preventDefault();
-    setresetPasswordError(null);
+    setResetPasswordError(null);
     setLoading(true);
-    await forgotPasswordAction.ConfirmPassword(
+    forgotPasswordAction.ConfirmPassword(
       props.forgotPasswordState.forgotPasswordEmail,
       formState.inputValues.verifyCode,
       formState.inputValues.password,
       props.navigation,
       setLoading,
-      setresetPasswordError
+      setResetPasswordError
     );
   };
 
@@ -108,9 +108,18 @@ const ResetPasswordScreen = props => {
           initialValue=''
         />
       </Card>
-      <View style={styles.button}>
-        <Button title='SUBMIT' color={colors.white} onPress={submitHandler} />
-      </View>
+      {isLoading ? (
+        <ActivityIndicator size='small' color={colors.theme} />
+      ) : (
+        <View style={styles.button}>
+          <Button
+            title='SUBMIT'
+            color={colors.white}
+            disabled={formState.formIsValid ? false : true}
+            onPress={submitHandler}
+          />
+        </View>
+      )}
     </KeyboardAvoidingView>
   );
 };

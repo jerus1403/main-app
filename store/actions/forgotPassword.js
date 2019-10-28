@@ -48,23 +48,28 @@ export const ConfirmPassword = (
   newPassword,
   navigationObject,
   setLoading,
-  setresetPasswordError
+  setResetPasswordError
 ) => {
-  const userData = {
-    Username: email,
-    Pool: userPool
-  };
-  const cognitoUser = new AmazonCognitoIdentity.CognitoUser(userData);
-  cognitoUser.confirmPassword(verificationCode, newPassword, {
-    onSuccess: result => {
-      setLoading(false);
-      console.log(result, "CONFIRM PASSWORD RESULT");
-      navigationObject.navigate("Auth");
-    },
-    onFailure: err => {
-      setLoading(false);
-      setresetPasswordError(err.message);
-      console.log(err, "CONFIRM PASSWORD ERROR");
-    }
+  return new Promise((resolve, reject) => {
+    const userData = {
+      Username: email,
+      Pool: userPool
+    };
+    const cognitoUser = new AmazonCognitoIdentity.CognitoUser(userData);
+    cognitoUser.confirmPassword(verificationCode, newPassword, {
+      onSuccess: result => {
+        setLoading(false);
+        console.log(result, "CONFIRM PASSWORD RESULT");
+        alert(
+          "Reset password successfully! Now log in with your new password."
+        );
+        navigationObject.navigate("Auth");
+      },
+      onFailure: err => {
+        setLoading(false);
+        setResetPasswordError(err.message);
+        console.log(err, "CONFIRM PASSWORD ERROR");
+      }
+    });
   });
 };
