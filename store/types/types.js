@@ -12,4 +12,4 @@ export const LOGIN_FAILED = "LOGIN_FAILED";
 
 export const LOG_OUT = "LOG_OUT";
 
-export const FORGOT_PASSWORD = "FORGOT_PASSWORD";
+export const SEND_EMAIL_CODE_SUCCESS = "SEND_EMAIL_CODE_SUCCESS";

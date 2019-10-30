@@ -1,6 +1,6 @@
 import * as AmazonCognitoIdentity from "amazon-cognito-identity-js";
 
-import { FORGOT_PASSWORD } from "../../store/types/types";
+import { SEND_EMAIL_CODE_SUCCESS } from "../../store/types/types";
 
 const POOL_DATA = {
   UserPoolId: `us-east-1_UIj3Jxl1F`,
@@ -9,8 +9,8 @@ const POOL_DATA = {
 
 const userPool = new AmazonCognitoIdentity.CognitoUserPool(POOL_DATA);
 
-export const forgotPasswordEmail = data => ({
-  type: FORGOT_PASSWORD,
+export const forgotPasswordSuccess = data => ({
+  type: SEND_EMAIL_CODE_SUCCESS,
   payload: data
 });
 
@@ -30,12 +30,14 @@ export const ResetPassword = (
       onSuccess: result => {
         setLoading(false);
         console.log(result, "FORGOT PASSWORD SUCCESS");
-        dispatch(forgotPasswordEmail(email));
+        dispatch(forgotPasswordSuccess(email));
         navigationObject.navigate("ResetPassword");
+        alert("A verification Code has been sent to your email!");
       },
       onFailure: err => {
         setLoading(false);
         setEmailError(err.message);
+        dispatch({ type: SEND_EMAIL_CODE_FAILED });
         console.log(err, "FORGOT PASSWORD ERROR");
       }
     });
