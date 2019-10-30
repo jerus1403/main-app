@@ -18,12 +18,15 @@ import Input from "../../components/UI/Input";
 import Card from "../../components/UI/Card";
 import { colors } from "../../styleUtility/colors";
 import * as forgotPasswordAction from "../../store/actions/forgotPassword";
-import { FORM_INPUT_UPDATE, formReducer } from "../../utils/formReducer";
+import {
+  RESET_PASSWORD_INPUT_UPDATE,
+  formReducer
+} from "../../utils/formReducer";
 
 const ResetPasswordScreen = props => {
   const dispatch = useDispatch();
   [isLoading, setLoading] = useState(false);
-  [resetPasswordError, setResetPasswordError] = useState();
+  [resetPasswordError, setResetPasswordError] = useState(null);
 
   const [formState, dispatchFormState] = useReducer(formReducer, {
     inputValues: {
@@ -60,7 +63,7 @@ const ResetPasswordScreen = props => {
   const inputChangeHandler = useCallback(
     (inputIdentifier, inputValue, inputValidity) => {
       dispatchFormState({
-        type: FORM_INPUT_UPDATE,
+        type: RESET_PASSWORD_INPUT_UPDATE,
         input: inputIdentifier,
         value: inputValue,
         isValid: inputValidity

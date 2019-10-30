@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   StyleSheet,
   Text,
@@ -6,27 +6,53 @@ import {
   TextInput,
   View,
   Button,
-  FlatList
+  FlatList,
+  Image
 } from "react-native";
 import { connect, useDispatch } from "react-redux";
 
 import * as authActions from "../../store/actions/auth";
 
+import { colors } from "../../styleUtility/colors";
+import IconImage from "../../assets/icon.png";
+
 const Profile = props => {
   const dispatch = useDispatch();
-  const logUserOut = async () => {
-    await dispatch(authActions.SignOutUser(props.navigation));
+  const logUserOut = () => {
+    dispatch(authActions.SignOutUser(props.navigation));
   };
+  useEffect(() => {
+    props.navigation.setParams({
+      logOutButton: logUserOut
+    });
+  }, []);
   return (
-    <View style={styles.container}>
-      <Button title='Sign Out' onPress={logUserOut} />
-    </View>
+    <ScrollView style={styles.container}>
+      <View style={styles.backgroundSection}>
+        <Text style={styles.title}>Name</Text>
+        <Text style={styles.title}>Email</Text>
+        <Image source={IconImage} style={styles.profileImage} />
+      </View>
+      <View style={styles.profileSection}>
+        <Button title='Change' />
+      </View>
+    </ScrollView>
   );
 };
 
-Profile.navigationOptions = {
-  headerTitle: "Profile"
-};
+Profile.navigationOptions = ({ navigation }) => ({
+  headerTitle: "Profile",
+  headerRight: () => {
+    const { params = {} } = navigation.state;
+    return (
+      <Button
+        title='Log Out'
+        onPress={params.logOutButton}
+        color={colors.theme}
+      />
+    );
+  }
+});
 
 const styles = StyleSheet.create({
   title: {
@@ -34,8 +60,22 @@ const styles = StyleSheet.create({
     textAlign: "center"
   },
   container: {
-    paddingTop: 10
-  }
+    flex: 1
+  },
+  backgroundSection: {
+    paddingTop: 20,
+    height: 200,
+    backgroundColor: colors.theme
+  },
+  profileImage: {
+    position: "relative",
+    alignSelf: "center",
+    top: 40,
+    height: 200,
+    width: 200,
+    borderRadius: 200 / 2
+  },
+  profileSection: {}
 });
 
 const mapStateToProps = state => {

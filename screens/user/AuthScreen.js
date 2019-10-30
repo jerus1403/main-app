@@ -43,7 +43,7 @@ const AuthScreen = props => {
   [isSignUp, setSignUp] = useState(true);
   [isLoading, setLoading] = useState(false);
   [signInerror, setSignInError] = useState();
-  [signUpError, setSignUpError] = useState(null);
+  // [signUpError, setSignUpError] = useState(null);
 
   const dispatch = useDispatch();
 
@@ -94,7 +94,7 @@ const AuthScreen = props => {
     props.navigation.setParams({
       headerText: `${isSignUp ? "Register" : "Log In"}`
     });
-  }, [signInerror, isSignUp, signUpError]);
+  }, [signInerror, isSignUp]);
   /**
    *  SIGN IN SUBMIT FUNCTION
    */
@@ -135,7 +135,7 @@ const AuthScreen = props => {
     [dispatchCodeState]
   );
 
-  // console.log(props.authState.auth, "REDUCER STATE");
+  // console.log(props.authState.auth, "AUTH REDUCER - AUTH SCREEEN");
   return (
     <KeyboardAvoidingView style={styles.screen}>
       <Card style={styles.authContainer}>

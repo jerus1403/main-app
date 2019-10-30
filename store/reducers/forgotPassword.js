@@ -1,4 +1,4 @@
-import { FORGOT_PASSWORD } from "../types/types";
+import { SEND_EMAIL_CODE_SUCCESS } from "../types/types";
 
 const initialState = {
   forgotPasswordEmail: null
@@ -6,7 +6,7 @@ const initialState = {
 
 const forgotPasswordReducer = (state = initialState, action) => {
   switch (action.type) {
-    case FORGOT_PASSWORD:
+    case SEND_EMAIL_CODE_SUCCESS:
       return {
         ...state,
         forgotPasswordEmail: action.payload
