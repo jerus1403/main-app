@@ -7,9 +7,11 @@ import {
   View,
   Button,
   FlatList,
-  Image
+  Image,
+  TouchableOpacity
 } from "react-native";
 import { connect, useDispatch } from "react-redux";
+import { Ionicons } from "@expo/vector-icons";
 
 import * as authActions from "../../store/actions/auth";
 
@@ -29,12 +31,16 @@ const Profile = props => {
   return (
     <ScrollView style={styles.container}>
       <View style={styles.backgroundSection}>
-        <Text style={styles.title}>Name</Text>
-        <Text style={styles.title}>Email</Text>
         <Image source={IconImage} style={styles.profileImage} />
+        <View style={styles.profileSection}>
+          <Text style={styles.title}>Name</Text>
+        </View>
       </View>
-      <View style={styles.profileSection}>
-        <Button title='Change' />
+      <View style={styles.accountSettingSection}>
+        <Text>Name: John Do</Text>
+        <Text>Birthday: 10/20/1982</Text>
+        <Text>Address: 1000 Broadcast blvd. Plano NJ 92313</Text>
+        <Text>Email: test@test.com</Text>
       </View>
     </ScrollView>
   );
@@ -48,9 +54,28 @@ Profile.navigationOptions = ({ navigation }) => ({
       <Button
         title='Log Out'
         onPress={params.logOutButton}
-        color={colors.theme}
+        color={colors.white}
       />
     );
+  },
+  headerLeft: () => {
+    return (
+      <TouchableOpacity
+        style={styles.settingButton}
+        onPress={() => navigation.navigate("Settings")}
+      >
+        <Ionicons
+          name='ios-settings'
+          size={30}
+          color={colors.white}
+          style={styles.icon}
+        />
+      </TouchableOpacity>
+    );
+  },
+  headerStyle: {
+    backgroundColor: colors.theme,
+    color: colors.white
   }
 });
 
@@ -63,19 +88,35 @@ const styles = StyleSheet.create({
     flex: 1
   },
   backgroundSection: {
-    paddingTop: 20,
-    height: 200,
-    backgroundColor: colors.theme
+    flexDirection: "row",
+    padding: 20,
+    height: "auto",
+    backgroundColor: colors.easyGreen
+  },
+  profileSection: {
+    flexDirection: "column",
+    justifyContent: "center",
+    padding: 20
   },
   profileImage: {
-    position: "relative",
     alignSelf: "center",
-    top: 40,
-    height: 200,
-    width: 200,
-    borderRadius: 200 / 2
+    height: 180,
+    width: 180,
+    borderRadius: 180 / 2
   },
-  profileSection: {}
+  accountSettingSection: {
+    minHeight: 100,
+    justifyContent: "space-between",
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    backgroundColor: colors.lightWhite
+  },
+  settingButton: {
+    marginHorizontal: 20
+  },
+  icon: {
+    alignSelf: "center"
+  }
 });
 
 const mapStateToProps = state => {

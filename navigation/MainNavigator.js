@@ -3,6 +3,7 @@ import { Text, View, StyleSheet } from "react-native";
 import { createAppContainer, createSwitchNavigator } from "react-navigation";
 import { createStackNavigator } from "react-navigation-stack";
 import { createBottomTabNavigator } from "react-navigation-tabs";
+import { createDrawerNavigator } from "react-navigation-drawer";
 import { Ionicons } from "@expo/vector-icons";
 
 import HomeScreen from "../screens/HomeScreen";
@@ -14,6 +15,8 @@ import ProfileScreen from "../screens/user/ProfileScreen";
 import AuthLoadingScreen from "../screens/AuthLoadingScreen";
 import ForgotPasswordScreen from "../screens/user/ForgotPasswordScreen";
 import ResetPasswordScreen from "../screens/user/ResetPasswordScreen";
+import SettingsScreen from "../screens/user/SettingsScreen";
+import ChangeNameModal from "../screens/user/ChangeNameModal";
 
 const InboxStack = createStackNavigator({
   Inbox: {
@@ -65,7 +68,19 @@ const AuthStack = createStackNavigator({
   }
 });
 
-const MainNavigator = createBottomTabNavigator(
+const SettingStack = createStackNavigator(
+  {
+    SettingScreen: { screen: SettingsScreen },
+    ChangeName: {
+      screen: ChangeNameModal
+    }
+  },
+  {
+    mode: "modal"
+  }
+);
+
+const TabNavigator = createBottomTabNavigator(
   {
     Home: { screen: HomeScreen },
     InboxTab: { screen: InboxStack },
@@ -103,12 +118,21 @@ const MainNavigator = createBottomTabNavigator(
   }
 );
 
+const MainNavigator = createStackNavigator(
+  {
+    Tab: TabNavigator,
+    Settings: SettingStack
+  },
+  {
+    headerMode: "none"
+  }
+);
+
 const Navigator = createSwitchNavigator(
   {
     Starter: AuthLoadingScreen,
     App: MainNavigator,
     Auth: AuthStack
-    // ForgotPassWord: ForgotPassWordStack
   },
   {
     initialRouteName: "Starter"
