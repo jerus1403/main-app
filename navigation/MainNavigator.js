@@ -17,6 +17,8 @@ import ForgotPasswordScreen from "../screens/user/ForgotPasswordScreen";
 import ResetPasswordScreen from "../screens/user/ResetPasswordScreen";
 import SettingsScreen from "../screens/user/SettingsScreen";
 import ChangeNameModal from "../screens/user/ChangeNameModal";
+import VerifyBirthdayModal from "../screens/user/VerifyBirthdayModal";
+import VerifyAddressModal from "../screens/user/VerifyAddressModal";
 
 const InboxStack = createStackNavigator({
   Inbox: {
@@ -73,6 +75,12 @@ const SettingStack = createStackNavigator(
     SettingScreen: { screen: SettingsScreen },
     ChangeName: {
       screen: ChangeNameModal
+    },
+    VerifyBirthday: {
+      screen: VerifyBirthdayModal
+    },
+    VerifyAddress: {
+      screen: VerifyAddressModal
     }
   },
   {
@@ -114,7 +122,12 @@ const TabNavigator = createBottomTabNavigator(
       activeTintColor: "tomato",
       inactiveTintColor: "gray",
       showLabel: false
-    }
+    },
+    navigationOptions: ({ navigation }) => ({
+      tabBarOnPress: ({ navigation, defaultHandler }) => {
+        defaultHandler();
+      }
+    })
   }
 );
 

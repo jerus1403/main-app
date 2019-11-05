@@ -18,14 +18,14 @@ import { Ionicons } from "@expo/vector-icons";
 import { colors } from "../../styleUtility/colors";
 import * as authActions from "../../store/actions/auth";
 
-const ChangeNameModal = props => {
+const VerifyAddressModal = props => {
   const dispatch = useDispatch();
   [isLoading, setLoading] = useState(false);
   [value, onChangeText] = useState("");
 
   const submitHandler = event => {
     event.preventDefault();
-    const type = "name";
+    const type = "address";
     setLoading(true);
     authActions.addAttribute(value, type, setLoading);
     props.navigation.navigate("SettingScreen");
@@ -33,12 +33,11 @@ const ChangeNameModal = props => {
 
   return (
     <KeyboardAvoidingView style={styles.screen}>
-      <Text style={styles.header}>Change your name</Text>
+      <Text style={styles.header}>Verify Your Address</Text>
       <TextInput
         style={styles.input}
         onChangeText={text => onChangeText(text)}
         value={value}
-        placeholder='John Do'
       />
       {isLoading ? (
         <ActivityIndicator size='small' color={colors.theme} />
@@ -91,4 +90,4 @@ styles = StyleSheet.create({
   }
 });
 
-export default ChangeNameModal;
+export default VerifyAddressModal;

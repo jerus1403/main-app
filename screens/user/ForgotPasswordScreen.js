@@ -71,42 +71,49 @@ const ForgotPasswordScreen = props => {
   );
   return (
     <KeyboardAvoidingView style={styles.screen}>
-      <Ionicons name='ios-lock' size={60} color={colors.theme} />
-      <Text style={styles.header}>Forgot Your password</Text>
-      <Text style={styles.text}>
-        To recover your password, you need to enter your register email address.
-        We will send the recovery code to your email.
-      </Text>
-      <Card style={styles.authContainer}>
-        <Input
-          id='email'
-          label='Email'
-          keyboardType='email-address'
-          required
-          email
-          autoCapitalize='none'
-          errorText='Please enter a valid email address.'
-          onInputChange={inputChangeHandler}
-          initialValue=''
+      <ScrollView>
+        <Ionicons
+          name='ios-lock'
+          size={60}
+          color={colors.theme}
+          style={styles.lockIcon}
         />
-      </Card>
-      {isLoading ? (
-        <ActivityIndicator size='small' color={colors.theme} />
-      ) : (
-        <View style={styles.button}>
-          <Button
-            title='SEND'
-            color={colors.white}
-            disabled={formState.formIsValid ? false : true}
-            onPress={submitHandler}
+        <Text style={styles.header}>Forgot Your password</Text>
+        <Text style={styles.text}>
+          To recover your password, you need to enter your register email
+          address. We will send the recovery code to your email.
+        </Text>
+        <Card style={styles.authContainer}>
+          <Input
+            id='email'
+            label='Email'
+            keyboardType='email-address'
+            required
+            email
+            autoCapitalize='none'
+            errorText='Please enter a valid email address.'
+            onInputChange={inputChangeHandler}
+            initialValue=''
           />
-        </View>
-      )}
+        </Card>
+        {isLoading ? (
+          <ActivityIndicator size='small' color={colors.theme} />
+        ) : (
+          <View style={styles.button}>
+            <Button
+              title='SEND'
+              color={colors.white}
+              disabled={formState.formIsValid ? false : true}
+              onPress={submitHandler}
+            />
+          </View>
+        )}
+      </ScrollView>
     </KeyboardAvoidingView>
   );
 };
 
-styles = StyleSheet.create({
+const styles = StyleSheet.create({
   screen: {
     flex: 1,
     alignItems: "center",
@@ -117,7 +124,12 @@ styles = StyleSheet.create({
     width: "80%",
     maxWidth: 400,
     maxHeight: 400,
-    padding: 20
+    padding: 20,
+    alignSelf: "center"
+  },
+  lockIcon: {
+    alignSelf: "center",
+    marginHorizontal: "auto"
   },
   header: {
     fontSize: 30,
@@ -134,6 +146,8 @@ styles = StyleSheet.create({
   },
   button: {
     marginTop: 30,
+    width: "80%",
+    alignSelf: "center",
     backgroundColor: colors.theme
   }
 });
