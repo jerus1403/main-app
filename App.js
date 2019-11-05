@@ -6,7 +6,7 @@ import { Provider } from "react-redux";
 import thunk from "redux-thunk";
 // import Reactotron from "reactotron-react-native";
 
-import MainNavigator from "./navigation/MainNavigator";
+import AppNavigator from "./navigation/MainNavigator";
 import authReducer from "./store/reducers/auth";
 import forgotPasswordReducer from "./store/reducers/forgotPassword";
 
@@ -36,7 +36,7 @@ const App = () => {
   }
   return (
     <Provider store={store}>
-      <MainNavigator globalState={store} />
+      <AppNavigator globalState={store} />
     </Provider>
   );
 };

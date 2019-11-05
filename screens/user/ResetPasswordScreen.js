@@ -71,63 +71,69 @@ const ResetPasswordScreen = props => {
     },
     [dispatchFormState]
   );
-  console.log(props.forgotPasswordState, "FORGOT STATE RESET SCREEN");
   return (
     <KeyboardAvoidingView style={styles.screen}>
-      <Ionicons name='ios-key' size={60} color={colors.theme} />
-      <Text style={styles.header}>Reset Your password</Text>
-      <Text style={styles.text}>
-        Please enter your verification code from your email and new password.
-        Make sure your new password has at least one uppercase character, one
-        lowercase character, and one number.
-      </Text>
-      <Card style={styles.authContainer}>
-        <Input
-          id='verifyCode'
-          label='Verification Code'
-          keyboardType='default'
-          secureTextEntry
-          required
-          type='verifyCode'
-          minLength={6}
-          maxLength={6}
-          autoCapitalize='none'
-          errorText='Please enter a valid code.'
-          onInputChange={inputChangeHandler}
-          initialValue=''
+      <ScrollView>
+        <Ionicons
+          name='ios-key'
+          size={60}
+          color={colors.theme}
+          style={styles.keyIcon}
         />
-        <Input
-          label='New Password'
-          id='password'
-          keyboardType='default'
-          secureTextEntry
-          required
-          type='password'
-          minLength={8}
-          maxLength={255}
-          autoCapitalize='none'
-          errorText='Please enter a valid password.'
-          onInputChange={inputChangeHandler}
-          initialValue=''
-        />
-      </Card>
-      {isLoading ? (
-        <ActivityIndicator size='small' color={colors.theme} />
-      ) : (
-        <View style={styles.button}>
-          <Button
-            title='SUBMIT'
-            color={colors.white}
-            disabled={formState.formIsValid ? false : true}
-            onPress={submitHandler}
+        <Text style={styles.header}>Reset Your password</Text>
+        <Text style={styles.text}>
+          Please enter your verification code from your email and new password.
+          Make sure your new password has at least one uppercase character, one
+          lowercase character, and one number.
+        </Text>
+        <Card style={styles.authContainer}>
+          <Input
+            id='verifyCode'
+            label='Verification Code'
+            keyboardType='default'
+            secureTextEntry
+            required
+            type='verifyCode'
+            minLength={6}
+            maxLength={6}
+            autoCapitalize='none'
+            errorText='Please enter a valid code.'
+            onInputChange={inputChangeHandler}
+            initialValue=''
           />
-        </View>
-      )}
+          <Input
+            label='New Password'
+            id='password'
+            keyboardType='default'
+            secureTextEntry
+            required
+            type='password'
+            minLength={8}
+            maxLength={255}
+            autoCapitalize='none'
+            errorText='Please enter a valid password.'
+            onInputChange={inputChangeHandler}
+            initialValue=''
+          />
+        </Card>
+        {isLoading ? (
+          <ActivityIndicator size='small' color={colors.theme} />
+        ) : (
+          <View style={styles.button}>
+            <Button
+              title='SUBMIT'
+              color={colors.white}
+              disabled={formState.formIsValid ? false : true}
+              onPress={submitHandler}
+            />
+          </View>
+        )}
+      </ScrollView>
     </KeyboardAvoidingView>
   );
 };
 
-styles = StyleSheet.create({
+const styles = StyleSheet.create({
   screen: {
     flex: 1,
     alignItems: "center",
@@ -136,9 +142,13 @@ styles = StyleSheet.create({
   },
   authContainer: {
     width: "80%",
+    alignSelf: "center",
     maxWidth: 400,
     maxHeight: 400,
     padding: 20
+  },
+  keyIcon: {
+    alignSelf: "center"
   },
   header: {
     fontSize: 30,
@@ -155,6 +165,8 @@ styles = StyleSheet.create({
   },
   button: {
     marginTop: 30,
+    alignSelf: "center",
+    width: "80%",
     backgroundColor: colors.theme
   }
 });

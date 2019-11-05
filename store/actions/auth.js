@@ -17,7 +17,8 @@ import {
 import {
   GetAccessToken,
   ClearStorage,
-  SetAccessToken
+  SetAccessToken,
+  SetUserAttribute
 } from "../../utils/utils";
 
 const POOL_DATA = {
@@ -134,10 +135,6 @@ export const SignInUser = (
       onSuccess: result => {
         setLoading(false);
         const token = result.getAccessToken().getJwtToken();
-        // console.log("access token + " + result.getAccessToken().getJwtToken());
-        console.log(result, "SIGN IN RESULT");
-        const exp = parseInt(result.getAccessToken().payload.exp);
-        const expiredToken = new Date(exp);
         SetAccessToken(token, result);
         dispatch(logInSuccess(result));
         navigationObject.navigate("App");
@@ -146,10 +143,100 @@ export const SignInUser = (
         setLoading(false);
         setSignInError(err.message);
         dispatch(logInFailed(err.message));
-        console.log(err, "SIGN IN ERROR");
       }
     });
   };
+};
+
+export const addAttribute = async (value, type, setLoading) => {
+  let attributeList = [];
+  let attribute;
+  if (type === "name") {
+    attribute = {
+      Name: "name",
+      Value: value
+    };
+  } else if (type === "birthday") {
+    attribute = {
+      Name: "birthdate",
+      Value: value
+    };
+  } else if (type === "address") {
+    attribute = {
+      Name: "address",
+      Value: value
+    };
+  }
+  var cognitoAttribute = new AmazonCognitoIdentity.CognitoUserAttribute(
+    attribute
+  );
+  attributeList.push(cognitoAttribute);
+
+  const cognitoUser = userPool.getCurrentUser();
+  if (cognitoUser != null) {
+    cognitoUser.getSession((err, session) => {
+      if (err) {
+        alert(err.message || JSON.stringify(err));
+        return;
+      }
+      cognitoUser.updateAttributes(attributeList, (err, result) => {
+        if (err) {
+          setLoading(false);
+          console.log("Attribute Error", err);
+          return;
+        }
+        setLoading(false);
+        console.log("Attribtue result: " + result);
+      });
+    });
+  }
+};
+
+export const retrieveUserData = (
+  setLoading,
+  setName,
+  setEmail,
+  setAddress,
+  setBirthdate
+) => {
+  //Get cognito user from storage
+  userPool.storage.sync(function(err, result) {
+    if (err) {
+      setLoading(false);
+      console.log(err, "ERROR RETRIEVE");
+    } else if (result === "SUCCESS") {
+      //Get Current User
+      const cognitoUser = userPool.getCurrentUser();
+      if (cognitoUser != null) {
+        //Get Session
+        cognitoUser.getSession((err, session) => {
+          if (err) {
+            alert(err.message);
+          }
+          //Get user Attributes
+          cognitoUser.getUserAttributes((err, userData) => {
+            if (err) {
+              alert(err.message);
+              return;
+            }
+            setLoading(false);
+            userData.map(item => {
+              if (item.getName() === "name") {
+                setName(item.getValue());
+              } else if (item.getName() === "email") {
+                setEmail(item.getValue());
+              } else if (item.getName() === "birthdate") {
+                setBirthdate(item.getValue());
+              } else if (item.getName() === "address") {
+                setAddress(item.getValue());
+              }
+              console.log(userData, "ATTRIBUTES");
+            });
+          });
+        });
+      }
+    }
+  });
 };
 
 export const SignOutUser = navigationObject => {

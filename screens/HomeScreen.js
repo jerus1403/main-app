@@ -34,7 +34,6 @@ const Home = props => {
     console.log(new Date().getTime(), "TODAY");
     console.log(expiredToken, "DATE");
   };
-  console.log(props.authState.auth, "HOME");
   return (
     <View style={styles.container}>
       <Text style={styles.title}>This is Home Screen</Text>

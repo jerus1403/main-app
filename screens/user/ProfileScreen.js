@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import {
   StyleSheet,
   Text,
@@ -8,7 +8,8 @@ import {
   Button,
   FlatList,
   Image,
-  TouchableOpacity
+  TouchableOpacity,
+  ActivityIndicator
 } from "react-native";
 import { connect, useDispatch } from "react-redux";
 import { Ionicons } from "@expo/vector-icons";
@@ -17,31 +18,63 @@ import * as authActions from "../../store/actions/auth";
 
 import { colors } from "../../styleUtility/colors";
 import IconImage from "../../assets/icon.png";
+import { GetUserAttributes } from "../../utils/utils";
 
 const Profile = props => {
   const dispatch = useDispatch();
+  [attributeList, setAttributeList] = useState([]);
+  [isLoading, setLoading] = useState(false);
+  [name, setName] = useState();
+  [birthdate, setBirthdate] = useState();
+  [address, setAddress] = useState();
+  [email, setEmail] = useState();
+
   const logUserOut = () => {
     dispatch(authActions.SignOutUser(props.navigation));
   };
+
   useEffect(() => {
     props.navigation.setParams({
       logOutButton: logUserOut
     });
-  }, []);
+
+    //Get User Attributes
+    const getUserData = async () => {
+      setLoading(true);
+      await authActions.retrieveUserData(
+        setLoading,
+        setName,
+        setEmail,
+        setAddress,
+        setBirthdate
+      );
+    };
+    getUserData();
+    console.log(props.navigation.isFocused(), "FOCUS");
+  }, [props.navigation.isFocused()]);
+
   return (
     <ScrollView style={styles.container}>
-      <View style={styles.backgroundSection}>
-        <Image source={IconImage} style={styles.profileImage} />
-        <View style={styles.profileSection}>
-          <Text style={styles.title}>Name</Text>
+      {isLoading ? (
+        <View style={styles.indicator}>
+          <ActivityIndicator size='large' color={colors.theme} />
         </View>
-      </View>
-      <View style={styles.accountSettingSection}>
-        <Text>Name: John Do</Text>
-        <Text>Birthday: 10/20/1982</Text>
-        <Text>Address: 1000 Broadcast blvd. Plano NJ 92313</Text>
-        <Text>Email: test@test.com</Text>
-      </View>
+      ) : (
+        <View>
+          <View style={styles.backgroundSection}>
+            <Image source={IconImage} style={styles.profileImage} />
+            <View style={styles.profileSection}>
+              <Text style={styles.name}>{name ? name : ""}</Text>
+            </View>
+          </View>
+          <View style={styles.accountSettingSection}>
+            <Text style={styles.userDetail}>User Detail</Text>
+            <Text>Birthday: {birthdate ? birthdate : ""}</Text>
+            <Text>Address: {address ? address : ""}</Text>
+            <Text>Email: {email ? email : ""}</Text>
+          </View>
+        </View>
+      )}
     </ScrollView>
   );
 };
@@ -80,10 +113,17 @@ Profile.navigationOptions = ({ navigation }) => ({
 });
 
 const styles = StyleSheet.create({
-  title: {
-    fontSize: 20,
-    textAlign: "center"
+  indicator: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: "40%"
   },
+  name: {
+    fontSize: 20,
+    fontWeight: "bold"
+  },
+
   container: {
     flex: 1
   },
@@ -103,6 +143,10 @@ const styles = StyleSheet.create({
     height: 180,
     width: 180,
     borderRadius: 180 / 2
+  },
+  userDetail: {
+    fontSize: 20,
+    fontWeight: "bold"
   },
   accountSettingSection: {
     minHeight: 100,
