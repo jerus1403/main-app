@@ -20,14 +20,31 @@ import * as authActions from "../../store/actions/auth";
 
 const VerifyAddressModal = props => {
   const dispatch = useDispatch();
+  [isSubmitLoading, setSubmitLoading] = useState(false);
   [isLoading, setLoading] = useState(false);
   [value, onChangeText] = useState("");
+  [address, setAddress] = useState();
 
-  const submitHandler = event => {
+  useEffect(() => {
+    //Get User Attributes
+    const getUserData = async () => {
+      await authActions.retrieveUserData(
+        setLoading,
+        null,
+        null,
+        setAddress,
+        null
+      );
+    };
+    getUserData();
+  });
+
+  const submitHandler = async event => {
     event.preventDefault();
     const type = "address";
-    setLoading(true);
-    authActions.addAttribute(value, type, setLoading);
+    setSubmitLoading(true);
+    await dispatch(authActions.addAttribute(value, type));
+    setSubmitLoading(false);
     props.navigation.navigate("SettingScreen");
   };
 
@@ -38,8 +55,9 @@ const VerifyAddressModal = props => {
         style={styles.input}
         onChangeText={text => onChangeText(text)}
         value={value}
+        placeholder={address ? address : ""}
       />
-      {isLoading ? (
+      {isSubmitLoading ? (
         <ActivityIndicator size='small' color={colors.theme} />
       ) : (
         <View style={styles.button}>

@@ -64,8 +64,8 @@ export const logOut = () => ({
   type: LOG_OUT
 });
 
-export const changeName = value => ({
-  type: CHANGE_NAME,
+export const changeValue = (valueType, value) => ({
+  type: valueType,
   payload: value
 });
 
@@ -156,47 +156,56 @@ export const SignInUser = (
 };
 
 export const addAttribute = (value, type) => {
-  let attributeList = [];
-  let attribute;
-  if (type === "name") {
-    attribute = {
-      Name: "name",
-      Value: value
-    };
-  } else if (type === "birthday") {
-    attribute = {
-      Name: "birthdate",
-      Value: value
-    };
-  } else if (type === "address") {
-    attribute = {
-      Name: "address",
-      Value: value
-    };
-  }
-  var cognitoAttribute = new AmazonCognitoIdentity.CognitoUserAttribute(
-    attribute
-  );
-  attributeList.push(cognitoAttribute);
+  return dispatch => {
+    let attributeList = [];
+    let attribute;
+    if (type === "name") {
+      attribute = {
+        Name: "name",
+        Value: value
+      };
+    } else if (type === "birthdate") {
+      attribute = {
+        Name: "birthdate",
+        Value: value
+      };
+    } else if (type === "address") {
+      attribute = {
+        Name: "address",
+        Value: value
+      };
+    }
+    var cognitoAttribute = new AmazonCognitoIdentity.CognitoUserAttribute(
+      attribute
+    );
+    attributeList.push(cognitoAttribute);
 
-  const cognitoUser = userPool.getCurrentUser();
-  if (cognitoUser != null) {
-    cognitoUser.getSession((err, session) => {
-      if (err) {
-        alert(err.message || JSON.stringify(err));
-        return;
-      }
-      cognitoUser.updateAttributes(attributeList, (err, result) => {
+    const cognitoUser = userPool.getCurrentUser();
+    if (cognitoUser != null) {
+      cognitoUser.getSession((err, session) => {
         if (err) {
-          console.log("Attribute Error", err);
+          alert(err.message || JSON.stringify(err));
           return;
         }
-        console.log(
-          "Attribtue result: " + Object.prototype.valueOf(attributeList)
-        );
+        cognitoUser.updateAttributes(attributeList, (err, result) => {
+          if (err) {
+            console.log("Attribute Error", err);
+            return;
+          }
+          if (type === "name") {
+            dispatch(changeValue(CHANGE_NAME, value));
+          } else if (type === "birthdate") {
+            dispatch(changeValue(CHANGE_BIRTHDATE, value));
+          } else if (type === "address") {
+            dispatch(changeValue(CHANGE_ADDRESS, value));
+          }
+          console.log(
+            "Attribtue result: " + Object.prototype.valueOf(attributeList)
+          );
+        });
       });
-    });
-  }
+    }
+  };
 };
 
 export const retrieveUserData = (
@@ -209,7 +218,6 @@ export const retrieveUserData = (
   //Get cognito user from storage
   userPool.storage.sync(function(err, result) {
     if (err) {
-      setLoading(false);
       console.log(err, "ERROR RETRIEVE");
     } else if (result === "SUCCESS") {
       //Get Current User
@@ -223,19 +231,19 @@ export const retrieveUserData = (
           //Get user Attributes
           cognitoUser.getUserAttributes((err, userData) => {
             if (err) {
+              setLoading(false);
               alert(err.message);
               return;
             }
             setLoading(false);
             userData.map(item => {
-              if (item.getName() === "name") {
-                // dispatch(changeName(item.getValue()));
+              if (item.getName() === "name" && setName) {
                 setName(item.getValue());
-              } else if (item.getName() === "email") {
+              } else if (item.getName() === "email" && setEmail) {
                 setEmail(item.getValue());
-              } else if (item.getName() === "birthdate") {
+              } else if (item.getName() === "birthdate" && setBirthdate) {
                 setBirthdate(item.getValue());
-              } else if (item.getName() === "address") {
+              } else if (item.getName() === "address" && setAddress) {
                 setAddress(item.getValue());
               }
             });

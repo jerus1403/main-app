@@ -20,6 +20,9 @@ import { colors } from "../../styleUtility/colors";
 import IconImage from "../../assets/icon.png";
 
 const Profile = props => {
+  //REDUCER STATE
+  const { attributes } = props.authState;
+
   const dispatch = useDispatch();
   [isLoading, setLoading] = useState(false);
   [name, setName] = useState();
@@ -35,11 +38,10 @@ const Profile = props => {
     props.navigation.setParams({
       logOutButton: logUserOut
     });
-
     //Get User Attributes
-    const getUserData = () => {
+    const getUserData = async () => {
       setLoading(true);
-      authActions.retrieveUserData(
+      await authActions.retrieveUserData(
         setLoading,
         setName,
         setEmail,
@@ -49,7 +51,6 @@ const Profile = props => {
     };
     getUserData();
   }, []);
-
   return (
     <ScrollView style={styles.container}>
       {isLoading ? (
@@ -61,13 +62,25 @@ const Profile = props => {
           <View style={styles.backgroundSection}>
             <Image source={IconImage} style={styles.profileImage} />
             <View style={styles.profileSection}>
-              <Text style={styles.name}>{name ? name : ""}</Text>
+              <Text style={styles.name}>
+                {attributes.name === null && name ? name : attributes.name}
+              </Text>
             </View>
           </View>
           <View style={styles.accountSettingSection}>
             <Text style={styles.userDetail}>User Detail</Text>
-            <Text>Birthday: {birthdate ? birthdate : ""}</Text>
-            <Text>Address: {address ? address : ""}</Text>
+            <Text>
+              Birthday:{" "}
+              {attributes.birthdate === null && birthdate
+                ? birthdate
+                : attributes.birthdate}
+            </Text>
+            <Text>
+              Address:{" "}
+              {attributes.address === null && address
+                ? address
+                : attributes.address}
+            </Text>
             <Text>Email: {email ? email : ""}</Text>
           </View>
         </View>

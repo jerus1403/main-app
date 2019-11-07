@@ -1,7 +1,9 @@
-import { CHANGE_NAME } from "../types/types";
+import { CHANGE_NAME, CHANGE_BIRTHDATE, CHANGE_ADDRESS } from "../types/types";
 
 const initialState = {
-  name: null
+  name: null,
+  birthdate: null,
+  address: null
 };
 
 const attributesReducer = (state = initialState, action) => {
@@ -10,6 +12,16 @@ const attributesReducer = (state = initialState, action) => {
       return {
         ...state,
         name: action.payload
+      };
+    case CHANGE_BIRTHDATE:
+      return {
+        ...state,
+        birthdate: action.payload
+      };
+    case CHANGE_ADDRESS:
+      return {
+        ...state,
+        address: action.payload
       };
     default:
       return state;
