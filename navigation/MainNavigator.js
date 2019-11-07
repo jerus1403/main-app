@@ -122,12 +122,10 @@ const TabNavigator = createBottomTabNavigator(
       activeTintColor: "tomato",
       inactiveTintColor: "gray",
       showLabel: false
-    },
-    navigationOptions: ({ navigation }) => ({
-      tabBarOnPress: ({ navigation, defaultHandler }) => {
-        defaultHandler();
-      }
-    })
+    }
+    // navigationOptions: ({ navigation }) => ({
+    //   console.log()
+    // })
   }
 );
 

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import {
   StyleSheet,
   Text,
@@ -11,18 +11,16 @@ import {
   TouchableOpacity,
   ActivityIndicator
 } from "react-native";
-import { connect, useDispatch } from "react-redux";
+import { connect, useDispatch, useSelector } from "react-redux";
 import { Ionicons } from "@expo/vector-icons";
 
 import * as authActions from "../../store/actions/auth";
 
 import { colors } from "../../styleUtility/colors";
 import IconImage from "../../assets/icon.png";
-import { GetUserAttributes } from "../../utils/utils";
 
 const Profile = props => {
   const dispatch = useDispatch();
-  [attributeList, setAttributeList] = useState([]);
   [isLoading, setLoading] = useState(false);
   [name, setName] = useState();
   [birthdate, setBirthdate] = useState();
@@ -39,9 +37,9 @@ const Profile = props => {
     });
 
     //Get User Attributes
-    const getUserData = async () => {
+    const getUserData = () => {
       setLoading(true);
-      await authActions.retrieveUserData(
+      authActions.retrieveUserData(
         setLoading,
         setName,
         setEmail,
@@ -50,8 +48,7 @@ const Profile = props => {
       );
     };
     getUserData();
-    console.log(props.navigation.isFocused(), "FOCUS");
-  }, [props.navigation.isFocused()]);
+  }, []);
 
   return (
     <ScrollView style={styles.container}>

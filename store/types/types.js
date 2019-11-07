@@ -13,3 +13,8 @@ export const LOGIN_FAILED = "LOGIN_FAILED";
 export const LOG_OUT = "LOG_OUT";
 
 export const SEND_EMAIL_CODE_SUCCESS = "SEND_EMAIL_CODE_SUCCESS";
+
+export const CHANGE_NAME = "CHANGE_NAME";
+export const CHANGE_BIRTHDATE = "CHANGE_BIRTHDATE";
+export const CHANGE_ADDRESS = "CHANGE_ADDRESS";
+export const CHANGE_EMAIL = "CHANGE_EMAIL";

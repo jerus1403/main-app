@@ -11,14 +11,16 @@ import {
   LOGIN_REQUEST,
   LOGIN_SUCCESS,
   LOGIN_FAILED,
-  LOG_OUT
+  LOG_OUT,
+  CHANGE_NAME,
+  CHANGE_BIRTHDATE,
+  CHANGE_ADDRESS
 } from "../types/types";
 
 import {
   GetAccessToken,
   ClearStorage,
-  SetAccessToken,
-  SetUserAttribute
+  SetAccessToken
 } from "../../utils/utils";
 
 const POOL_DATA = {
@@ -60,6 +62,11 @@ export const logInFailed = err => ({
 
 export const logOut = () => ({
   type: LOG_OUT
+});
+
+export const changeName = value => ({
+  type: CHANGE_NAME,
+  payload: value
 });
 
 export const RegisterUser = (email, password) => {
@@ -148,7 +155,7 @@ export const SignInUser = (
   };
 };
 
-export const addAttribute = async (value, type, setLoading) => {
+export const addAttribute = (value, type) => {
   let attributeList = [];
   let attribute;
   if (type === "name") {
@@ -181,12 +188,12 @@ export const addAttribute = async (value, type, setLoading) => {
       }
       cognitoUser.updateAttributes(attributeList, (err, result) => {
         if (err) {
-          setLoading(false);
           console.log("Attribute Error", err);
           return;
         }
-        setLoading(false);
-        console.log("Attribtue result: " + result);
+        console.log(
+          "Attribtue result: " + Object.prototype.valueOf(attributeList)
+        );
       });
     });
   }
@@ -222,6 +229,7 @@ export const retrieveUserData = (
             setLoading(false);
             userData.map(item => {
               if (item.getName() === "name") {
+                // dispatch(changeName(item.getValue()));
                 setName(item.getValue());
               } else if (item.getName() === "email") {
                 setEmail(item.getValue());
@@ -230,7 +238,6 @@ export const retrieveUserData = (
               } else if (item.getName() === "address") {
                 setAddress(item.getValue());
               }
-              console.log(userData, "ATTRIBUTES");
             });
           });
         });
