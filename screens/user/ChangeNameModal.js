@@ -20,15 +20,25 @@ import * as authActions from "../../store/actions/auth";
 
 const ChangeNameModal = props => {
   const dispatch = useDispatch();
+  [isSubmitLoading, setSubmitLoading] = useState(false);
   [isLoading, setLoading] = useState(false);
   [value, onChangeText] = useState("");
+  [name, setName] = useState();
 
-  const submitHandler = event => {
+  useEffect(() => {
+    //Get User Attributes
+    const getUserData = async () => {
+      await authActions.retrieveUserData(setLoading, setName);
+    };
+    getUserData();
+  });
+
+  const submitHandler = async event => {
     event.preventDefault();
     const type = "name";
-    setLoading(true);
-    authActions.addAttribute(value, type, setLoading);
-    setLoading(false);
+    setSubmitLoading(true);
+    await dispatch(authActions.addAttribute(value, type));
+    setSubmitLoading(false);
     props.navigation.navigate("SettingScreen");
   };
 
@@ -39,9 +49,9 @@ const ChangeNameModal = props => {
         style={styles.input}
         onChangeText={text => onChangeText(text)}
         value={value}
-        placeholder='John Do'
+        placeholder={name ? name : ""}
       />
-      {isLoading ? (
+      {isSubmitLoading ? (
         <ActivityIndicator size='small' color={colors.theme} />
       ) : (
         <View style={styles.button}>

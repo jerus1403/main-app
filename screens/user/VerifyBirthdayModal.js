@@ -20,14 +20,31 @@ import * as authActions from "../../store/actions/auth";
 
 const VerifyBirthdayModal = props => {
   const dispatch = useDispatch();
+  [isSubmitLoading, setSubmitLoading] = useState(false);
   [isLoading, setLoading] = useState(false);
   [value, onChangeText] = useState("");
+  [birthdate, setBirthdate] = useState();
 
-  const submitHandler = event => {
+  useEffect(() => {
+    //Get User Attributes
+    const getUserData = async () => {
+      await authActions.retrieveUserData(
+        setLoading,
+        null,
+        null,
+        null,
+        setBirthdate
+      );
+    };
+    getUserData();
+  });
+
+  const submitHandler = async event => {
     event.preventDefault();
-    const type = "birthday";
-    setLoading(true);
-    authActions.addAttribute(value, type, setLoading);
+    const type = "birthdate";
+    setSubmitLoading(true);
+    await dispatch(authActions.addAttribute(value, type));
+    setSubmitLoading(false);
     props.navigation.navigate("SettingScreen");
   };
 
@@ -38,9 +55,9 @@ const VerifyBirthdayModal = props => {
         style={styles.input}
         onChangeText={text => onChangeText(text)}
         value={value}
-        placeholder='00/00/0000'
+        placeholder={birthdate ? birthdate : ""}
       />
-      {isLoading ? (
+      {isSubmitLoading ? (
         <ActivityIndicator size='small' color={colors.theme} />
       ) : (
         <View style={styles.button}>

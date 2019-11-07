@@ -123,9 +123,6 @@ const TabNavigator = createBottomTabNavigator(
       inactiveTintColor: "gray",
       showLabel: false
     }
-    // navigationOptions: ({ navigation }) => ({
-    //   console.log()
-    // })
   }
 );
 

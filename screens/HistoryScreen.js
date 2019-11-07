@@ -9,7 +9,7 @@ import {
   FlatList
 } from "react-native";
 
-const History = () => {
+const History = props => {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>History Screen</Text>
