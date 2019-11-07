@@ -9,12 +9,14 @@ import thunk from "redux-thunk";
 import AppNavigator from "./navigation/MainNavigator";
 import authReducer from "./store/reducers/auth";
 import forgotPasswordReducer from "./store/reducers/forgotPassword";
+import attributes from "./store/reducers/attributes";
 
 // Reactotron.configure().useReactNative();
 
 const rootReducer = combineReducers({
   auth: authReducer,
-  forgotPassword: forgotPasswordReducer
+  forgotPassword: forgotPasswordReducer,
+  attributes: attributes
 });
 
 const store = createStore(rootReducer, applyMiddleware(thunk));

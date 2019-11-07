@@ -28,6 +28,7 @@ const ChangeNameModal = props => {
     const type = "name";
     setLoading(true);
     authActions.addAttribute(value, type, setLoading);
+    setLoading(false);
     props.navigation.navigate("SettingScreen");
   };
 
