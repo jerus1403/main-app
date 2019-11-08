@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import { View, StatusBar, ActivityIndicator, StyleSheet } from "react-native";
 
 import { GetAccessToken, GetUserData } from "../utils/utils";
