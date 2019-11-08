@@ -23,7 +23,7 @@ const SettingsScreen = props => {
   [isLoading, setLoading] = useState(false);
   [value, onChangeText] = useState("Your Name");
 
-  const settingList = [
+  const accountList = [
     {
       name: "Change Name",
       route: "ChangeName"
@@ -37,26 +37,54 @@ const SettingsScreen = props => {
       route: "VerifyAddress"
     }
   ];
+  const pictureList = [
+    {
+      name: "Profile Picture",
+      route: "ChangeProfilePicture"
+    }
+  ];
   return (
     <KeyboardAvoidingView style={styles.container}>
-      <Text style={styles.subTitle}>Account</Text>
-      {settingList.map(item => {
-        return (
-          <TouchableOpacity
-            key={item.route}
-            style={styles.listItem}
-            onPress={() => props.navigation.navigate(item.route)}
-          >
-            <Text style={styles.functionalButton}>{item.name}</Text>
-            <Ionicons
-              style={styles.buttonIcon}
-              name='ios-arrow-forward'
-              size={20}
-              color={colors.easyGreen}
-            />
-          </TouchableOpacity>
-        );
-      })}
+      <ScrollView>
+        <Text style={styles.subTitle}>Account</Text>
+        <FlatList
+          data={accountList}
+          keyExtractor={item => item.route}
+          renderItem={({ item }) => (
+            <TouchableOpacity
+              style={styles.listItem}
+              onPress={() => props.navigation.navigate(item.route)}
+            >
+              <Text style={styles.functionalButton}>{item.name}</Text>
+              <Ionicons
+                style={styles.buttonIcon}
+                name='ios-arrow-forward'
+                size={20}
+                color={colors.fadedGrey}
+              />
+            </TouchableOpacity>
+          )}
+        />
+        <Text style={styles.subTitle}>Picture</Text>
+        <FlatList
+          data={pictureList}
+          keyExtractor={item => item.route}
+          renderItem={({ item }) => (
+            <TouchableOpacity
+              style={styles.listItem}
+              onPress={() => props.navigation.navigate(item.route)}
+            >
+              <Text style={styles.functionalButton}>{item.name}</Text>
+              <Ionicons
+                style={styles.buttonIcon}
+                name='ios-arrow-forward'
+                size={20}
+                color={colors.fadedGrey}
+              />
+            </TouchableOpacity>
+          )}
+        />
+      </ScrollView>
     </KeyboardAvoidingView>
   );
 };

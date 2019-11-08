@@ -69,24 +69,11 @@ styles = StyleSheet.create({
     backgroundColor: colors.lightWhite,
     paddingTop: 40
   },
-  authContainer: {
-    width: "80%",
-    maxWidth: 400,
-    maxHeight: 400,
-    padding: 20
-  },
   header: {
     fontSize: 30,
     textAlign: "center",
     marginTop: 30,
     marginBottom: 25
-  },
-  text: {
-    fontSize: 16,
-    textAlign: "center",
-    marginBottom: 30,
-    paddingRight: 40,
-    paddingLeft: 40
   },
   input: {
     height: 40,
