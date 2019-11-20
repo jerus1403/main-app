@@ -1,5 +1,6 @@
 import React, { useState, useReducer, useCallback, useEffect } from "react";
-import { Dimensions } from "react-native";
+import * as ImagePicker from "expo-image-picker";
+import * as Permissions from "expo-permissions";
 import { useDispatch, connect } from "react-redux";
 import {
   StyleSheet,
@@ -17,28 +18,105 @@ import {
 import { Ionicons } from "@expo/vector-icons";
 
 import { colors } from "../../styleUtility/colors";
+import { getTimeFieldValues } from "uuid-js";
+import * as authActions from "../../store/actions/auth";
+import * as profilePictureAction from "../../store/actions/profile";
 
 const ChangeProfilePictureModal = props => {
-  const submitHandler = async event => {
-    event.preventDefault();
+  const dispatch = useDispatch();
+  [pickedImage, setImage] = useState(null);
+  [isLoading, setLoading] = useState(false);
+
+  useEffect(() => {
+    //Get User Attributes
+    // const getUserData = async () => {
+    //   await authActions.retrieveUserData(
+    //     setLoading,
+    //     null,
+    //     null,
+    //     null,
+    //     null,
+    //     setImage
+    //   );
+    // };
+    // getUserData();
+  }, []);
+  //Ask Permission for Camera
+  const cameraPermission = async () => {
+    const result = await Permissions.askAsync(
+      Permissions.CAMERA,
+      Permissions.CAMERA_ROLL
+    );
+    if (result.status !== "granted") {
+      Alert.alert("You need to grant the camera access first!", [
+        { text: "OK" }
+      ]);
+      return false;
+    }
+    return true;
+  };
+  //Ask Permission for Gallery
+  const galleryPermission = async () => {
+    const result = await Permissions.askAsync(Permissions.CAMERA_ROLL);
+    if (result.status !== "granted") {
+      Alert.alert("You need to grant access to the gallery first!", [
+        { text: "OK" }
+      ]);
+      return false;
+    }
+    return true;
+  };
+  //Take Photo Handler
+  const takePhotoHandler = async () => {
+    const hasCameraPermission = await cameraPermission();
+    if (!hasCameraPermission) {
+      return;
+    }
+    ImagePicker.launchCameraAsync();
+  };
+  //Select Photo from Gallery Handler
+  const selectPhotoHandler = async () => {
+    const hasGalleryPermission = await galleryPermission();
+    if (!hasGalleryPermission) {
+      return;
+    }
+    const image = await ImagePicker.launchImageLibraryAsync({ base64: true });
+    // type = "picture";
+    // await dispatch(authActions.addAttribute(image.uri, type));
+    if (!image.cancelled) {
+      setImage(image.uri);
+      await dispatch(profilePictureAction.postProfilePicture(image));
+      console.log(image.uri, "image");
+    }
   };
 
   return (
     <KeyboardAvoidingView style={styles.screen}>
-      <Text style={styles.header}>Change your profile picture</Text>
-      <View style={styles.imageHolder}></View>
+      <Text style={styles.header}>Profile picture</Text>
+      <View>
+        {!pickedImage && !isLoading ? (
+          <Text>No image picked yet</Text>
+        ) : isLoading ? (
+          <ActivityIndicator color={colors.theme} size='small' />
+        ) : (
+          <Image
+            style={styles.profileImage}
+            source={{ uri: pickedImage ? pickedImage : "" }}
+          />
+        )}
+      </View>
       <View style={styles.button}>
         <Button
           title='TAKE PHOTO'
           color={colors.white}
-          onPress={submitHandler}
+          onPress={takePhotoHandler}
         />
       </View>
       <View style={styles.button}>
         <Button
           title='SELECT PHOTO'
           color={colors.white}
-          onPress={submitHandler}
+          onPress={selectPhotoHandler}
         />
       </View>
     </KeyboardAvoidingView>
@@ -52,12 +130,12 @@ styles = StyleSheet.create({
     backgroundColor: colors.lightWhite,
     paddingTop: 40
   },
-  imageHolder: {
-    backgroundColor: colors.invisible,
-    width: 200,
-    height: 200,
-    borderWidth: 1,
-    borderStyle: "dashed"
+  profileImage: {
+    alignSelf: "center",
+    height: 180,
+    width: 180,
+    borderRadius: 180 / 2,
+    marginBottom: 20
   },
   header: {
     fontSize: 30,
@@ -74,7 +152,8 @@ styles = StyleSheet.create({
     borderWidth: 1
   },
   button: {
-    marginTop: 30,
+    marginTop: 10,
+    width: "60%",
     backgroundColor: colors.theme
   }
 });

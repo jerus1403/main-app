@@ -14,7 +14,8 @@ import {
   LOG_OUT,
   CHANGE_NAME,
   CHANGE_BIRTHDATE,
-  CHANGE_ADDRESS
+  CHANGE_ADDRESS,
+  CHANGE_PICTURE
 } from "../types/types";
 
 import {
@@ -175,6 +176,12 @@ export const addAttribute = (value, type) => {
         Value: value
       };
     }
+    // else if (type === "picture") {
+    //   attribute = {
+    //     Name: "picture",
+    //     Value: value
+    //   };
+    // }
     var cognitoAttribute = new AmazonCognitoIdentity.CognitoUserAttribute(
       attribute
     );
@@ -199,6 +206,9 @@ export const addAttribute = (value, type) => {
           } else if (type === "address") {
             dispatch(changeValue(CHANGE_ADDRESS, value));
           }
+          // else if (type === "picture") {
+          //   dispatch(changeValue(CHANGE_PICTURE, value));
+          // }
           console.log(
             "Attribtue result: " + Object.prototype.valueOf(attributeList)
           );
@@ -246,6 +256,9 @@ export const retrieveUserData = (
               } else if (item.getName() === "address" && setAddress) {
                 setAddress(item.getValue());
               }
+              // else if (item.getName() === "picture" && setProfileImage) {
+              //   setProfileImage(item.getValue());
+              // }
             });
           });
         });

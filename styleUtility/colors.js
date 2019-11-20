@@ -5,5 +5,6 @@ export const colors = {
   lightWhite: "#f7f7f7",
   mainText: "black",
   fadedGrey: "#333333",
-  invisible: "#dddddd"
+  invisible: "#dddddd",
+  lightBlack: "#555555"
 };
