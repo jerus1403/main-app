@@ -17,7 +17,6 @@ import { Ionicons } from "@expo/vector-icons";
 import * as authActions from "../../store/actions/auth";
 
 import { colors } from "../../styleUtility/colors";
-import IconImage from "../../assets/icon.png";
 
 const Profile = props => {
   //REDUCER STATE
@@ -29,6 +28,7 @@ const Profile = props => {
   [birthdate, setBirthdate] = useState();
   [address, setAddress] = useState();
   [email, setEmail] = useState();
+  [profileImage, setProfileImage] = useState();
 
   const logUserOut = () => {
     dispatch(authActions.SignOutUser(props.navigation));
@@ -41,16 +41,24 @@ const Profile = props => {
     //Get User Attributes
     const getUserData = async () => {
       setLoading(true);
-      await authActions.retrieveUserData(
+      const result = await authActions.retrieveUserData(
         setLoading,
         setName,
         setEmail,
         setAddress,
-        setBirthdate
+        setBirthdate,
+        setProfileImage
       );
+      if (result) {
+        console.log(result, "RESULT");
+      }
     };
     getUserData();
   }, []);
+  if (profileImage) {
+    console.log(profileImage, "PROFILE IMAGE");
+  }
+  console.log(attributes.picture, "PROFILE ATTRIBUTE IMG");
   return (
     <ScrollView style={styles.container}>
       {isLoading ? (
@@ -60,7 +68,14 @@ const Profile = props => {
       ) : (
         <View>
           <View style={styles.backgroundSection}>
-            <Image source={IconImage} style={styles.profileImage} />
+            {attributes.picture == null && profileImage ? (
+              <Image source={{ uri: profileImage }} style={styles.userImage} />
+            ) : (
+              <Image
+                source={{ uri: attributes.picture }}
+                style={styles.userImage}
+              />
+            )}
             <View style={styles.profileSection}>
               <Text style={styles.name}>
                 {attributes.name === null && name ? name : attributes.name}
@@ -68,9 +83,8 @@ const Profile = props => {
             </View>
           </View>
           <View style={styles.accountSettingSection}>
-            <Text style={styles.userDetail}>User Detail</Text>
             <Text>
-              Birthday:{" "}
+              <Text>Birthday:</Text>{" "}
               {attributes.birthdate === null && birthdate
                 ? birthdate
                 : attributes.birthdate}
@@ -97,7 +111,7 @@ Profile.navigationOptions = ({ navigation }) => ({
       <Button
         title='Log Out'
         onPress={params.logOutButton}
-        color={colors.white}
+        color={colors.lightBlack}
       />
     );
   },
@@ -110,15 +124,11 @@ Profile.navigationOptions = ({ navigation }) => ({
         <Ionicons
           name='ios-settings'
           size={30}
-          color={colors.white}
+          color={colors.lightBlack}
           style={styles.icon}
         />
       </TouchableOpacity>
     );
-  },
-  headerStyle: {
-    backgroundColor: colors.theme,
-    color: colors.white
   }
 });
 
@@ -141,22 +151,21 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     padding: 20,
     height: "auto",
-    backgroundColor: colors.easyGreen
+    backgroundColor: colors.theme
   },
   profileSection: {
     flexDirection: "column",
     justifyContent: "center",
     padding: 20
   },
-  profileImage: {
+  userImage: {
     alignSelf: "center",
     height: 180,
     width: 180,
     borderRadius: 180 / 2
   },
-  userDetail: {
-    fontSize: 20,
-    fontWeight: "bold"
+  userDetailText: {
+    fontSize: 16
   },
   accountSettingSection: {
     minHeight: 100,
@@ -164,6 +173,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingVertical: 10,
     backgroundColor: colors.lightWhite
+    // borderTopWidth: 1,
+    // borderBottomWidth: 1,
+    // borderColor: colors.fadedGrey
   },
   settingButton: {
     marginHorizontal: 20
