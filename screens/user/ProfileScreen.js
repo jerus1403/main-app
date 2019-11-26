@@ -8,6 +8,7 @@ import {
   Button,
   FlatList,
   Image,
+  ImageBackground,
   TouchableOpacity,
   ActivityIndicator
 } from "react-native";
@@ -39,7 +40,7 @@ const Profile = props => {
       logOutButton: logUserOut
     });
     //Get User Attributes
-    const getUserData = async () => {
+    const getUserAttributes = async () => {
       setLoading(true);
       const result = await authActions.retrieveUserData(
         setLoading,
@@ -53,7 +54,7 @@ const Profile = props => {
         console.log(result, "RESULT");
       }
     };
-    getUserData();
+    getUserAttributes();
   }, []);
   if (profileImage) {
     console.log(profileImage, "PROFILE IMAGE");
@@ -67,35 +68,59 @@ const Profile = props => {
         </View>
       ) : (
         <View>
-          <View style={styles.backgroundSection}>
+          <ImageBackground style={styles.backgroundSection}>
             {attributes.picture == null && profileImage ? (
-              <Image source={{ uri: profileImage }} style={styles.userImage} />
+              <View style={styles.userImageContainer}>
+                <View style={styles.userImageFrame}>
+                  <Image
+                    source={{
+                      uri: `https://profile-image-main-app.s3.amazonaws.com/f829c9af-0fc7-4245-8df3-52b77857abbc.jpg`
+                    }}
+                    style={styles.userImage}
+                  />
+                </View>
+
+                <Text style={styles.name}>
+                  {attributes.name === null && name ? name : attributes.name}
+                </Text>
+              </View>
             ) : (
-              <Image
-                source={{ uri: attributes.picture }}
-                style={styles.userImage}
-              />
+              <View style={styles.userImageContainer}>
+                <View style={styles.userImageFrame}>
+                  <Image
+                    source={{
+                      uri: `https://profile-image-main-app.s3.amazonaws.com/f829c9af-0fc7-4245-8df3-52b77857abbc.jpg`
+                    }}
+                    style={styles.userImage}
+                  />
+                </View>
+                <Text style={styles.name}>
+                  {attributes.name === null && name ? name : attributes.name}
+                </Text>
+              </View>
             )}
-            <View style={styles.profileSection}>
-              <Text style={styles.name}>
-                {attributes.name === null && name ? name : attributes.name}
+          </ImageBackground>
+          <View style={styles.accountSettingSection}>
+            <View style={styles.listItem}>
+              <Text style={styles.label}>Birthday</Text>
+              <Text>
+                {attributes.birthdate === null && birthdate
+                  ? birthdate
+                  : attributes.birthdate}
               </Text>
             </View>
-          </View>
-          <View style={styles.accountSettingSection}>
-            <Text>
-              <Text>Birthday:</Text>{" "}
-              {attributes.birthdate === null && birthdate
-                ? birthdate
-                : attributes.birthdate}
-            </Text>
-            <Text>
-              Address:{" "}
-              {attributes.address === null && address
-                ? address
-                : attributes.address}
-            </Text>
-            <Text>Email: {email ? email : ""}</Text>
+            <View style={styles.listItem}>
+              <Text style={styles.label}>Address</Text>
+              <Text>
+                {attributes.address === null && address
+                  ? address
+                  : attributes.address}
+              </Text>
+            </View>
+            <View style={styles.listItem}>
+              <Text style={styles.label}>Email</Text>
+              <Text>{email ? email : ""}</Text>
+            </View>
           </View>
         </View>
       )}
@@ -139,43 +164,54 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginTop: "40%"
   },
-  name: {
-    fontSize: 20,
-    fontWeight: "bold"
-  },
-
   container: {
     flex: 1
   },
   backgroundSection: {
-    flexDirection: "row",
-    padding: 20,
-    height: "auto",
+    height: 150,
     backgroundColor: colors.theme
   },
-  profileSection: {
-    flexDirection: "column",
-    justifyContent: "center",
-    padding: 20
+  userImageContainer: {
+    alignSelf: "center",
+    position: "absolute",
+    top: 50
+  },
+  userImageFrame: {
+    padding: 5,
+    backgroundColor: colors.white,
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: colors.lightBlack
   },
   userImage: {
+    height: 160,
+    width: 160,
+    borderRadius: 10
+  },
+  name: {
+    // position: "relative",
     alignSelf: "center",
-    height: 180,
-    width: 180,
-    borderRadius: 180 / 2
+    fontSize: 20,
+    fontWeight: "bold"
   },
   userDetailText: {
     fontSize: 16
   },
   accountSettingSection: {
+    position: "relative",
+    top: 110,
     minHeight: 100,
     justifyContent: "space-between",
-    paddingHorizontal: 20,
-    paddingVertical: 10,
-    backgroundColor: colors.lightWhite
-    // borderTopWidth: 1,
-    // borderBottomWidth: 1,
-    // borderColor: colors.fadedGrey
+    paddingHorizontal: 20
+  },
+  listItem: {
+    borderBottomWidth: 1,
+    borderBottomColor: colors.lightBlack,
+    paddingVertical: 10
+  },
+  label: {
+    color: colors.theme,
+    fontWeight: "bold"
   },
   settingButton: {
     marginHorizontal: 20

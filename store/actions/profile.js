@@ -5,28 +5,30 @@ export const changeProfilePicture = result => ({
   payload: result
 });
 
-export const postProfilePicture = image => {
-  return dispatch => {
+export const postProfilePicture = imageData => {
+  return async dispatch => {
     const url =
       "https://yr19pxohlc.execute-api.us-east-1.amazonaws.com/dev/requestUploadURL";
-
-    // const formData = new FormData();
-    // formData.append("photo", {
-    //   data: image
-    // });
-    // const formData = {
-    //   file: image,
-    //   name: imageName,
-    //   type: `image/${imageType}`
-    // };
-    const data = JSON.stringify(image);
-
+    const data = JSON.stringify(imageData);
     const options = {
       method: "POST",
       body: data
     };
-    console.log(image.uri, "ACTION");
-    dispatch(changeProfilePicture(image.uri));
-    return fetch(url, options);
+    dispatch(changeProfilePicture(imageData.uri));
+    const response = await fetch(url, options);
+    return response;
+  };
+};
+
+export const getProfilePicture = userId => {
+  return async dispatch => {
+    const url =
+      "https://yr19pxohlc.execute-api.us-east-1.amazonaws.com/dev/getUserProfileImageURL";
+    const options = {
+      method: "GET",
+      body: userId
+    };
+    const response = await fetch(url, options);
+    return response;
   };
 };
