@@ -6,17 +6,24 @@ import {
   TextInput,
   View,
   Button,
-  FlatList
+  FlatList,
+  Dimensions
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { connect } from "react-redux";
+import MapView from "react-native-maps";
 
 import { GetUserData } from "../utils/utils";
 
 const Home = props => {
   // [token, setToken] = useState(null);
   // [tokenData, setTokenData] = useState({});
-
+  const mapRegion = {
+    latitude: 32.7763,
+    longitude: -96.7969,
+    latitudeDelta: 0.0922,
+    longitudeDelta: 0.0421
+  };
   const getToken = async () => {
     const data = await GetUserData();
     const convertedData = JSON.parse(data);
@@ -36,9 +43,10 @@ const Home = props => {
   };
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>This is Home Screen</Text>
+      {/* <Text style={styles.title}>This is Home Screen</Text>
       <Button title='Get Token' onPress={getToken} />
-      <Button title='Get Date' onPress={getTime} />
+      <Button title='Get Date' onPress={getTime} /> */}
+      <MapView initialRegion={mapRegion} style={styles.myMap} />
     </View>
   );
 };
@@ -55,6 +63,10 @@ const styles = StyleSheet.create({
   },
   container: {
     paddingTop: 50
+  },
+  myMap: {
+    width: Dimensions.get("window").width,
+    height: Dimensions.get("window").height
   }
 });
 

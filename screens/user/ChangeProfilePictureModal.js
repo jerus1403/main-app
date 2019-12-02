@@ -18,29 +18,56 @@ import {
 import { Ionicons } from "@expo/vector-icons";
 
 import { colors } from "../../styleUtility/colors";
-import { getTimeFieldValues } from "uuid-js";
-import * as authActions from "../../store/actions/auth";
+
+import { GetUserData } from "../../utils/utils";
 import * as profilePictureAction from "../../store/actions/profile";
 
 const ChangeProfilePictureModal = props => {
   const dispatch = useDispatch();
   [pickedImage, setImage] = useState(null);
   [isLoading, setLoading] = useState(false);
+  [userId, setUserId] = useState();
+  [fetchRes, setFetch] = useState();
 
   useEffect(() => {
-    //Get User Attributes
-    // const getUserData = async () => {
-    //   await authActions.retrieveUserData(
-    //     setLoading,
-    //     null,
-    //     null,
-    //     null,
-    //     null,
-    //     setImage
-    //   );
-    // };
-    // getUserData();
-  }, []);
+    const getUserId = async () => {
+      setLoading(true);
+      const data = await GetUserData();
+      if (data) {
+        const jsonData = JSON.parse(data);
+        const cognitoUserId = jsonData.userData.accessToken.payload.username;
+        setUserId(cognitoUserId);
+      }
+    };
+    getUserId();
+    if (userId) {
+      console.log(userId, "USER ID");
+      const bodyObj = {
+        user_id: userId,
+        type: "jpg"
+      };
+      // const fetchImage = () => {
+      const url =
+        "https://yr19pxohlc.execute-api.us-east-1.amazonaws.com/dev/getUserProfileImageURL";
+      const options = {
+        method: "POST",
+        body: JSON.stringify(bodyObj)
+      };
+      fetch(url, options)
+        .then(res => {
+          console.log(res.status, "RESPONSE");
+        })
+        .catch(err => {
+          console.log(err, "ERROR FETCHING");
+        });
+      setLoading(false);
+      // };
+      // fetchImage();
+    }
+  }, [userId]);
+
+  // console.log(fetchRes, "FETCH RESULT");
+
   //Ask Permission for Camera
   const cameraPermission = async () => {
     const result = await Permissions.askAsync(
@@ -55,6 +82,7 @@ const ChangeProfilePictureModal = props => {
     }
     return true;
   };
+
   //Ask Permission for Gallery
   const galleryPermission = async () => {
     const result = await Permissions.askAsync(Permissions.CAMERA_ROLL);
@@ -66,6 +94,7 @@ const ChangeProfilePictureModal = props => {
     }
     return true;
   };
+
   //Take Photo Handler
   const takePhotoHandler = async () => {
     const hasCameraPermission = await cameraPermission();
@@ -74,6 +103,7 @@ const ChangeProfilePictureModal = props => {
     }
     ImagePicker.launchCameraAsync();
   };
+
   //Select Photo from Gallery Handler
   const selectPhotoHandler = async () => {
     const hasGalleryPermission = await galleryPermission();
@@ -81,12 +111,21 @@ const ChangeProfilePictureModal = props => {
       return;
     }
     const image = await ImagePicker.launchImageLibraryAsync({ base64: true });
-    // type = "picture";
-    // await dispatch(authActions.addAttribute(image.uri, type));
-    if (!image.cancelled) {
+    const imageName = image.uri.split("/").pop();
+    const imageArray = imageName.split(".");
+    const imageType = imageArray[imageArray.length - 1];
+    if (!image.cancelled && userId) {
       setImage(image.uri);
-      await dispatch(profilePictureAction.postProfilePicture(image));
-      console.log(image.uri, "image");
+      const imageObject = {
+        data: image.base64,
+        name: `${userId}.${imageType}`,
+        type: imageType,
+        uri: image.uri
+      };
+      const result = await dispatch(
+        profilePictureAction.postProfilePicture(imageObject)
+      );
+      // console.log(result, "image");
     }
   };
 

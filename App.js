@@ -4,6 +4,8 @@ import { AppLoading } from "expo";
 import { createStore, combineReducers, applyMiddleware } from "redux";
 import { Provider } from "react-redux";
 import thunk from "redux-thunk";
+import { YellowBox } from "react-native";
+
 // import Reactotron from "reactotron-react-native";
 
 import AppNavigator from "./navigation/MainNavigator";
@@ -11,6 +13,7 @@ import authReducer from "./store/reducers/auth";
 import forgotPasswordReducer from "./store/reducers/forgotPassword";
 import attributes from "./store/reducers/attributes";
 
+YellowBox.ignoreWarnings(["Remote debugger"]);
 // Reactotron.configure().useReactNative();
 
 const rootReducer = combineReducers({
