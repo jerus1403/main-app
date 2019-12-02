@@ -9,11 +9,35 @@ import {
   FlatList
 } from "react-native";
 
+import { ProgressSteps, ProgressStep } from "react-native-progress-steps";
+
+import PhotoComponent from "../components/PostItem/PhotoStep/PhotoComponent";
+import { colors } from "../styleUtility/colors";
+
 const PostItem = props => {
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Post Item</Text>
-    </View>
+    <ScrollView style={styles.container}>
+      <ProgressSteps borderWidth={4}>
+        <ProgressStep label='Photo' nextBtnStyle={styles.nextButton}>
+          <PhotoComponent />
+        </ProgressStep>
+        <ProgressStep label='Detail'>
+          <View style={styles.content}>
+            <Text>This is the content within step 2!</Text>
+          </View>
+        </ProgressStep>
+        <ProgressStep label='Location'>
+          <View style={styles.content}>
+            <Text>This is the content within step 3!</Text>
+          </View>
+        </ProgressStep>
+        <ProgressStep label='Rate'>
+          <View style={styles.content}>
+            <Text>This is the content within step 4!</Text>
+          </View>
+        </ProgressStep>
+      </ProgressSteps>
+    </ScrollView>
   );
 };
 
@@ -22,12 +46,15 @@ PostItem.navigationOptions = {
 };
 
 const styles = StyleSheet.create({
-  title: {
-    fontSize: 20,
-    textAlign: "center"
-  },
   container: {
-    paddingTop: 50
+    flex: 1
+  },
+  content: {
+    height: "80%",
+    alignItems: "center"
+  },
+  nextButton: {
+    padding: 4
   }
 });
 
