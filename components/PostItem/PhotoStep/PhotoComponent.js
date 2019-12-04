@@ -13,11 +13,14 @@ import {
   FlatList,
   KeyboardAvoidingView,
   ActivityIndicator,
-  Alert
+  Alert,
+  TouchableOpacity
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 
 import { colors } from "../../../styleUtility/colors";
+import ThumbnailModule from "./ThumbnailModule";
+import ImageListModule from "./ImageListModule";
 
 const PhotoComponent = props => {
   [imageArray, setImgArray] = useState([]);
@@ -51,16 +54,15 @@ const PhotoComponent = props => {
   //Select Photo from Gallery Handler
   const selectPhotoHandler = async () => {
     const hasGalleryPermission = await galleryPermission();
-    let arr = [];
     if (!hasGalleryPermission) {
       return;
     }
     const image = await ImagePicker.launchImageLibraryAsync({ base64: true });
-    const imageName = image.uri.split("/").pop();
-    const imageArray = imageName.split(".");
-    const imageType = imageArray[imageArray.length - 1];
 
     if (!image.cancelled) {
+      const imageName = image.uri.split("/").pop();
+      const imageArray = imageName.split(".");
+      const imageType = imageArray[imageArray.length - 1];
       const imageObj = {
         data: image.base64,
         type: imageType,
@@ -70,44 +72,25 @@ const PhotoComponent = props => {
     }
   };
 
-  const displayImages = () => {
-    if (imageArray) {
-      return imageArray.map(el => {
-        console.log(el, "ELEMENT");
-        return (
-          <View key={el.uri} style={styles.imageContainer}>
-            <Image
-              style={styles.postImage}
-              source={{ uri: el.uri ? el.uri : "" }}
-            />
-          </View>
-        );
-      });
-    }
-  };
-
-  console.log(imageArray, "IMAGEs");
+  console.log(imageArray.length, "LENGTH");
   return (
     <View>
-      {imageArray.length == 0 ? (
+      {imageArray.length > 0 ? (
         <View style={styles.container}>
+          <ThumbnailModule image={imageArray[0]} />
+          <ImageListModule
+            imageArray={imageArray}
+            selectPhotoHandler={selectPhotoHandler}
+          />
+        </View>
+      ) : (
+        <View>
           <View style={styles.buttons}>
             <Button title='TAKE PHOTO' color={colors.white} />
           </View>
           <View style={styles.buttons}>
             <Button
               title='SELECT PHOTO'
-              color={colors.white}
-              onPress={selectPhotoHandler}
-            />
-          </View>
-        </View>
-      ) : (
-        <View style={styles.container}>
-          <View>{displayImages()}</View>
-          <View style={styles.addButton}>
-            <Button
-              title='ADD'
               color={colors.white}
               onPress={selectPhotoHandler}
             />
@@ -120,26 +103,12 @@ const PhotoComponent = props => {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    alignItems: "center"
+    flex: 1
   },
   buttons: {
     marginTop: 10,
-    width: "60%",
-    backgroundColor: colors.theme
-  },
-  imageContainer: {
-    margin: 5
-  },
-  postImage: {
     alignSelf: "center",
-    height: 60,
-    width: 60
-  },
-  addButton: {
-    marginTop: 10,
-    width: 80,
-    height: "auto",
+    width: "60%",
     backgroundColor: colors.theme
   }
 });
