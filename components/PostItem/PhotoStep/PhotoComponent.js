@@ -23,7 +23,7 @@ import ThumbnailModule from "./ThumbnailModule";
 import ImageListModule from "./ImageListModule";
 
 const PhotoComponent = props => {
-  [imageArray, setImgArray] = useState([]);
+  [imageList, setImgArray] = useState([]);
   //Ask Permission for Camera
   const cameraPermission = async () => {
     const result = await Permissions.askAsync(
@@ -51,6 +51,16 @@ const PhotoComponent = props => {
     return true;
   };
 
+  //Check if object exists method
+  const checkObject = (obj, list) => {
+    let found = list.some(el => el.data === obj.data);
+    if (found) {
+      return true;
+    } else {
+      return false;
+    }
+  };
+
   //Select Photo from Gallery Handler
   const selectPhotoHandler = async () => {
     const hasGalleryPermission = await galleryPermission();
@@ -58,7 +68,6 @@ const PhotoComponent = props => {
       return;
     }
     const image = await ImagePicker.launchImageLibraryAsync({ base64: true });
-
     if (!image.cancelled) {
       const imageName = image.uri.split("/").pop();
       const imageArray = imageName.split(".");
@@ -68,19 +77,44 @@ const PhotoComponent = props => {
         type: imageType,
         uri: image.uri
       };
-      setImgArray(oldArr => [...oldArr, imageObj]);
+
+      if (!checkObject(imageObj, imageList)) {
+        setImgArray(oldArr => [...oldArr, imageObj]);
+      } else {
+        alert("Photo added already. Please choose another photo!");
+      }
     }
   };
 
-  console.log(imageArray.length, "LENGTH");
+  //Remove photo method from List
+  const removePhoto = id => {
+    let newList = imageList.filter(el => el.data !== id);
+    setImgArray([...newList]);
+  };
+
+  //Set covered photo
+  const setCoveredPhoto = indexB => {
+    let temp = imageList[0];
+    imageList[0] = imageList[indexB];
+    imageList[indexB] = temp;
+    setImgArray([...imageList]);
+    console.log(imageList, "LIST FROM SET FUNCTION");
+  };
+
+  useEffect(() => {
+    console.log(imageList, "IMAGE LIST");
+  }, [imageList]);
+
   return (
     <View>
-      {imageArray.length > 0 ? (
+      {imageList.length > 0 ? (
         <View style={styles.container}>
-          <ThumbnailModule image={imageArray[0]} />
+          <ThumbnailModule imageList={imageList} removePhoto={removePhoto} />
           <ImageListModule
-            imageArray={imageArray}
+            imageList={imageList}
             selectPhotoHandler={selectPhotoHandler}
+            removePhoto={removePhoto}
+            setCoveredPhoto={setCoveredPhoto}
           />
         </View>
       ) : (
