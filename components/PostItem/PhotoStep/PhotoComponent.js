@@ -14,16 +14,20 @@ import {
   KeyboardAvoidingView,
   ActivityIndicator,
   Alert,
-  TouchableOpacity
+  TouchableOpacity,
+  Dimensions
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 
 import { colors } from "../../../styleUtility/colors";
 import ThumbnailModule from "./ThumbnailModule";
 import ImageListModule from "./ImageListModule";
+import ImageViewerModal from "../../UI/ImageViewerModal";
+import * as post from "../../../store/actions/post";
 
-const PhotoComponent = props => {
-  [imageList, setImgArray] = useState([]);
+const PhotoComponent = ({ imageList, setImgArray, state }) => {
+  [isViewerVisible, setViewer] = useState(false);
+  [currentImgIndex, setIndex] = useState();
   //Ask Permission for Camera
   const cameraPermission = async () => {
     const result = await Permissions.askAsync(
@@ -75,7 +79,7 @@ const PhotoComponent = props => {
       const imageObj = {
         data: image.base64,
         type: imageType,
-        uri: image.uri
+        url: image.uri
       };
 
       if (!checkObject(imageObj, imageList)) {
@@ -98,27 +102,35 @@ const PhotoComponent = props => {
     imageList[0] = imageList[indexB];
     imageList[indexB] = temp;
     setImgArray([...imageList]);
-    console.log(imageList, "LIST FROM SET FUNCTION");
   };
-
-  useEffect(() => {
-    console.log(imageList, "IMAGE LIST");
-  }, [imageList]);
-
+  console.log(state.imageList, "REDUCER");
   return (
     <View>
       {imageList.length > 0 ? (
         <View style={styles.container}>
-          <ThumbnailModule imageList={imageList} removePhoto={removePhoto} />
+          <ThumbnailModule
+            imageList={imageList}
+            removePhoto={removePhoto}
+            setViewer={setViewer}
+            setIndex={setIndex}
+          />
           <ImageListModule
             imageList={imageList}
             selectPhotoHandler={selectPhotoHandler}
             removePhoto={removePhoto}
             setCoveredPhoto={setCoveredPhoto}
+            setViewer={setViewer}
+            setIndex={setIndex}
+          />
+          <ImageViewerModal
+            isViewerVisible={isViewerVisible}
+            imageList={imageList}
+            setViewer={setViewer}
+            currentImgIndex={currentImgIndex}
           />
         </View>
       ) : (
-        <View>
+        <View style={styles.container}>
           <View style={styles.buttons}>
             <Button title='TAKE PHOTO' color={colors.white} />
           </View>
@@ -140,11 +152,17 @@ const styles = StyleSheet.create({
     flex: 1
   },
   buttons: {
-    marginTop: 10,
     alignSelf: "center",
     width: "60%",
+    marginTop: 10,
     backgroundColor: colors.theme
   }
 });
 
-export default PhotoComponent;
+const mapStateToProps = state => {
+  return {
+    state: state.post
+  };
+};
+
+export default connect(mapStateToProps)(PhotoComponent);

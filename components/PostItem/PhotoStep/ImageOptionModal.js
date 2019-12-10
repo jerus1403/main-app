@@ -19,7 +19,8 @@ const ImageOptionModal = ({
   photoId,
   currentPhotoIndex,
   removePhoto,
-  setCoveredPhoto
+  setCoveredPhoto,
+  setViewer
 }) => {
   return (
     <View style={styles.container}>
@@ -33,7 +34,13 @@ const ImageOptionModal = ({
         </TouchableHighlight>
         <View style={styles.modalInsideView}>
           <TouchableOpacity style={styles.buttons}>
-            <Button title='View' />
+            <Button
+              title='View'
+              onPress={() => {
+                setViewer(true);
+                closeModal();
+              }}
+            />
           </TouchableOpacity>
           <TouchableOpacity style={styles.buttons}>
             <Button
@@ -87,12 +94,6 @@ const styles = StyleSheet.create({
     width: "90%",
     borderRadius: 5
   }
-  //   cancel: {
-  //     backgroundColor: colors.white,
-  //     marginHorizontal: 5,
-  //     width: "90%",
-  //     borderRadius: 5
-  //   }
 });
 
 export default ImageOptionModal;
