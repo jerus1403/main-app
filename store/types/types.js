@@ -19,3 +19,5 @@ export const CHANGE_BIRTHDATE = "CHANGE_BIRTHDATE";
 export const CHANGE_ADDRESS = "CHANGE_ADDRESS";
 export const CHANGE_EMAIL = "CHANGE_EMAIL";
 export const CHANGE_PICTURE = "CHANGE_PICTURE";
+
+export const ADD_IMAGES = "ADD_IMAGES";

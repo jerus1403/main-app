@@ -18,45 +18,44 @@ import { Ionicons } from "@expo/vector-icons";
 
 import { shadow, colors } from "../../../styleUtility/colors";
 
-const ThumbnailModule = ({ imageList, removePhoto }) => {
-  // useEffect(() => {
-  //   console.log(imageList, "IMAGE LIST");
-  // }, [imageList]);
+const ThumbnailModule = ({ imageList, removePhoto, setViewer, setIndex }) => {
   return (
-    <ImageBackground
-      source={{ uri: imageList[0].uri }}
-      style={[styles.thumbnailContainter, shadow.shadow_one]}
+    <TouchableOpacity
+      onPress={() => {
+        setIndex(0);
+        setViewer(true);
+      }}
+      style={[styles.container, shadow.shadow_one]}
     >
-      <TouchableOpacity
-        style={styles.deleteButton}
-        onPress={() => removePhoto(imageList[0].data)}
+      <ImageBackground
+        source={{ uri: imageList[0].url }}
+        style={styles.thumbnailContainter}
       >
-        <Ionicons
-          name='ios-close-circle'
-          size={30}
-          color={colors.theme}
-          style={styles.icon}
-        />
-      </TouchableOpacity>
-      {/* <Image source={{ uri: imageList[0].uri }} style={styles.thumbnailImage} /> */}
-    </ImageBackground>
+        <TouchableOpacity
+          style={styles.deleteButton}
+          onPress={() => removePhoto(imageList[0].data)}
+        >
+          <Ionicons
+            name='ios-close-circle'
+            size={30}
+            color={colors.theme}
+            style={styles.icon}
+          />
+        </TouchableOpacity>
+      </ImageBackground>
+    </TouchableOpacity>
   );
 };
 
 const styles = StyleSheet.create({
-  thumbnailContainter: {
-    flex: 1,
-    marginVertical: 10,
+  container: {
     marginTop: 30,
-    width: "90%",
-    height: 170,
-    borderRadius: 5,
-    alignSelf: "center"
+    marginBottom: 5,
+    borderRadius: 5
   },
-  thumbnailImage: {
-    borderRadius: 5,
-    height: 170,
-    width: "100%"
+  thumbnailContainter: {
+    width: "100%",
+    height: 200
   },
   deleteButton: {
     width: 30,
@@ -68,8 +67,6 @@ const styles = StyleSheet.create({
     top: -15
   },
   icon: {
-    // borderRadius: 15,
-    // backgroundColor: colors.lightBlack,
     alignSelf: "center"
   }
 });

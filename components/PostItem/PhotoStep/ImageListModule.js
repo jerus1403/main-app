@@ -22,7 +22,9 @@ const ImageListModule = ({
   imageList,
   selectPhotoHandler,
   removePhoto,
-  setCoveredPhoto
+  setCoveredPhoto,
+  setViewer,
+  setIndex
 }) => {
   [isModalVisible, setModal] = useState(false);
   [photoId, setPhotoId] = useState();
@@ -38,10 +40,6 @@ const ImageListModule = ({
     setModal(false);
   };
 
-  // useEffect(() => {
-  //   console.log(imageList, "IMAGE LIST");
-  // }, [imageList]);
-
   return (
     <View style={styles.container}>
       <View style={styles.list}>
@@ -51,14 +49,17 @@ const ImageListModule = ({
               <TouchableOpacity
                 key={item.data}
                 style={[styles.imageContainer, shadow.shadow_one]}
-                onPress={() => openModal(item.data, index)}
+                onPress={() => {
+                  setIndex(index);
+                  openModal(item.data, index);
+                }}
               >
-                <Image style={styles.postImage} source={{ uri: item.uri }} />
+                <Image style={styles.postImage} source={{ uri: item.url }} />
               </TouchableOpacity>
             );
           }
         })}
-        {imageList.length < 5 ? (
+        {imageList.length < 6 ? (
           <TouchableOpacity
             style={[styles.addButton, shadow.shadow_one]}
             onPress={selectPhotoHandler}
@@ -79,6 +80,7 @@ const ImageListModule = ({
         closeModal={closeModal}
         removePhoto={removePhoto}
         setCoveredPhoto={setCoveredPhoto}
+        setViewer={setViewer}
       />
     </View>
   );
@@ -89,8 +91,7 @@ const styles = StyleSheet.create({
     marginTop: 5,
     paddingBottom: 10,
     flex: 1,
-    width: "90%",
-    alignSelf: "center"
+    width: "100%"
   },
   list: {
     flex: 1,
@@ -108,7 +109,6 @@ const styles = StyleSheet.create({
   },
   addButton: {
     justifyContent: "center",
-    alignItems: "center",
     flexDirection: "row",
     width: 60,
     height: 60

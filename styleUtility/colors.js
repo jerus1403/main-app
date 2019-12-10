@@ -8,7 +8,8 @@ export const colors = {
   mainText: "black",
   fadedGrey: "#333333",
   invisible: "#dddddd",
-  lightBlack: "#555555"
+  lightBlack: "#555555",
+  mainGreen: "#4bb543"
 };
 
 export const shadow = StyleSheet.create({
