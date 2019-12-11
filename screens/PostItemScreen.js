@@ -9,7 +9,7 @@ import {
   FlatList,
   Dimensions
 } from "react-native";
-import { useDispatch, connect } from "react-redux";
+import { useDispatch, connect, getState } from "react-redux";
 import { ProgressSteps, ProgressStep } from "react-native-progress-steps";
 
 import { colors } from "../styleUtility/colors";
@@ -17,22 +17,37 @@ import * as post from "../store/actions/post";
 
 import PhotoComponent from "../components/PostItem/PhotoStep/PhotoComponent";
 import DetailComponent from "../components/PostItem/DetailStep/DetailComponent";
+import LocationComponent from "../components/PostItem/LocationStep/LocationComponent";
 
 const PostItem = props => {
   const dispatch = useDispatch();
   [imageList, setImgArray] = useState([]);
+  [categoryList, setCategory] = useState([]);
+  [title, setTitle] = useState(null);
+  [description, setDescription] = useState(null);
 
   useEffect(() => {
     dispatch(post.addImages(imageList));
-  }, [imageList]);
-
+    dispatch(post.addCategories(categoryList));
+    dispatch(post.addTitle(title));
+    dispatch(post.addDescription(description));
+  }, [imageList, categoryList, title, description]);
+  console.log(props.reducer, "Reducer");
   return (
     <View style={styles.container}>
-      <ProgressSteps borderWidth={4}>
+      <ProgressSteps
+        borderWidth={4}
+        activeStepIconBorderColor={colors.theme}
+        completedProgressBarColor={colors.theme}
+        completedStepIconColor={colors.theme}
+        activeLabelColor={colors.theme}
+        activeStepNumColor={colors.theme}
+      >
         <ProgressStep
           label='Photo'
           nextBtnStyle={styles.nextButton}
           nextBtnTextStyle={styles.btnTextStyle}
+          nextBtnDisabled={imageList.length == 0 ? true : false}
         >
           <View style={styles.content}>
             <PhotoComponent imageList={imageList} setImgArray={setImgArray} />
@@ -44,9 +59,19 @@ const PostItem = props => {
           nextBtnTextStyle={styles.btnTextStyle}
           previousBtnStyle={styles.prevButton}
           previousBtnTextStyle={styles.btnTextStyle}
+          nextBtnDisabled={
+            categoryList.length == 0 || title == null ? true : false
+          }
         >
           <View style={styles.content}>
-            <DetailComponent />
+            <DetailComponent
+              categoryList={categoryList}
+              setCategory={setCategory}
+              title={title}
+              setTitle={setTitle}
+              description={description}
+              setDescription={setDescription}
+            />
           </View>
         </ProgressStep>
         <ProgressStep
@@ -57,7 +82,7 @@ const PostItem = props => {
           previousBtnTextStyle={styles.btnTextStyle}
         >
           <View style={styles.content}>
-            <Text>This is the content within step 3!</Text>
+            <LocationComponent />
           </View>
         </ProgressStep>
         <ProgressStep
@@ -92,14 +117,16 @@ const styles = StyleSheet.create({
     width: "90%"
   },
   nextButton: {
-    padding: 5,
-    width: 80,
+    padding: 10,
+    width: 100,
+    borderRadius: 5,
     backgroundColor: colors.theme,
     color: colors.white
   },
   prevButton: {
-    padding: 5,
-    width: 80,
+    padding: 10,
+    width: 100,
+    borderRadius: 5,
     backgroundColor: colors.theme
   },
   btnTextStyle: {
@@ -108,4 +135,10 @@ const styles = StyleSheet.create({
   }
 });
 
-export default PostItem;
+const mapStateToProps = state => {
+  return {
+    reducer: state.post
+  };
+};
+
+export default connect(mapStateToProps)(PostItem);

@@ -25,7 +25,7 @@ import ImageListModule from "./ImageListModule";
 import ImageViewerModal from "../../UI/ImageViewerModal";
 import * as post from "../../../store/actions/post";
 
-const PhotoComponent = ({ imageList, setImgArray, state }) => {
+const PhotoComponent = ({ imageList, setImgArray, reducer }) => {
   [isViewerVisible, setViewer] = useState(false);
   [currentImgIndex, setIndex] = useState();
   //Ask Permission for Camera
@@ -103,7 +103,7 @@ const PhotoComponent = ({ imageList, setImgArray, state }) => {
     imageList[indexB] = temp;
     setImgArray([...imageList]);
   };
-  console.log(state.imageList, "REDUCER");
+
   return (
     <View>
       {imageList.length > 0 ? (
@@ -130,7 +130,7 @@ const PhotoComponent = ({ imageList, setImgArray, state }) => {
           />
         </View>
       ) : (
-        <View style={styles.container}>
+        <View style={styles.buttonContainer}>
           <View style={styles.buttons}>
             <Button title='TAKE PHOTO' color={colors.white} />
           </View>
@@ -151,17 +151,23 @@ const styles = StyleSheet.create({
   container: {
     flex: 1
   },
+  buttonContainer: {
+    flex: 1,
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center"
+  },
   buttons: {
     alignSelf: "center",
     width: "60%",
     marginTop: 10,
-    backgroundColor: colors.theme
+    backgroundColor: colors.mainGreen
   }
 });
 
 const mapStateToProps = state => {
   return {
-    state: state.post
+    reducer: state.post
   };
 };
 

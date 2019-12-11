@@ -1,7 +1,22 @@
-import { ADD_IMAGES } from "../types/types";
+import {
+  ADD_IMAGES,
+  ADD_CATEGORIES,
+  ADD_TITLE,
+  ADD_DESCRIPTION,
+  ADD_LOCATION,
+  ADD_RATE
+} from "../types/types";
 
 const initialState = {
-  imageList: []
+  imageList: [],
+  categoryList: [],
+  title: null,
+  description: null,
+  location: {
+    latitute: null,
+    longiture: null
+  },
+  rate: null
 };
 
 const postReducer = (state = initialState, action) => {
@@ -10,6 +25,21 @@ const postReducer = (state = initialState, action) => {
       return {
         ...state,
         imageList: action.payload
+      };
+    case ADD_CATEGORIES:
+      return {
+        ...state,
+        categoryList: action.payload
+      };
+    case ADD_TITLE:
+      return {
+        ...state,
+        title: action.payload
+      };
+    case ADD_DESCRIPTION:
+      return {
+        ...state,
+        description: action.payload
       };
     default:
       return state;
