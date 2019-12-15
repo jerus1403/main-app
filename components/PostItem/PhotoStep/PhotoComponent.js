@@ -23,7 +23,8 @@ import { colors } from "../../../styleUtility/colors";
 import ThumbnailModule from "./ThumbnailModule";
 import ImageListModule from "./ImageListModule";
 import ImageViewerModal from "../../UI/ImageViewerModal";
-import * as post from "../../../store/actions/post";
+import ButtonModule from "../../UI/ButtonModule";
+import { fonts } from "../../../styleUtility/fonts";
 
 const PhotoComponent = ({ imageList, setImgArray, reducer }) => {
   [isViewerVisible, setViewer] = useState(false);
@@ -131,16 +132,12 @@ const PhotoComponent = ({ imageList, setImgArray, reducer }) => {
         </View>
       ) : (
         <View style={styles.buttonContainer}>
-          <View style={styles.buttons}>
-            <Button title='TAKE PHOTO' color={colors.white} />
-          </View>
-          <View style={styles.buttons}>
-            <Button
-              title='SELECT PHOTO'
-              color={colors.white}
-              onPress={selectPhotoHandler}
-            />
-          </View>
+          <ButtonModule style={styles.buttons} onPress={cameraPermission}>
+            <Text style={[styles.buttonText, fonts.text]}>TAKE PHOTO</Text>
+          </ButtonModule>
+          <ButtonModule style={styles.buttons} onPress={selectPhotoHandler}>
+            <Text style={[styles.buttonText, fonts.text]}>SELECT PHOTO</Text>
+          </ButtonModule>
         </View>
       )}
     </View>
@@ -161,7 +158,13 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     width: "60%",
     marginTop: 10,
-    backgroundColor: colors.mainGreen
+    backgroundColor: colors.theme,
+    paddingVertical: 15,
+    borderRadius: 5
+  },
+  buttonText: {
+    color: colors.white,
+    textAlign: "center"
   }
 });
 
