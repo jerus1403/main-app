@@ -13,6 +13,7 @@ import { useDispatch, connect, getState } from "react-redux";
 import { ProgressSteps, ProgressStep } from "react-native-progress-steps";
 
 import { colors } from "../styleUtility/colors";
+import { fonts } from "../styleUtility/fonts";
 import * as post from "../store/actions/post";
 
 import PhotoComponent from "../components/PostItem/PhotoStep/PhotoComponent";
@@ -25,14 +26,18 @@ const PostItem = props => {
   [categoryList, setCategory] = useState([]);
   [title, setTitle] = useState(null);
   [description, setDescription] = useState(null);
+  [latitude, setLatitude] = useState(null);
+  [longitude, setLongitude] = useState(null);
 
   useEffect(() => {
     dispatch(post.addImages(imageList));
     dispatch(post.addCategories(categoryList));
     dispatch(post.addTitle(title));
     dispatch(post.addDescription(description));
-  }, [imageList, categoryList, title, description]);
+  }, [imageList, categoryList, title, description, latitude, longitude]);
   console.log(props.reducer, "Reducer");
+  console.log(latitude, "LAT");
+  console.log(longitude, "LONG");
   return (
     <View style={styles.container}>
       <ProgressSteps
@@ -47,7 +52,7 @@ const PostItem = props => {
           label='Photo'
           nextBtnStyle={styles.nextButton}
           nextBtnTextStyle={styles.btnTextStyle}
-          nextBtnDisabled={imageList.length == 0 ? true : false}
+          // nextBtnDisabled={imageList.length == 0 ? true : false}
         >
           <View style={styles.content}>
             <PhotoComponent imageList={imageList} setImgArray={setImgArray} />
@@ -59,9 +64,9 @@ const PostItem = props => {
           nextBtnTextStyle={styles.btnTextStyle}
           previousBtnStyle={styles.prevButton}
           previousBtnTextStyle={styles.btnTextStyle}
-          nextBtnDisabled={
-            categoryList.length == 0 || title == null ? true : false
-          }
+          // nextBtnDisabled={
+          //   categoryList.length == 0 || title == null ? true : false
+          // }
         >
           <View style={styles.content}>
             <DetailComponent
@@ -82,7 +87,12 @@ const PostItem = props => {
           previousBtnTextStyle={styles.btnTextStyle}
         >
           <View style={styles.content}>
-            <LocationComponent />
+            <LocationComponent
+              setLatitude={setLatitude}
+              setLongitude={setLongitude}
+              latitude={latitude}
+              longitude={longitude}
+            />
           </View>
         </ProgressStep>
         <ProgressStep
@@ -117,21 +127,22 @@ const styles = StyleSheet.create({
     width: "90%"
   },
   nextButton: {
-    padding: 10,
-    width: 100,
+    padding: 7,
+    width: Dimensions.get("window").width / 4 + 10,
     borderRadius: 5,
     backgroundColor: colors.theme,
     color: colors.white
   },
   prevButton: {
-    padding: 10,
-    width: 100,
+    padding: 7,
+    width: Dimensions.get("window").width / 4 + 10,
     borderRadius: 5,
     backgroundColor: colors.theme
   },
   btnTextStyle: {
     textAlign: "center",
-    color: colors.white
+    color: colors.white,
+    fontSize: 15
   }
 });
 

@@ -28,6 +28,7 @@ import { Ionicons } from "@expo/vector-icons";
 import MultiSelect from "react-native-multiple-select";
 
 import { colors } from "../../../styleUtility/colors";
+import { fonts } from "../../../styleUtility/fonts";
 
 const DetailComponent = ({
   categoryList,
@@ -69,7 +70,7 @@ const DetailComponent = ({
   return (
     <View style={styles.container}>
       <View style={styles.section}>
-        <Text style={styles.sectionLabel}>Categories</Text>
+        <Text style={fonts.label}>Categories</Text>
         <MultiSelect
           hideTags
           items={data}
@@ -93,7 +94,6 @@ const DetailComponent = ({
                       name='ios-close-circle-outline'
                       size={20}
                       color={colors.white}
-                      //   style={styles.icon}
                     />
                   </TouchableOpacity>
                 </View>
@@ -103,7 +103,7 @@ const DetailComponent = ({
         ) : null}
       </View>
       <View style={styles.section}>
-        <Text style={styles.sectionLabel}>Title</Text>
+        <Text style={fonts.label}>Title</Text>
         <TextInput
           style={styles.inputBox}
           onChangeText={text => setTitle(text)}
@@ -111,9 +111,9 @@ const DetailComponent = ({
         />
       </View>
       <View style={styles.section}>
-        <Text style={styles.sectionLabel}>Description (Optional)</Text>
+        <Text style={fonts.label}>Description (Optional)</Text>
         <TextInput
-          style={[styles.inputBox, { height: 180 }]}
+          style={[styles.inputBox, { height: 160 }]}
           onChangeText={text => setDescription(text)}
           value={description}
           multiline={true}
