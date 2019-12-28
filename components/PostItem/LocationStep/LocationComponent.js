@@ -5,8 +5,7 @@ import React, {
   useEffect,
   useRef
 } from "react";
-import * as ImagePicker from "expo-image-picker";
-import * as Permissions from "expo-permissions";
+
 import { useDispatch, connect } from "react-redux";
 import {
   StyleSheet,
@@ -26,10 +25,14 @@ import {
   Dimensions,
   Modal
 } from "react-native";
+import * as ImagePicker from "expo-image-picker";
+import * as Permissions from "expo-permissions";
 
 import { Ionicons } from "@expo/vector-icons";
 import Geocode from "react-geocode";
 import { GOOGLE_API_KEY } from "react-native-dotenv";
+import * as Location from "expo-location";
+import * as Permission from "expo-permissions";
 
 import ButtonModule from "../../UI/ButtonModule";
 import PinIcon from "../../../assets/pin_icon.png";
@@ -43,12 +46,33 @@ const LocationComponent = ({
   setLongitude
 }) => {
   [city, setCity] = useState(null);
+  [lat, setLat] = useState();
+  [long, setLong] = useState();
   [isModalOpen, setModal] = useState(false);
 
   useEffect(() => {
-    if (city !== null) {
-    }
+    // if (lat && long) {
+    //   Geocode.fromLatLng(lat, long).then(
+    //     response => {
+    //       console.log(response, "GEO RES");
+    //     },
+    //     error => {
+    //       console.log(error, "GEO ERROR");
+    //     }
+    //   );
+    // }
   }, [city]);
+
+  const permission = async () => {
+    const result = await Permissions.askAsync(Permissions.LOCATION);
+    if (result.status !== "granted") {
+      Alert.alert("You need to grant the location access first!", [
+        { text: "OK" }
+      ]);
+      return false;
+    }
+    return true;
+  };
 
   const saveLocation = name => {
     Geocode.fromAddress(name, GOOGLE_API_KEY).then(
@@ -64,15 +88,38 @@ const LocationComponent = ({
     );
   };
 
+  const getLocationHandler = async () => {
+    const isPermissionGranted = await permission();
+    if (!isPermissionGranted) {
+      return;
+    }
+    try {
+      const currentLocation = await Location.getCurrentPositionAsync({
+        timeOut: 5000
+      });
+      console.log(currentLocation);
+      setLatitude(currentLocation.coords.latitude);
+      setLongitude(currentLocation.coords.longitude);
+      //   setLat(currentLocation.coords.latitude);
+      //   setLong(currentLocation.coords.longitude);
+    } catch (err) {
+      alert("Location is not granted");
+    }
+  };
+
   return (
     <View style={styles.container}>
       <Image source={PinIcon} style={styles.pinIcon} />
       <Text style={[styles.heading, fonts.label]}>Locate Your Service</Text>
-      {latitude && longitude ? (
+      {latitude && longitude && city ? (
         <View>
-          <Text>
-            {latitude} + {longitude}
-          </Text>
+          <Text>{city}</Text>
+          <ButtonModule
+            style={styles.editButton}
+            onPress={() => setModal(true)}
+          >
+            <Text style={styles.editText}>Edit</Text>
+          </ButtonModule>
         </View>
       ) : (
         <ButtonModule
@@ -89,7 +136,10 @@ const LocationComponent = ({
             <Text style={[styles.headerText, fonts.text]}>Set Location</Text>
           </View>
           <View style={styles.innerContainer}>
-            <ButtonModule style={styles.locationBtnContainer}>
+            <ButtonModule
+              style={styles.locationBtnContainer}
+              onPress={getLocationHandler}
+            >
               <Ionicons name='ios-pin' size={20} color={colors.white} />
               <Text style={[fonts.text, styles.iconText]}>
                 Get current location
@@ -107,7 +157,6 @@ const LocationComponent = ({
               style={styles.footerButton}
               onPress={() => {
                 saveLocation(city);
-
                 setModal(false);
               }}
             >
@@ -131,6 +180,13 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     justifyContent: "space-evenly"
+  },
+  editButton: {
+    alignItems: "center"
+  },
+  editText: {
+    color: colors.mainGreen,
+    textDecorationLine: "underline"
   },
   pinIcon: {
     width: 100,

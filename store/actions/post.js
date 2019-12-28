@@ -35,3 +35,9 @@ export const addDescription = description => {
     dispatch(addFunc(ADD_DESCRIPTION, description));
   };
 };
+
+export const addLocation = location => {
+  return dispatch => {
+    dispatch(addFunc(ADD_LOCATION, location));
+  };
+};
