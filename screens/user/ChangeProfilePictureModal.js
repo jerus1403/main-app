@@ -101,7 +101,8 @@ const ChangeProfilePictureModal = props => {
     if (!hasCameraPermission) {
       return;
     }
-    ImagePicker.launchCameraAsync();
+    const cameraImage = await ImagePicker.launchCameraAsync();
+    console.log(cameraImage, "CAMERA IMAGE");
   };
 
   //Select Photo from Gallery Handler

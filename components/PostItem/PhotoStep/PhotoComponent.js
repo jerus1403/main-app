@@ -66,6 +66,16 @@ const PhotoComponent = ({ imageList, setImgArray, reducer }) => {
     }
   };
 
+  //Take Photo Handler
+  const takePhotoHandler = async () => {
+    const hasCameraPermission = await cameraPermission();
+    if (!hasCameraPermission) {
+      return;
+    }
+    const cameraImage = await ImagePicker.launchCameraAsync();
+    console.log(cameraImage, "CAMERA IMAGE");
+  };
+
   //Select Photo from Gallery Handler
   const selectPhotoHandler = async () => {
     const hasGalleryPermission = await galleryPermission();
@@ -132,7 +142,7 @@ const PhotoComponent = ({ imageList, setImgArray, reducer }) => {
         </View>
       ) : (
         <View style={styles.buttonContainer}>
-          <ButtonModule style={styles.buttons} onPress={cameraPermission}>
+          <ButtonModule style={styles.buttons} onPress={takePhotoHandler}>
             <Text style={[styles.buttonText, fonts.text]}>TAKE PHOTO</Text>
           </ButtonModule>
           <ButtonModule style={styles.buttons} onPress={selectPhotoHandler}>

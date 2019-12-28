@@ -41,6 +41,14 @@ const postReducer = (state = initialState, action) => {
         ...state,
         description: action.payload
       };
+    case ADD_LOCATION:
+      return {
+        ...state,
+        location: {
+          latitute: action.payload.lat,
+          longiture: action.payload.long
+        }
+      };
     default:
       return state;
   }

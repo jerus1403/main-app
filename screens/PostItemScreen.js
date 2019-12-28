@@ -34,6 +34,11 @@ const PostItem = props => {
     dispatch(post.addCategories(categoryList));
     dispatch(post.addTitle(title));
     dispatch(post.addDescription(description));
+    let location = {
+      lat: latitude,
+      long: longitude
+    };
+    dispatch(post.addLocation(location));
   }, [imageList, categoryList, title, description, latitude, longitude]);
   console.log(props.reducer, "Reducer");
   console.log(latitude, "LAT");
