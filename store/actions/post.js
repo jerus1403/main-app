@@ -41,3 +41,9 @@ export const addLocation = location => {
     dispatch(addFunc(ADD_LOCATION, location));
   };
 };
+
+export const addRate = rate => {
+  return dispatch => {
+    dispatch(addFunc(ADD_RATE, rate));
+  };
+};

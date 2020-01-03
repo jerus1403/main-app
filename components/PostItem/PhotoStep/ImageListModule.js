@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useCallback } from "react";
 import {
+  Modal,
   StyleSheet,
   Text,
   ScrollView,
@@ -11,33 +12,53 @@ import {
   KeyboardAvoidingView,
   ActivityIndicator,
   Alert,
-  TouchableOpacity
+  TouchableOpacity,
+  TouchableHighlight,
+  Platform,
+  Dimensions
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 
 import { colors, shadow } from "../../../styleUtility/colors";
 import ImageOptionModal from "./ImageOptionModal";
+import TakePhotoButtonModal from "./TakePhotoButtonModal";
 
 const ImageListModule = ({
   imageList,
-  selectPhotoHandler,
+  // selectPhotoHandler,
+  takePhotoHandler,
   removePhoto,
   setCoveredPhoto,
   setViewer,
-  setIndex
+  setIndex,
+  // isPhotoButtonModalVisible,
+  toggleButtonModal,
+  openModal,
+  toggleModal
 }) => {
-  [isModalVisible, setModal] = useState(false);
+  [isImageOptionModalVisible, setImageOptionModal] = useState(false);
+  // [isPhotoButtonModalVisible, setPhotoButtonModal] = useState(false);
   [photoId, setPhotoId] = useState();
   [currentPhotoIndex, setPhotoIndex] = useState();
 
-  const openModal = (id, index) => {
-    setModal(true);
-    setPhotoId(id);
-    setPhotoIndex(index);
+  const openPhotoModal = (id, index, type) => {
+    if (type === "imageOption" && id && index) {
+      setImageOptionModal(true);
+      setPhotoId(id);
+      setPhotoIndex(index);
+    }
+    // else if (type === "takePhoto") {
+    //   setPhotoButtonModal(true);
+    // }
   };
 
-  const closeModal = () => {
-    setModal(false);
+  const closeModal = type => {
+    if (type === "imageOption") {
+      setImageOptionModal(false);
+    }
+    // else if (type === "takePhoto") {
+    //   setPhotoButtonModal(false);
+    // }
   };
 
   return (
@@ -47,11 +68,11 @@ const ImageListModule = ({
           if (index != 0) {
             return (
               <TouchableOpacity
-                key={item.data}
+                key={item.id}
                 style={[styles.imageContainer, shadow.shadow_one]}
                 onPress={() => {
                   setIndex(index);
-                  openModal(item.data, index);
+                  openPhotoModal(item.id, index, "imageOption");
                 }}
               >
                 <Image style={styles.postImage} source={{ uri: item.url }} />
@@ -62,7 +83,7 @@ const ImageListModule = ({
         {imageList.length < 6 ? (
           <TouchableOpacity
             style={[styles.addButton, shadow.shadow_one]}
-            onPress={selectPhotoHandler}
+            onPress={() => toggleModal("photoButtonsModal")}
           >
             <Ionicons
               name='ios-add'
@@ -73,8 +94,15 @@ const ImageListModule = ({
           </TouchableOpacity>
         ) : null}
       </View>
+      <TakePhotoButtonModal
+        openModal={openModal}
+        // toggleButtonModal={toggleButtonModal}
+        // selectPhotoHandler={selectPhotoHandler}
+        takePhotoHandler={takePhotoHandler}
+        toggleModal={toggleModal}
+      />
       <ImageOptionModal
-        isModalVisible={isModalVisible}
+        isImageOptionModalVisible={isImageOptionModalVisible}
         photoId={photoId}
         currentPhotoIndex={currentPhotoIndex}
         closeModal={closeModal}

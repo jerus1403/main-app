@@ -75,9 +75,7 @@ const ChangeProfilePictureModal = props => {
       Permissions.CAMERA_ROLL
     );
     if (result.status !== "granted") {
-      Alert.alert("You need to grant the camera access first!", [
-        { text: "OK" }
-      ]);
+      alert("You need to grant the camera access first!");
       return false;
     }
     return true;
@@ -87,9 +85,7 @@ const ChangeProfilePictureModal = props => {
   const galleryPermission = async () => {
     const result = await Permissions.askAsync(Permissions.CAMERA_ROLL);
     if (result.status !== "granted") {
-      Alert.alert("You need to grant access to the gallery first!", [
-        { text: "OK" }
-      ]);
+      alert("You need to grant access to the gallery first!");
       return false;
     }
     return true;

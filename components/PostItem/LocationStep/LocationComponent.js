@@ -42,12 +42,11 @@ import { fonts } from "../../../styleUtility/fonts";
 const LocationComponent = ({
   latitude,
   longitude,
+  city,
   setLatitude,
-  setLongitude
+  setLongitude,
+  setCity
 }) => {
-  [city, setCity] = useState(null);
-  [lat, setLat] = useState();
-  [long, setLong] = useState();
   [isModalOpen, setModal] = useState(false);
 
   useEffect(() => {
@@ -66,9 +65,7 @@ const LocationComponent = ({
   const permission = async () => {
     const result = await Permissions.askAsync(Permissions.LOCATION);
     if (result.status !== "granted") {
-      Alert.alert("You need to grant the location access first!", [
-        { text: "OK" }
-      ]);
+      alert("You need to grant the location access first!");
       return false;
     }
     return true;
@@ -78,7 +75,6 @@ const LocationComponent = ({
     Geocode.fromAddress(name, GOOGLE_API_KEY).then(
       response => {
         const { lat, lng } = response.results[0].geometry.location;
-        console.log(lat, lng);
         setLatitude(lat);
         setLongitude(lng);
       },
@@ -97,11 +93,22 @@ const LocationComponent = ({
       const currentLocation = await Location.getCurrentPositionAsync({
         timeOut: 5000
       });
-      console.log(currentLocation);
+      console.log(currentLocation, "CURRENT LoCA");
       setLatitude(currentLocation.coords.latitude);
       setLongitude(currentLocation.coords.longitude);
-      //   setLat(currentLocation.coords.latitude);
-      //   setLong(currentLocation.coords.longitude);
+      Geocode.fromLatLng(
+        currentLocation.coords.latitude,
+        currentLocation.coords.longitude,
+        GOOGLE_API_KEY
+      ).then(
+        response => {
+          const address = response.results[4].formatted_address;
+          setCity(address);
+        },
+        error => {
+          console.log(error);
+        }
+      );
     } catch (err) {
       alert("Location is not granted");
     }
@@ -113,7 +120,7 @@ const LocationComponent = ({
       <Text style={[styles.heading, fonts.label]}>Locate Your Service</Text>
       {latitude && longitude && city ? (
         <View>
-          <Text>{city}</Text>
+          <Text style={[styles.locationText, fonts.subHeading]}>{city}</Text>
           <ButtonModule
             style={styles.editButton}
             onPress={() => setModal(true)}
@@ -149,6 +156,7 @@ const LocationComponent = ({
             <TextInput
               style={styles.inputBox}
               placeholder={city ? city : "City Name"}
+              placeholderTextColor={colors.lightBlack}
               onChangeText={text => setCity(text)}
             />
           </View>
@@ -180,6 +188,9 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     justifyContent: "space-evenly"
+  },
+  locationText: {
+    color: colors.darkBlue
   },
   editButton: {
     alignItems: "center"

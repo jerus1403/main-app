@@ -49,6 +49,11 @@ const postReducer = (state = initialState, action) => {
           longiture: action.payload.long
         }
       };
+    case ADD_RATE:
+      return {
+        ...state,
+        rate: action.payload
+      };
     default:
       return state;
   }
