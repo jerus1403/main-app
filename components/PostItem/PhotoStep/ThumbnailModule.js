@@ -33,7 +33,7 @@ const ThumbnailModule = ({ imageList, removePhoto, setViewer, setIndex }) => {
       >
         <TouchableOpacity
           style={styles.deleteButton}
-          onPress={() => removePhoto(imageList[0].data)}
+          onPress={() => removePhoto(imageList[0].id)}
         >
           <Ionicons
             name='ios-close-circle'

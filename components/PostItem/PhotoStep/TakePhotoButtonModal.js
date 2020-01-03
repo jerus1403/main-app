@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback } from "react";
 import {
   Modal,
   Text,
@@ -13,60 +13,51 @@ import {
 } from "react-native";
 import { colors } from "../../../styleUtility/colors";
 
-const ImageOptionModal = ({
-  isImageOptionModalVisible,
-  closeModal,
-  photoId,
-  currentPhotoIndex,
-  removePhoto,
-  setCoveredPhoto,
-  setViewer
+const TakePhotoButtonModal = ({
+  openModal,
+  //   isPhotoButtonModalVisible,
+  //   closeModal,
+  takePhotoHandler,
+  //   toggleButtonModal,
+  toggleModal
 }) => {
   return (
     <View style={styles.container}>
       <Modal
         animationType='slide'
         transparent={true}
-        visible={isImageOptionModalVisible}
+        visible={openModal.photoButtonsModal}
       >
         <TouchableHighlight
           style={styles.background}
-          onPress={() => closeModal("imageOption")}
+          onPress={() => toggleModal("photoButtonsModal")}
           underlayColor={"transparent"}
         >
           <View />
         </TouchableHighlight>
         <View style={styles.modalInsideView}>
           <TouchableOpacity style={styles.buttons}>
+            <Button title='Take Photo' onPress={takePhotoHandler} />
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.buttons}>
             <Button
-              title='View'
-              onPress={() => {
-                setViewer(true);
-                closeModal("imageOption");
-              }}
+              title='Select Photo'
+              onPress={
+                // selectPhotoHandler
+                () => {
+                  toggleModal("photoButtonsModal");
+                  setTimeout(() => {
+                    toggleModal("photoSelectorModal");
+                  }, 100);
+                }
+              }
             />
           </TouchableOpacity>
           <TouchableOpacity style={styles.buttons}>
             <Button
-              title='Set as Cover'
-              onPress={() => {
-                setCoveredPhoto(currentPhotoIndex);
-                closeModal("imageOption");
-              }}
+              title='Cancel'
+              onPress={() => toggleModal("photoButtonsModal")}
             />
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.buttons}>
-            <Button
-              title='Delete'
-              color={colors.theme}
-              onPress={() => {
-                removePhoto(photoId);
-                closeModal("imageOption");
-              }}
-            />
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.buttons}>
-            <Button title='Cancel' onPress={() => closeModal("imageOption")} />
           </TouchableOpacity>
         </View>
       </Modal>
@@ -100,4 +91,4 @@ const styles = StyleSheet.create({
   }
 });
 
-export default ImageOptionModal;
+export default TakePhotoButtonModal;

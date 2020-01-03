@@ -9,7 +9,8 @@ import {
   StyleSheet,
   Button,
   Platform,
-  Dimensions
+  Dimensions,
+  CameraRoll
 } from "react-native";
 import ImageViewer from "react-native-image-zoom-viewer";
 

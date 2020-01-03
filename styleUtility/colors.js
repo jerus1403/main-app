@@ -10,7 +10,8 @@ export const colors = {
   lightGray: "#ebebe4",
   invisible: "#dddddd",
   lightBlack: "#555555",
-  mainGreen: "#4bb543"
+  mainGreen: "#4bb543",
+  darkBlue: "#202E74"
 };
 
 export const shadow = StyleSheet.create({
