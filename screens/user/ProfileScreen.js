@@ -51,15 +51,16 @@ const Profile = props => {
         setProfileImage
       );
       if (result) {
-        console.log(result, "RESULT");
+        // console.log(result, "RESULT");
       }
     };
     getUserAttributes();
+    console.log(props, "PROFILE");
   }, []);
   if (profileImage) {
-    console.log(profileImage, "PROFILE IMAGE");
+    // console.log(profileImage, "PROFILE IMAGE");
   }
-  console.log(attributes.picture, "PROFILE ATTRIBUTE IMG");
+  // console.log(attributes.picture, "PROFILE ATTRIBUTE IMG");
   return (
     <ScrollView style={styles.container}>
       {isLoading ? (

@@ -1,21 +1,23 @@
 class Post {
   constructor(
-    id,
+    postId,
     userId,
-    categories,
+    categoryList,
     imageList,
     title,
-    detail,
-    coordinates,
+    description,
+    location,
     rate
   ) {
-    this.id = id;
+    this.postId = postId;
     this.userId = userId;
-    this.categories = categories;
+    this.categoryList = categoryList;
     this.imageList = imageList;
     this.title = title;
-    this.detail = detail;
-    this.coordinates = coordinates;
+    this.description = description;
+    this.location = location;
     this.rate = rate;
   }
 }
+
+export default Post;

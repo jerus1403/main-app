@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   StyleSheet,
   Text,
@@ -41,6 +41,11 @@ const Home = props => {
     console.log(new Date().getTime(), "TODAY");
     console.log(expiredToken, "DATE");
   };
+
+  useEffect(() => {
+    console.log(props, "HOME");
+  }, [props]);
+
   return (
     <View style={styles.container}>
       {/* <Text style={styles.title}>This is Home Screen</Text>
@@ -72,7 +77,7 @@ const styles = StyleSheet.create({
 
 const mapStateToProps = state => {
   return {
-    authState: state
+    state: state
   };
 };
 

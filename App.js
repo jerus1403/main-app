@@ -13,6 +13,7 @@ import authReducer from "./store/reducers/auth";
 import forgotPasswordReducer from "./store/reducers/forgotPassword";
 import attributes from "./store/reducers/attributes";
 import postReducer from "./store/reducers/post";
+import postsReducer from "./store/reducers/posts";
 
 YellowBox.ignoreWarnings(["Remote debugger"]);
 // Reactotron.configure().useReactNative();
@@ -21,7 +22,8 @@ const rootReducer = combineReducers({
   auth: authReducer,
   forgotPassword: forgotPasswordReducer,
   attributes: attributes,
-  post: postReducer
+  post: postReducer,
+  posts: postsReducer
 });
 
 const store = createStore(rootReducer, applyMiddleware(thunk));

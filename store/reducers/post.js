@@ -4,10 +4,14 @@ import {
   ADD_TITLE,
   ADD_DESCRIPTION,
   ADD_LOCATION,
-  ADD_RATE
+  ADD_RATE,
+  ADD_POST_ID,
+  ADD_USER_ID
 } from "../types/types";
 
 const initialState = {
+  postId: null,
+  userId: null,
   imageList: [],
   categoryList: [],
   title: null,
@@ -21,6 +25,16 @@ const initialState = {
 
 const postReducer = (state = initialState, action) => {
   switch (action.type) {
+    case ADD_POST_ID:
+      return {
+        ...state,
+        postId: action.payload
+      };
+    case ADD_USER_ID:
+      return {
+        ...state,
+        userId: action.payload
+      };
     case ADD_IMAGES:
       return {
         ...state,

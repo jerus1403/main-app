@@ -47,20 +47,7 @@ const LocationComponent = ({
   setLongitude,
   setCity
 }) => {
-  [isModalOpen, setModal] = useState(false);
-
-  useEffect(() => {
-    // if (lat && long) {
-    //   Geocode.fromLatLng(lat, long).then(
-    //     response => {
-    //       console.log(response, "GEO RES");
-    //     },
-    //     error => {
-    //       console.log(error, "GEO ERROR");
-    //     }
-    //   );
-    // }
-  }, [city]);
+  [isModalOpen, setLocationModal] = useState(false);
 
   const permission = async () => {
     const result = await Permissions.askAsync(Permissions.LOCATION);
@@ -93,7 +80,6 @@ const LocationComponent = ({
       const currentLocation = await Location.getCurrentPositionAsync({
         timeOut: 5000
       });
-      console.log(currentLocation, "CURRENT LoCA");
       setLatitude(currentLocation.coords.latitude);
       setLongitude(currentLocation.coords.longitude);
       Geocode.fromLatLng(
@@ -123,7 +109,7 @@ const LocationComponent = ({
           <Text style={[styles.locationText, fonts.subHeading]}>{city}</Text>
           <ButtonModule
             style={styles.editButton}
-            onPress={() => setModal(true)}
+            onPress={() => setLocationModal(true)}
           >
             <Text style={styles.editText}>Edit</Text>
           </ButtonModule>
@@ -131,7 +117,7 @@ const LocationComponent = ({
       ) : (
         <ButtonModule
           style={styles.getLocationButton}
-          onPress={() => setModal(true)}
+          onPress={() => setLocationModal(true)}
         >
           <Text style={styles.iconText}>Get Location</Text>
         </ButtonModule>
@@ -165,13 +151,13 @@ const LocationComponent = ({
               style={styles.footerButton}
               onPress={() => {
                 saveLocation(city);
-                setModal(false);
+                setLocationModal(false);
               }}
             >
               <Text style={styles.footerBtnText}>Save</Text>
             </ButtonModule>
             <ButtonModule
-              onPress={() => setModal(false)}
+              onPress={() => setLocationModal(false)}
               style={styles.footerButton}
             >
               <Text style={styles.footerBtnText}>Cancel</Text>
