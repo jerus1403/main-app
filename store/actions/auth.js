@@ -1,5 +1,6 @@
 import * as AmazonCognitoIdentity from "amazon-cognito-identity-js";
 import { getState } from "redux";
+import { UserPoolId, ClientId } from "react-native-dotenv";
 
 import {
   SIGN_UP_REQUEST,
@@ -25,8 +26,8 @@ import {
 } from "../../utils/utils";
 
 const POOL_DATA = {
-  UserPoolId: `us-east-1_UIj3Jxl1F`,
-  ClientId: `10m7rsgelk6p12c7cme6mkm8h`
+  UserPoolId: UserPoolId,
+  ClientId: ClientId
 };
 
 const userPool = new AmazonCognitoIdentity.CognitoUserPool(POOL_DATA);

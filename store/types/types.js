@@ -26,3 +26,8 @@ export const ADD_TITLE = "ADD_TITLE";
 export const ADD_DESCRIPTION = "ADD_DESCRIPTION";
 export const ADD_LOCATION = "ADD_LOCATION";
 export const ADD_RATE = "ADD_RATE";
+
+export const ADD_POST_ID = "ADD_POST_ID";
+export const ADD_USER_ID = "ADD_USER_ID";
+
+export const ADD_POST = "ADD_POST";

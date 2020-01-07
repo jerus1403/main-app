@@ -41,7 +41,7 @@ const RateComponent = ({ rate, setRate }) => {
         style={styles.inputBox}
         onChangeText={number => setRate(number)}
         value={rate}
-        placeholder={rate ? `$/${rate}` : "Your Rate"}
+        placeholder={rate ? rate : "Your Rate"}
         placeholderTextColor={colors.lightBlack}
         keyboardType='numeric'
       />

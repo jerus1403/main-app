@@ -4,13 +4,27 @@ import {
   ADD_TITLE,
   ADD_DESCRIPTION,
   ADD_LOCATION,
-  ADD_RATE
+  ADD_RATE,
+  ADD_POST_ID,
+  ADD_USER_ID
 } from "../types/types";
 
 export const addFunc = (type, payload) => ({
   type: type,
   payload: payload
 });
+
+export const addPostId = id => {
+  return dispatch => {
+    dispatch(addFunc(ADD_POST_ID, id));
+  };
+};
+
+export const addUserId = id => {
+  return dispatch => {
+    dispatch(addFunc(ADD_USER_ID, id));
+  };
+};
 
 export const addImages = imageList => {
   return dispatch => {
