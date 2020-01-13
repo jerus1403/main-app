@@ -7,11 +7,14 @@ import {
   View,
   Button,
   FlatList,
+  Alert,
   Dimensions,
   ActivityIndicator
 } from "react-native";
 import { useDispatch, connect, getState } from "react-redux";
 import { ProgressSteps, ProgressStep } from "react-native-progress-steps";
+import * as ImagePicker from "expo-image-picker";
+import * as Permissions from "expo-permissions";
 import { ImageBrowser } from "expo-multiple-media-imagepicker";
 
 import { colors } from "../../styleUtility/colors";
@@ -31,20 +34,19 @@ const PostItem = props => {
   const dispatch = useDispatch();
   [imageList, setImgArray] = useState([]);
   [categoryList, setCategory] = useState([]);
-  [title, setTitle] = useState(null);
-  [description, setDescription] = useState(null);
-  [latitude, setLatitude] = useState(null);
-  [longitude, setLongitude] = useState(null);
-  [city, setCity] = useState(null);
-  [rate, setRate] = useState(null);
+  [title, setTitle] = useState();
+  [description, setDescription] = useState();
+  [latitude, setLatitude] = useState();
+  [longitude, setLongitude] = useState();
+  [city, setCity] = useState();
+  [rate, setRate] = useState();
   [userId, setUserId] = useState();
   [currentStep, setCurrentStep] = useState(0);
   [openModal, setModal] = useState({
     photoViewerModal: false,
-    photoButtonsModal: false,
-    photoSelectorModal: false
+    photoButtonsModal: false
+    // photoSelectorModal: false
   });
-  [isSubmitLoading, setSubmitLoading] = useState(false);
 
   const toggleModal = modal => {
     setModal({ ...openModal, [modal]: !openModal[modal] });
@@ -56,6 +58,7 @@ const PostItem = props => {
 
   useEffect(() => {
     let unmounted = false;
+    // Get USER ID from Local Mememory
     const getUserID = async () => {
       const result = await GetUserData();
       const transformedResult = JSON.parse(result);
@@ -65,19 +68,6 @@ const PostItem = props => {
     };
     getUserID();
 
-    // if (userId) {
-    //   dispatch(post.addUserId(userId));
-    // }
-    // dispatch(post.addImages(imageList));
-    // dispatch(post.addCategories(categoryList));
-    // dispatch(post.addTitle(title));
-    // dispatch(post.addDescription(description));
-    // let location = {
-    //   lat: latitude,
-    //   long: longitude
-    // };
-    // dispatch(post.addLocation(location));
-    // dispatch(post.addRate(rate));
     return () => {
       unmounted = true;
     };
@@ -93,6 +83,7 @@ const PostItem = props => {
     city
   ]);
 
+  // Check if Image exists UTILITY FUNCTION ---------------------------------------------------------
   const checkObject = (obj, list) => {
     let found = list.some(el => el.id === obj.id);
     if (found) {
@@ -102,27 +93,108 @@ const PostItem = props => {
     }
   };
 
-  imageBrowserCallback = callback => {
-    callback
-      .then(photos => {
-        if (photos.length === 0) {
-          toggleModal("photoSelectorModal");
-        } else if (photos.length > 0) {
-          const newArr = photos.map(({ uri, ...rest }) => ({
-            url: uri,
-            ...rest
-          }));
-          newArr.map(object => {
-            if (!checkObject(object, imageList)) {
-              setImgArray(oldArr => [...oldArr, object]);
-            }
-          });
-          toggleModal("photoSelectorModal");
-        }
-      })
-      .catch(e => console.log(e));
+  // imageBrowserCallback = callback => {
+  //   callback
+  //     .then(photos => {
+  //       if (photos.length === 0) {
+  //         toggleModal("photoSelectorModal");
+  //       } else if (photos.length > 0) {
+  //         console.log(photos, "PHOTOS");
+  //         const newArr = photos.map(({ uri, ...rest }) => ({
+  //           url: uri,
+  //           ...rest
+  //         }));
+  //         newArr.map(object => {
+  //           if (!checkObject(object, imageList)) {
+  //             setImgArray(oldArr => [...oldArr, object]);
+  //           }
+  //         });
+  //         toggleModal("photoSelectorModal");
+  //       }
+  //     })
+  //     .catch(e => console.log(e));
+  // };
+
+  //Ask Permission for Camera ---------------------------------------------------------
+  const cameraPermission = async () => {
+    const result = await Permissions.askAsync(
+      Permissions.CAMERA,
+      Permissions.CAMERA_ROLL
+    );
+    if (result.status !== "granted") {
+      alert("You need to grant the camera access first!");
+      return false;
+    }
+    return true;
   };
 
+  //Ask Permission for Gallery ---------------------------------------------------------
+  const galleryPermission = async () => {
+    const result = await Permissions.askAsync(Permissions.CAMERA_ROLL);
+    if (result.status !== "granted") {
+      alert("You need to grant access to the gallery first!");
+      return false;
+    }
+    return true;
+  };
+
+  //Take Photo Handler ---------------------------------------------------------
+  const takePhotoHandler = async () => {
+    const hasCameraPermission = await cameraPermission();
+    if (!hasCameraPermission) {
+      return;
+    }
+    const cameraImage = await ImagePicker.launchCameraAsync({ base64: true });
+    if (!cameraImage.cancelled) {
+      const imageName = cameraImage.uri.split("/").pop();
+      const imageArray = imageName.split(".");
+      const imageType = imageArray[imageArray.length - 1];
+      const imageObj = {
+        id: cameraImage.base64,
+        type: imageType,
+        url: cameraImage.uri,
+        filename: imageName
+      };
+      setImgArray(oldArr => [...oldArr, imageObj]);
+    }
+    closeModal("photoButtonsModal");
+  };
+
+  // Select Photo from Gallery Handler ---------------------------------------------------------
+  const selectPhotoHandler = async () => {
+    const hasGalleryPermission = await galleryPermission();
+    if (!hasGalleryPermission) {
+      return;
+    }
+    const image = await ImagePicker.launchImageLibraryAsync({
+      base64: true
+    });
+    closeModal("photoButtonsModal");
+    if (!image.cancelled) {
+      console.log(image, "IMAGE");
+      const imageName = image.uri.split("/").pop();
+      const imageArray = imageName.split(".");
+      const imageType = imageArray[imageArray.length - 1];
+      const imageObj = {
+        id: image.base64,
+        type: imageType,
+        url: image.uri,
+        filename: imageName
+      };
+      console.log(imageName, "IMAGE NAME");
+      if (!checkObject(imageObj, imageList)) {
+        closeModal("photoButtonsModal");
+        setImgArray(oldArr => [...oldArr, imageObj]);
+      } else {
+        closeModal("photoButtonsModal");
+
+        setTimeout(() => {
+          Alert.alert("Photo added already. Please choose another photo.");
+        }, 600);
+      }
+    }
+  };
+  // Method: Generate a post ID ---------------------------------------------------------
   const guidGenerator = () => {
     var S4 = function() {
       return (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1);
@@ -142,10 +214,8 @@ const PostItem = props => {
       S4()
     );
   };
-  // console.log(props, "REDUCER");
-
+  // Method: Submit a post ---------------------------------------------------------
   const submitPost = () => {
-    setSubmitLoading(true);
     const postId = guidGenerator();
     dispatch(
       posts.addPost(
@@ -160,23 +230,21 @@ const PostItem = props => {
         rate
       )
     );
+    setCurrentStep(0);
     setImgArray([]);
     setCategory([]);
-    setTitle(null);
-    setDescription(null);
-    setLatitude(null);
-    setLongitude(null);
-    setCity(null);
-    setRate(null);
-    setCurrentStep(0);
-    props.navigation.navigate("PostTab");
-
-    setSubmitLoading(false);
+    setTitle();
+    setDescription();
+    setLatitude();
+    setLongitude();
+    setCity();
+    setRate();
+    // props.navigation.navigate("Home");
   };
-  console.log(currentStep, "CURRENT STEP");
+  console.log(props, "POST SCREEN");
   return (
     <View style={styles.container}>
-      {isSubmitLoading ? (
+      {props.posts.addPostPending ? (
         <ActivityIndicator size='large' color={colors.theme} />
       ) : (
         <ProgressSteps
@@ -202,6 +270,8 @@ const PostItem = props => {
                 toggleModal={toggleModal}
                 openModal={openModal}
                 closeModal={closeModal}
+                takePhotoHandler={takePhotoHandler}
+                selectPhotoHandler={selectPhotoHandler}
               />
             </View>
           </ProgressStep>
@@ -262,7 +332,7 @@ const PostItem = props => {
         </ProgressSteps>
       )}
 
-      <FullScreenModal openModal={openModal.photoSelectorModal}>
+      {/* <FullScreenModal openModal={openModal.photoSelectorModal}>
         <View style={styles.modalContainer}>
           <ImageBrowser
             max={100}
@@ -271,7 +341,7 @@ const PostItem = props => {
             callback={imageBrowserCallback}
           />
         </View>
-      </FullScreenModal>
+      </FullScreenModal> */}
     </View>
   );
 };
@@ -317,7 +387,7 @@ const styles = StyleSheet.create({
 
 const mapStateToProps = state => {
   return {
-    post: state.post,
+    posts: state.posts,
     auth: state.auth
   };
 };

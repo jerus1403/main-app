@@ -36,8 +36,7 @@ const DetailComponent = ({
   title,
   setTitle,
   description,
-  setDescription,
-  reducer
+  setDescription
 }) => {
   const data = [
     {

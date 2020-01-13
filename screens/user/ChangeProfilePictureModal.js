@@ -119,10 +119,11 @@ const ChangeProfilePictureModal = props => {
         type: imageType,
         uri: image.uri
       };
-      // const result = await dispatch(
-      //   profilePictureAction.postProfilePicture(imageObject)
-      // );
-      // console.log(result, "image");
+      const result = await dispatch(
+        profilePictureAction.postProfilePicture(imageObject)
+      );
+      console.log(result, "image");
+      console.log(imageObject, "IMAGE OBJECT");
     }
   };
 
