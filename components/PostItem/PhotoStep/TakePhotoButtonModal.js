@@ -15,10 +15,8 @@ import { colors } from "../../../styleUtility/colors";
 
 const TakePhotoButtonModal = ({
   openModal,
-  //   isPhotoButtonModalVisible,
-  //   closeModal,
   takePhotoHandler,
-  //   toggleButtonModal,
+  selectPhotoHandler,
   toggleModal
 }) => {
   return (
@@ -40,18 +38,7 @@ const TakePhotoButtonModal = ({
             <Button title='Take Photo' onPress={takePhotoHandler} />
           </TouchableOpacity>
           <TouchableOpacity style={styles.buttons}>
-            <Button
-              title='Select Photo'
-              onPress={
-                // selectPhotoHandler
-                () => {
-                  toggleModal("photoButtonsModal");
-                  setTimeout(() => {
-                    toggleModal("photoSelectorModal");
-                  }, 100);
-                }
-              }
-            />
+            <Button title='Select Photo' onPress={selectPhotoHandler} />
           </TouchableOpacity>
           <TouchableOpacity style={styles.buttons}>
             <Button

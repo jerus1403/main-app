@@ -25,40 +25,33 @@ import TakePhotoButtonModal from "./TakePhotoButtonModal";
 
 const ImageListModule = ({
   imageList,
-  // selectPhotoHandler,
+  selectPhotoHandler,
   takePhotoHandler,
   removePhoto,
   setCoveredPhoto,
   setViewer,
   setIndex,
-  // isPhotoButtonModalVisible,
-  toggleButtonModal,
   openModal,
   toggleModal
 }) => {
   [isImageOptionModalVisible, setImageOptionModal] = useState(false);
-  // [isPhotoButtonModalVisible, setPhotoButtonModal] = useState(false);
   [photoId, setPhotoId] = useState();
   [currentPhotoIndex, setPhotoIndex] = useState();
 
+  // Open Option Modal when an image was pressed
   const openPhotoModal = (id, index, type) => {
     if (type === "imageOption" && id && index) {
       setImageOptionModal(true);
       setPhotoId(id);
       setPhotoIndex(index);
     }
-    // else if (type === "takePhoto") {
-    //   setPhotoButtonModal(true);
-    // }
   };
 
+  // Close Photo Option Modal
   const closeModal = type => {
     if (type === "imageOption") {
       setImageOptionModal(false);
     }
-    // else if (type === "takePhoto") {
-    //   setPhotoButtonModal(false);
-    // }
   };
 
   return (
@@ -96,8 +89,7 @@ const ImageListModule = ({
       </View>
       <TakePhotoButtonModal
         openModal={openModal}
-        // toggleButtonModal={toggleButtonModal}
-        // selectPhotoHandler={selectPhotoHandler}
+        selectPhotoHandler={selectPhotoHandler}
         takePhotoHandler={takePhotoHandler}
         toggleModal={toggleModal}
       />

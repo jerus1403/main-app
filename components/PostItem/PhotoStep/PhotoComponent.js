@@ -31,100 +31,14 @@ const PhotoComponent = ({
   reducer,
   toggleModal,
   openModal,
-  closeModal
+  closeModal,
+  takePhotoHandler,
+  selectPhotoHandler
 }) => {
   [isViewerVisible, setViewer] = useState(false);
   [currentImgIndex, setIndex] = useState();
   [isPhotoButtonModalVisible, setPhotoButtonModal] = useState(false);
 
-  // const toggleButtonModal = () => {
-  //   setPhotoButtonModal(prevState => !prevState);
-  // };
-
-  //Ask Permission for Camera
-  const cameraPermission = async () => {
-    const result = await Permissions.askAsync(
-      Permissions.CAMERA,
-      Permissions.CAMERA_ROLL
-    );
-    if (result.status !== "granted") {
-      alert("You need to grant the camera access first!");
-      return false;
-    }
-    return true;
-  };
-
-  //Ask Permission for Gallery
-  // const galleryPermission = async () => {
-  //   const result = await Permissions.askAsync(Permissions.CAMERA_ROLL);
-  //   if (result.status !== "granted") {
-  //     alert("You need to grant access to the gallery first!");
-  //     return false;
-  //   }
-  //   return true;
-  // };
-
-  //Check if object exists method
-  // const checkObject = (obj, list) => {
-  //   let found = list.some(el => el.id === obj.id);
-  //   if (found) {
-  //     return true;
-  //   } else {
-  //     return false;
-  //   }
-  // };
-
-  //Take Photo Handler
-  const takePhotoHandler = async () => {
-    const hasCameraPermission = await cameraPermission();
-    if (!hasCameraPermission) {
-      return;
-    }
-    const cameraImage = await ImagePicker.launchCameraAsync({ base64: true });
-    if (!cameraImage.cancelled) {
-      const imageName = cameraImage.uri.split("/").pop();
-      const imageArray = imageName.split(".");
-      const imageType = imageArray[imageArray.length - 1];
-      const imageObj = {
-        id: cameraImage.base64,
-        type: imageType,
-        url: cameraImage.uri
-      };
-      setImgArray(oldArr => [...oldArr, imageObj]);
-    }
-    closeModal("photoButtonsModal");
-  };
-
-  // Select Photo from Gallery Handler
-  // const selectPhotoHandler = async () => {
-  //   const hasGalleryPermission = await galleryPermission();
-  //   if (!hasGalleryPermission) {
-  //     return;
-  //   }
-  //   const image = await ImagePicker.launchImageLibraryAsync({
-  //     base64: true
-  //   });
-  //   closeModal("photoButtonsModal");
-  //   if (!image.cancelled) {
-  //     const imageName = image.uri.split("/").pop();
-  //     const imageArray = imageName.split(".");
-  //     const imageType = imageArray[imageArray.length - 1];
-  //     const imageObj = {
-  //       id: image.base64,
-  //       type: imageType,
-  //       url: image.uri
-  //     };
-  //     if (!checkObject(imageObj, imageList)) {
-  //       closeModal("photoButtonsModal");
-  //       setImgArray(oldArr => [...oldArr, imageObj]);
-  //     } else {
-  //       alert("Photo added already. Please choose another photo.");
-  //       setTimeout(() => {
-  //         closeModal("photoButtonsModal");
-  //       }, 200);
-  //     }
-  //   }
-  // };
   //Remove photo method from List
   const removePhoto = id => {
     let newList = imageList.filter(el => el.id !== id);
@@ -151,14 +65,13 @@ const PhotoComponent = ({
           />
           <ImageListModule
             imageList={imageList}
-            // selectPhotoHandler={selectPhotoHandler}
+            selectPhotoHandler={selectPhotoHandler}
             takePhotoHandler={takePhotoHandler}
             removePhoto={removePhoto}
             setCoveredPhoto={setCoveredPhoto}
             setViewer={setViewer}
             setIndex={setIndex}
-            // isPhotoButtonModalVisible={isPhotoButtonModalVisible}
-            // toggleButtonModal={toggleButtonModal}
+            isPhotoButtonModalVisible={isPhotoButtonModalVisible}
             openModal={openModal}
             toggleModal={toggleModal}
           />
@@ -174,12 +87,7 @@ const PhotoComponent = ({
           <ButtonModule style={styles.buttons} onPress={takePhotoHandler}>
             <Text style={[styles.buttonText, fonts.text]}>TAKE PHOTO</Text>
           </ButtonModule>
-          <ButtonModule
-            style={styles.buttons}
-            onPress={() => {
-              toggleModal("photoSelectorModal");
-            }}
-          >
+          <ButtonModule style={styles.buttons} onPress={selectPhotoHandler}>
             <Text style={[styles.buttonText, fonts.text]}>SELECT PHOTO</Text>
           </ButtonModule>
         </View>

@@ -31,3 +31,6 @@ export const ADD_POST_ID = "ADD_POST_ID";
 export const ADD_USER_ID = "ADD_USER_ID";
 
 export const ADD_POST = "ADD_POST";
+export const ADD_POST_PENDING = "ADD_POST_PENDING";
+export const ADD_POST_FAILED = "ADD_POST_FAILED";
+export const ADD_POST_SUCCESS = "ADD_POST_SUCCESS";
