@@ -2,7 +2,9 @@ import {
   ADD_POST,
   ADD_POST_PENDING,
   ADD_POST_FAILED,
-  ADD_POST_SUCCESS
+  GET_USER_POST_PENDING,
+  GET_USER_POST_FAILED,
+  GET_USER_POST_SUCCESS
 } from "../types/types";
 import { POST_API } from "react-native-dotenv";
 
@@ -61,22 +63,38 @@ export const addPost = (
       if (responseData.Error || responseData.message) {
         dispatch({ type: ADD_POST_FAILED, payload: responseData.Error });
       } else if (responseData.result) {
+        alert("Your post has been successfully added!");
         dispatch({
           type: ADD_POST,
-          postData: {
-            postId,
-            userId,
-            categoryList,
-            title,
-            description,
-            imgPathList,
-            latitude,
-            longitude,
-            rate
-          }
+          payload: responseData.result
         });
       }
     }
     console.log(responseData, "RESPONSE DATA");
+  };
+};
+
+export const getUserPost = userId => {
+  return async dispatch => {
+    dispatch({ type: GET_USER_POST_PENDING });
+    const response = await fetch(
+      `https://yr19pxohlc.execute-api.us-east-1.amazonaws.com/dev/get-user-posts/${userId}`
+    );
+    const responseData = await response.json();
+    console.log(userId, "ID ACTION");
+    console.log(responseData, "RESPONSE DATA");
+    if (!responseData) {
+      const error = { message: "Something wrong with the internet!" };
+      dispatch({ type: GET_USER_POST_FAILED, payload: error });
+    } else {
+      if (responseData && responseData.message) {
+        dispatch({ type: GET_USER_POST_FAILED, payload: responseData.message });
+      } else if (responseData && responseData.result) {
+        dispatch({
+          type: GET_USER_POST_SUCCESS,
+          payload: responseData.result.data.Items
+        });
+      }
+    }
   };
 };

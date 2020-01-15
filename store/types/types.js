@@ -20,17 +20,20 @@ export const CHANGE_ADDRESS = "CHANGE_ADDRESS";
 export const CHANGE_EMAIL = "CHANGE_EMAIL";
 export const CHANGE_PICTURE = "CHANGE_PICTURE";
 
-export const ADD_IMAGES = "ADD_IMAGES";
-export const ADD_CATEGORIES = "ADD_CATEGORIES";
-export const ADD_TITLE = "ADD_TITLE";
-export const ADD_DESCRIPTION = "ADD_DESCRIPTION";
-export const ADD_LOCATION = "ADD_LOCATION";
-export const ADD_RATE = "ADD_RATE";
+// export const ADD_IMAGES = "ADD_IMAGES";
+// export const ADD_CATEGORIES = "ADD_CATEGORIES";
+// export const ADD_TITLE = "ADD_TITLE";
+// export const ADD_DESCRIPTION = "ADD_DESCRIPTION";
+// export const ADD_LOCATION = "ADD_LOCATION";
+// export const ADD_RATE = "ADD_RATE";
 
-export const ADD_POST_ID = "ADD_POST_ID";
-export const ADD_USER_ID = "ADD_USER_ID";
+// export const ADD_POST_ID = "ADD_POST_ID";
+// export const ADD_USER_ID = "ADD_USER_ID";
 
 export const ADD_POST = "ADD_POST";
 export const ADD_POST_PENDING = "ADD_POST_PENDING";
 export const ADD_POST_FAILED = "ADD_POST_FAILED";
-export const ADD_POST_SUCCESS = "ADD_POST_SUCCESS";
+
+export const GET_USER_POST_PENDING = "GET_USER_POST_PENDING";
+export const GET_USER_POST_FAILED = "GET_USER_POST_FAILED";
+export const GET_USER_POST_SUCCESS = "GET_USER_POST_SUCCESS";
