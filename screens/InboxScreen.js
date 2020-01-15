@@ -9,6 +9,8 @@ import {
   FlatList
 } from "react-native";
 
+import { colors } from "../styleUtility/colors";
+
 const Inbox = props => {
   return (
     <View style={styles.container}>
@@ -18,7 +20,10 @@ const Inbox = props => {
 };
 
 Inbox.navigationOptions = {
-  headerTitle: "Inbox"
+  headerTitle: "Inbox",
+  headerStyle: {
+    backgroundColor: colors.theme
+  }
 };
 
 const styles = StyleSheet.create({

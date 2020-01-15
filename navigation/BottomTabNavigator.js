@@ -6,8 +6,9 @@ import { Ionicons } from "@expo/vector-icons";
 import HomeScreen from "../screens/HomeScreen";
 import InboxScreen from "../screens/InboxScreen";
 import PostItemScreen from "../screens/post/PostItemScreen";
-import HistoryScreen from "../screens/HistoryScreen";
+import HistoryScreen from "../screens/history/HistoryScreen";
 import ProfileScreen from "../screens/user/ProfileScreen";
+import { colors } from "../styleUtility/colors";
 
 const InboxStack = createStackNavigator({
   Inbox: {

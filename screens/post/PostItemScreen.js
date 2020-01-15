@@ -19,7 +19,6 @@ import { ImageBrowser } from "expo-multiple-media-imagepicker";
 
 import { colors } from "../../styleUtility/colors";
 import { fonts } from "../../styleUtility/fonts";
-import * as post from "../../store/actions/post";
 import * as posts from "../../store/actions/posts";
 import { GetUserData } from "../../utils/utils";
 import Post from "../../models/post";
@@ -171,7 +170,6 @@ const PostItem = props => {
     });
     closeModal("photoButtonsModal");
     if (!image.cancelled) {
-      console.log(image, "IMAGE");
       const imageName = image.uri.split("/").pop();
       const imageArray = imageName.split(".");
       const imageType = imageArray[imageArray.length - 1];
@@ -347,7 +345,10 @@ const PostItem = props => {
 };
 
 PostItem.navigationOptions = {
-  headerTitle: "Post"
+  headerTitle: "Post",
+  headerStyle: {
+    backgroundColor: colors.theme
+  }
 };
 
 const styles = StyleSheet.create({

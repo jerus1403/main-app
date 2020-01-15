@@ -131,6 +131,9 @@ const Profile = props => {
 
 Profile.navigationOptions = ({ navigation }) => ({
   headerTitle: "Profile",
+  // headerStyle: {
+  //   backgroundColor: colors.theme
+  // },
   headerRight: () => {
     const { params = {} } = navigation.state;
     return (

@@ -2,16 +2,21 @@ import {
   ADD_POST,
   ADD_POST_PENDING,
   ADD_POST_FAILED,
-  ADD_POST_SUCCESS
+  GET_USER_POST_PENDING,
+  GET_USER_POST_FAILED,
+  GET_USER_POST_SUCCESS
 } from "../types/types";
-import Post from "../../models/post";
 
 const initialState = {
   addPostPending: false,
   addPostStatus: null,
-  errorPayload: null,
-  allPosts: [],
-  userPosts: []
+  addPostError: null,
+  addPostPayload: [],
+  getUserPostPending: false,
+  getUserPostStatus: null,
+  getUserPostError: null,
+  loadedUserPosts: [],
+  allPosts: []
 };
 
 export default (state = initialState, action) => {
@@ -26,26 +31,36 @@ export default (state = initialState, action) => {
         ...state,
         addPostPending: false,
         addPostStatus: false,
-        errorPayload: action.payload
+        addPostError: action.payload,
+        addPostPayload: []
       };
     case ADD_POST:
-      const newPost = {
-        postId: action.postData.postId,
-        usedId: action.postData.userId,
-        categoryList: action.postData.categoryList,
-        imgPathList: action.postData.imgPathList,
-        title: action.postData.title,
-        description: action.postData.description,
-        latitude: action.postData.latitude,
-        longitude: action.postData.longitude,
-        rate: action.postData.rate
-      };
       return {
         ...state,
         addPostPending: false,
         addPostStatus: true,
-        errorPayload: null,
-        allPosts: state.allPosts.concat(newPost)
+        addPostError: null,
+        addPostPayload: action.payload
+      };
+    case GET_USER_POST_PENDING:
+      return {
+        ...state,
+        getUserPostPending: true
+      };
+    case GET_USER_POST_FAILED:
+      return {
+        ...state,
+        getUserPostPending: false,
+        getUserPostStatus: false,
+        getUserPostError: action.payload,
+        loadedUserPosts: []
+      };
+    case GET_USER_POST_SUCCESS:
+      return {
+        ...state,
+        getUserPostPending: false,
+        getUserPostStatus: true,
+        loadedUserPosts: action.payload
       };
     default:
       return state;
