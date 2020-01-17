@@ -7,6 +7,16 @@ import { SettingStack } from "./SettingNavigator";
 import { AuthStack } from "./AuthNavigator";
 import { TabNavigator } from "./BottomTabNavigator";
 import EditPost from "../screens/history/EditPost";
+// import PostItemScreen from "../screens/post/PostItemScreen";
+
+// const PostStack = createStackNavigator(
+//   {
+//     screen: PostItemScreen
+//   },
+//   {
+//     mode: "modal"
+//   }
+// );
 
 const EditPostStack = createStackNavigator(
   {
@@ -22,6 +32,7 @@ const MainNavigator = createStackNavigator(
     Tab: TabNavigator,
     Settings: SettingStack,
     EditPost: EditPostStack
+    // Post: PostStack
   },
   {
     headerMode: "none"

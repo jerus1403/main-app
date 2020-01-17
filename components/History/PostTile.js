@@ -16,14 +16,26 @@ import {
 import { colors } from "../../styleUtility/colors";
 import { fonts } from "../../styleUtility/fonts";
 
-const PostTile = ({ navigation, postId, imageUri, title, rate }) => {
+const PostTile = ({
+  navigation,
+  postId,
+  imgPathList,
+  title,
+  rate,
+  postObject
+}) => {
   return (
     <TouchableOpacity
       style={styles.container}
       key={postId}
-      onPress={() => navigation.navigate("EditPost", { postId: postId })}
+      onPress={() =>
+        navigation.navigate("EditPost", {
+          postId: postId,
+          postObject: postObject
+        })
+      }
     >
-      <Image style={styles.coveredImg} source={{ uri: imageUri }} />
+      <Image style={styles.coveredImg} source={{ uri: imgPathList[0].url }} />
       <View style={styles.infoContainer}>
         <Text style={fonts.subHeading}>{title}</Text>
         <Text style={fonts.text}>Rate: ${rate}/hr</Text>

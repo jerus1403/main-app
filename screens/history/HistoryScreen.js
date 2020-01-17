@@ -48,9 +48,11 @@ const History = props => {
         <PostTile
           key={item.postId}
           postId={item.postId}
-          imageUri={item.imgPathList[0].url}
+          imgPathList={item.imgPathList}
+          categoryList={item.categoryList}
           title={item.title}
           rate={item.rate}
+          postObject={item}
           navigation={props.navigation}
         />
       );
@@ -87,6 +89,7 @@ const History = props => {
       </ScrollView>
     );
   } else if (
+    !userPosts.getUserPostPending &&
     userPosts.getUserPostStatus &&
     userPosts.loadedUserPosts.length == 0
   ) {
