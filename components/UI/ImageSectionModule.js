@@ -55,11 +55,11 @@ const styles = StyleSheet.create({
   },
   thumbnail: {
     width: "100%",
-    height: 250
+    height: 300
   },
   listContainer: {
     marginTop: 5,
-    paddingBottom: 10,
+    paddingBottom: 5,
     flex: 1,
     width: "100%"
   },
@@ -69,12 +69,12 @@ const styles = StyleSheet.create({
     flexWrap: "wrap"
   },
   listImgContainer: {
-    marginHorizontal: 7,
-    marginBottom: 10
+    marginLeft: 5
   },
   listImage: {
     height: 60,
-    width: 60
+    width: 60,
+    borderRadius: 5
   }
 });
 

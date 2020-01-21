@@ -1,4 +1,14 @@
-import { CHANGE_PICTURE } from "../types/types";
+import { CHANGE_PICTURE, GET_USER_ID } from "../types/types";
+import { GetUserData } from "../../utils/utils";
+
+export const getUserId = () => {
+  return async dispatch => {
+    const userData = await GetUserData();
+    const jsonData = JSON.parse(userData);
+    const userId = jsonData.userData.accessToken.payload.username;
+    dispatch({ type: GET_USER_ID, payload: userId });
+  };
+};
 
 export const changeProfilePicture = result => ({
   type: CHANGE_PICTURE,

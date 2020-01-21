@@ -11,18 +11,31 @@ import {
   Button,
   FlatList,
   ActivityIndicator,
-  TouchableOpacity
+  TouchableOpacity,
+  Dimensions
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+
+import * as posts from "../../store/actions/posts";
 import { colors } from "../../styleUtility/colors";
+import { fonts } from "../../styleUtility/fonts";
 import ImageViewerModal from "../../components/UI/ImageViewerModal";
 import ImageSectionModule from "../../components/UI/ImageSectionModule";
+import InfoSectionModule from "../../components/UI/InfoSectionModule";
+import MapSectionModule from "../../components/UI/MapSectionModule";
+import ButtonModule from "../../components/UI/ButtonModule";
 
 const EditPost = props => {
+  const dispatch = useDispatch();
   [isViewerVisible, setViewer] = useState(false);
   [currentImgIndex, setIndex] = useState();
   const postObject = props.navigation.getParam("postObject");
-  console.log(postObject, "EDIT POST");
+  console.log(postObject, "SINGLE POST");
+
+  const deletePost = async () => {
+    await dispatch(posts.deletePost(postObject));
+    props.navigation.navigate("HistoryTab");
+  };
   return (
     <ScrollView style={styles.container}>
       <ImageSectionModule
@@ -30,9 +43,24 @@ const EditPost = props => {
         setViewer={setViewer}
         imageList={postObject.imgPathList}
       />
-      <View>
-        <Text>{postObject.title}</Text>
-        {postObject.description ? <Text>{postObject.description}</Text> : null}
+      <InfoSectionModule
+        title={postObject.title}
+        description={postObject.description ? postObject.description : null}
+        rate={postObject.rate}
+        categoryList={postObject.categoryList}
+      />
+      <MapSectionModule
+        latitude={postObject.latitude}
+        longitude={postObject.longitude}
+        city={postObject.city}
+      />
+      <View style={styles.buttonContainer}>
+        <ButtonModule style={styles.editButton}>
+          <Text style={[fonts.text, styles.editButtonText]}>EDIT</Text>
+        </ButtonModule>
+        <ButtonModule style={styles.deleteButton} onPress={deletePost}>
+          <Text style={[fonts.text, styles.deleteButtonText]}>DELETE</Text>
+        </ButtonModule>
       </View>
       <ImageViewerModal
         isViewerVisible={isViewerVisible}
@@ -47,7 +75,35 @@ const EditPost = props => {
 const styles = StyleSheet.create({
   container: {
     flex: 1
-  }
+  },
+  buttonContainer: {
+    width: Dimensions.get("window").width - 10,
+    flexDirection: "row",
+    paddingHorizontal: 5,
+    paddingVertical: 15,
+    justifyContent: "center",
+    alignSelf: "center",
+    borderTopWidth: 1,
+    borderColor: colors.invisible
+  },
+  editButton: {
+    alignSelf: "center",
+    width: "50%",
+    marginHorizontal: 5,
+    backgroundColor: colors.mainGreen,
+    paddingVertical: 15,
+    borderRadius: 5
+  },
+  editButtonText: { color: colors.white, textAlign: "center" },
+  deleteButton: {
+    alignSelf: "center",
+    width: "50%",
+    marginHorizontal: 5,
+    backgroundColor: "red",
+    paddingVertical: 15,
+    borderRadius: 5
+  },
+  deleteButtonText: { color: colors.white, textAlign: "center" }
 });
 
 EditPost.navigationOptions = ({ navigation }) => ({

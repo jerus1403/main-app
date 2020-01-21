@@ -177,12 +177,6 @@ export const addAttribute = (value, type) => {
         Value: value
       };
     }
-    // else if (type === "picture") {
-    //   attribute = {
-    //     Name: "picture",
-    //     Value: value
-    //   };
-    // }
     var cognitoAttribute = new AmazonCognitoIdentity.CognitoUserAttribute(
       attribute
     );

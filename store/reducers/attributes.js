@@ -2,14 +2,16 @@ import {
   CHANGE_NAME,
   CHANGE_BIRTHDATE,
   CHANGE_ADDRESS,
-  CHANGE_PICTURE
+  CHANGE_PICTURE,
+  GET_USER_ID
 } from "../types/types";
 
 const initialState = {
   name: null,
   birthdate: null,
   address: null,
-  picture: null
+  picture: null,
+  userId: null
 };
 
 const attributesReducer = (state = initialState, action) => {
@@ -33,6 +35,11 @@ const attributesReducer = (state = initialState, action) => {
       return {
         ...state,
         picture: action.payload
+      };
+    case GET_USER_ID:
+      return {
+        ...state,
+        userId: action.payload
       };
     default:
       return state;
