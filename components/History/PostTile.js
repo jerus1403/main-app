@@ -37,7 +37,9 @@ const PostTile = ({
     >
       <Image style={styles.coveredImg} source={{ uri: imgPathList[0].url }} />
       <View style={styles.infoContainer}>
-        <Text style={fonts.subHeading}>{title}</Text>
+        <Text style={fonts.subHeading}>
+          {title.length > 25 ? title.slice(0, 25) + "..." : title}
+        </Text>
         <Text style={fonts.text}>Rate: ${rate}/hr</Text>
       </View>
     </TouchableOpacity>

@@ -38,7 +38,7 @@ const ThumbnailModule = ({ imageList, removePhoto, setViewer, setIndex }) => {
           <Ionicons
             name='ios-close-circle'
             size={30}
-            color={colors.theme}
+            color={colors.delete}
             style={styles.icon}
           />
         </TouchableOpacity>
