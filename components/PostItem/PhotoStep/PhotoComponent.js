@@ -85,10 +85,14 @@ const PhotoComponent = ({
       ) : (
         <View style={styles.buttonContainer}>
           <ButtonModule style={styles.buttons} onPress={takePhotoHandler}>
-            <Text style={[styles.buttonText, fonts.text]}>TAKE PHOTO</Text>
+            <Text style={[styles.buttonText, fonts.subHeading]}>
+              TAKE PHOTO
+            </Text>
           </ButtonModule>
           <ButtonModule style={styles.buttons} onPress={selectPhotoHandler}>
-            <Text style={[styles.buttonText, fonts.text]}>SELECT PHOTO</Text>
+            <Text style={[styles.buttonText, fonts.subHeading]}>
+              SELECT PHOTO
+            </Text>
           </ButtonModule>
         </View>
       )}
@@ -110,7 +114,7 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     width: "60%",
     marginTop: 10,
-    backgroundColor: colors.theme,
+    backgroundColor: colors.darkGreen,
     paddingVertical: 15,
     borderRadius: 5
   },

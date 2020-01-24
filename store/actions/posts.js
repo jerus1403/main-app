@@ -46,7 +46,7 @@ export const addPost = (
       post: post,
       imageList: imageList
     };
-
+    console.log(bodyData, "BODY DATA");
     const response = await fetch(POST_API, {
       method: "POST",
       mode: "cors",
@@ -63,10 +63,10 @@ export const addPost = (
       if (responseData.Error || responseData.message) {
         dispatch({ type: ADD_POST_FAILED, payload: responseData.Error });
       } else if (responseData.result) {
-        alert("Your post has been successfully added!");
         dispatch({
           type: ADD_POST,
-          payload: responseData.result
+          payload: responseData.result,
+          newPost: post
         });
       }
     }
@@ -97,7 +97,6 @@ export const deletePost = postObject => {
       if (response_json.Error || response_json.message) {
         dispatch({ type: DELETE_POST_FAILED, payload: response_json.Error });
       } else if (response_json.result) {
-        alert("Your post has been successfully deleted!");
         dispatch({
           type: DELETE_POST_SUCCESS,
           postId: postObject.postId

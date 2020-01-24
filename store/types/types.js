@@ -23,6 +23,7 @@ export const GET_USER_ID = "GET_USER_ID";
 
 export const ADD_POST = "ADD_POST";
 export const ADD_POST_FAILED = "ADD_POST_FAILED";
+export const AFTER_POST_SUCCESS = "AFTER_POST_SUCCESS";
 
 export const DELETE_POST_SUCCESS = "DELETE_POST_SUCCESS";
 export const DELETE_POST_FAILED = "DELETE_POST_FAILED";

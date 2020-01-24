@@ -1,7 +1,7 @@
 import { StyleSheet } from "react-native";
 
 export const colors = {
-  theme: "tomato",
+  theme: "#3ec1d3",
   easyGreen: "#1ebbd7",
   white: "#fff",
   lightWhite: "#f7f7f7",
@@ -11,7 +11,12 @@ export const colors = {
   invisible: "#dddddd",
   lightBlack: "#555555",
   mainGreen: "#4bb543",
-  darkBlue: "#202E74"
+  // lightGreen: "#3ec1d3",
+  tomato: "tomato",
+  darkGreen: "#0fabbc",
+  darkBlue: "#202E74",
+  delete: "#fa163f",
+  cancel: "#e4f9ff"
 };
 
 export const shadow = StyleSheet.create({

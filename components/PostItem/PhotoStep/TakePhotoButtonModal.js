@@ -12,6 +12,7 @@ import {
   Dimensions
 } from "react-native";
 import { colors } from "../../../styleUtility/colors";
+import { fonts } from "../../../styleUtility/fonts";
 
 const TakePhotoButtonModal = ({
   openModal,
@@ -34,17 +35,23 @@ const TakePhotoButtonModal = ({
           <View />
         </TouchableHighlight>
         <View style={styles.modalInsideView}>
-          <TouchableOpacity style={styles.buttons}>
-            <Button title='Take Photo' onPress={takePhotoHandler} />
+          <TouchableOpacity style={styles.buttons} onPress={takePhotoHandler}>
+            <Text style={[styles.btnText, fonts.subHeading]}>TAKE PHOTO</Text>
+            {/* <Button title='Take Photo' onPress={takePhotoHandler} /> */}
           </TouchableOpacity>
-          <TouchableOpacity style={styles.buttons}>
-            <Button title='Select Photo' onPress={selectPhotoHandler} />
+          <TouchableOpacity style={styles.buttons} onPress={selectPhotoHandler}>
+            <Text style={[styles.btnText, fonts.subHeading]}>SELECT PHOTO</Text>
+            {/* <Button title='Select Photo' onPress={selectPhotoHandler} /> */}
           </TouchableOpacity>
-          <TouchableOpacity style={styles.buttons}>
-            <Button
+          <TouchableOpacity
+            style={[styles.buttons, { backgroundColor: colors.fadedGrey }]}
+            onPress={() => toggleModal("photoButtonsModal")}
+          >
+            <Text style={[styles.btnText, fonts.subHeading]}>CANCEL</Text>
+            {/* <Button
               title='Cancel'
               onPress={() => toggleModal("photoButtonsModal")}
-            />
+            /> */}
           </TouchableOpacity>
         </View>
       </Modal>
@@ -65,16 +72,21 @@ const styles = StyleSheet.create({
   modalInsideView: {
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "rgba(0, 0, 0, 0.2)",
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
     height: 250,
     width: "100%"
   },
   buttons: {
-    backgroundColor: colors.lightWhite,
+    backgroundColor: colors.darkGreen,
     paddingHorizontal: 10,
+    paddingVertical: 10,
     marginBottom: 10,
     width: "90%",
     borderRadius: 5
+  },
+  btnText: {
+    textAlign: "center",
+    color: colors.white
   }
 });
 

@@ -126,7 +126,7 @@ const LocationComponent = ({
       <Modal animationType='slide' visible={isModalOpen}>
         <View style={styles.modalContainer}>
           <View style={styles.modalHeader}>
-            <Text style={[styles.headerText, fonts.text]}>Set Location</Text>
+            <Text style={[styles.headerText, fonts.label]}>Set Location</Text>
           </View>
           <View style={styles.innerContainer}>
             <ButtonModule
@@ -148,19 +148,19 @@ const LocationComponent = ({
           </View>
           <View style={styles.footerButtonContainer}>
             <ButtonModule
-              style={styles.footerButton}
+              onPress={() => setLocationModal(false)}
+              style={[styles.footerButton, styles.cancelBtn]}
+            >
+              <Text style={styles.footerBtnText}>Cancel</Text>
+            </ButtonModule>
+            <ButtonModule
+              style={[styles.footerButton, styles.saveBtn]}
               onPress={() => {
                 saveLocation(city);
                 setLocationModal(false);
               }}
             >
               <Text style={styles.footerBtnText}>Save</Text>
-            </ButtonModule>
-            <ButtonModule
-              onPress={() => setLocationModal(false)}
-              style={styles.footerButton}
-            >
-              <Text style={styles.footerBtnText}>Cancel</Text>
             </ButtonModule>
           </View>
         </View>
@@ -176,13 +176,13 @@ const styles = StyleSheet.create({
     justifyContent: "space-evenly"
   },
   locationText: {
-    color: colors.darkBlue
+    color: colors.tomato
   },
   editButton: {
     alignItems: "center"
   },
   editText: {
-    color: colors.mainGreen,
+    color: colors.darkGreen,
     textDecorationLine: "underline"
   },
   pinIcon: {
@@ -195,7 +195,7 @@ const styles = StyleSheet.create({
   },
   getLocationButton: {
     alignItems: "center",
-    backgroundColor: colors.theme,
+    backgroundColor: colors.darkGreen,
     paddingVertical: 10,
     borderRadius: 5,
     width: "70%"
@@ -224,7 +224,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: colors.theme,
+    backgroundColor: colors.darkGreen,
     paddingVertical: 10,
     width: "70%",
     marginVertical: 5,
@@ -263,6 +263,12 @@ const styles = StyleSheet.create({
   },
   footerBtnText: {
     color: colors.white
+  },
+  cancelBtn: {
+    backgroundColor: colors.fadedGrey
+  },
+  saveBtn: {
+    backgroundColor: colors.darkGreen
   }
 });
 

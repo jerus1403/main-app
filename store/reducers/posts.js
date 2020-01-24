@@ -1,6 +1,7 @@
 import {
   ADD_POST,
   ADD_POST_FAILED,
+  AFTER_POST_SUCCESS,
   DELETE_POST_FAILED,
   DELETE_POST_SUCCESS,
   GET_USER_POST_FAILED,
@@ -33,7 +34,13 @@ export default (state = initialState, action) => {
         ...state,
         addPostStatus: true,
         addPostError: null,
-        addPostPayload: action.payload
+        addPostPayload: action.payload,
+        loadedUserPosts: state.loadedUserPosts.concat(action.newPost)
+      };
+    case AFTER_POST_SUCCESS:
+      return {
+        ...state,
+        addPostStatus: null
       };
     case DELETE_POST_FAILED:
       return {

@@ -121,7 +121,8 @@ History.navigationOptions = {
   headerTitle: "Manage Post",
   headerStyle: {
     backgroundColor: colors.theme
-  }
+  },
+  headerTintColor: colors.white
 };
 
 const styles = StyleSheet.create({

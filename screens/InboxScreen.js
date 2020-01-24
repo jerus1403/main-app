@@ -23,7 +23,8 @@ Inbox.navigationOptions = {
   headerTitle: "Inbox",
   headerStyle: {
     backgroundColor: colors.theme
-  }
+  },
+  headerTintColor: colors.white
 };
 
 const styles = StyleSheet.create({

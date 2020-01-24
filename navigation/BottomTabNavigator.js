@@ -37,14 +37,6 @@ export const TabNavigator = createBottomTabNavigator(
     Home: { screen: HomeScreen },
     InboxTab: { screen: InboxStack },
     PostTab: PostStack,
-    //  {
-    //   screen: PostItemScreen,
-    //   navigationOptions: ({ navigation }) => ({
-    //     tabBarOnPress: ({ navigation }) => {
-    //       navigation.navigate("Post");
-    //     }
-    //   })
-    // },
     HistoryTab: { screen: HistoryStack },
     Profile: {
       screen: ProfileStack
@@ -71,8 +63,8 @@ export const TabNavigator = createBottomTabNavigator(
       }
     }),
     tabBarOptions: {
-      activeTintColor: "tomato",
-      inactiveTintColor: "gray",
+      activeTintColor: colors.darkGreen,
+      inactiveTintColor: colors.fadedGrey,
       showLabel: false
     }
   }

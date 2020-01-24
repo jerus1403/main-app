@@ -131,16 +131,17 @@ const Profile = props => {
 
 Profile.navigationOptions = ({ navigation }) => ({
   headerTitle: "Profile",
-  // headerStyle: {
-  //   backgroundColor: colors.theme
-  // },
+  headerStyle: {
+    backgroundColor: colors.theme
+  },
+  headerTintColor: colors.white,
   headerRight: () => {
     const { params = {} } = navigation.state;
     return (
       <Button
         title='Log Out'
         onPress={params.logOutButton}
-        color={colors.lightBlack}
+        color={colors.white}
       />
     );
   },
@@ -153,7 +154,7 @@ Profile.navigationOptions = ({ navigation }) => ({
         <Ionicons
           name='ios-settings'
           size={30}
-          color={colors.lightBlack}
+          color={colors.white}
           style={styles.icon}
         />
       </TouchableOpacity>

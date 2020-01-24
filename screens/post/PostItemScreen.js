@@ -9,13 +9,17 @@ import {
   FlatList,
   Alert,
   Dimensions,
-  ActivityIndicator
+  ActivityIndicator,
+  Modal,
+  Image
 } from "react-native";
 import { useDispatch, connect, getState } from "react-redux";
 import { ProgressSteps, ProgressStep } from "react-native-progress-steps";
 import * as ImagePicker from "expo-image-picker";
 import * as Permissions from "expo-permissions";
 import { ImageBrowser } from "expo-multiple-media-imagepicker";
+
+import { AFTER_POST_SUCCESS } from "../../store/types/types";
 
 import { colors } from "../../styleUtility/colors";
 import { fonts } from "../../styleUtility/fonts";
@@ -25,7 +29,8 @@ import PhotoComponent from "../../components/PostItem/PhotoStep/PhotoComponent";
 import DetailComponent from "../../components/PostItem/DetailStep/DetailComponent";
 import LocationComponent from "../../components/PostItem/LocationStep/LocationComponent";
 import RateComponent from "../../components/PostItem/RateStep/RateComponent";
-import FullScreenModal from "../../components/UI/Modal";
+import ButtonModule from "../../components/UI/ButtonModule";
+import InfoSectionModule from "../../components/UI/InfoSectionModule";
 
 const PostItem = props => {
   const dispatch = useDispatch();
@@ -43,8 +48,8 @@ const PostItem = props => {
   [currentStep, setCurrentStep] = useState(0);
   [openModal, setModal] = useState({
     photoViewerModal: false,
-    photoButtonsModal: false
-    // photoSelectorModal: false
+    photoButtonsModal: false,
+    postSuccessModal: false
   });
 
   const toggleModal = modal => {
@@ -55,7 +60,11 @@ const PostItem = props => {
     setModal({ ...openModal, [modal]: false });
   };
 
-  useEffect(() => {}, [
+  useEffect(() => {
+    if (props.state.posts.addPostStatus) {
+      setModal({ ...openModal, postSuccessModal: true });
+    }
+  }, [
     imageList,
     categoryList,
     title,
@@ -202,19 +211,23 @@ const PostItem = props => {
     setRate();
     // props.navigation.navigate("HistoryTab");
   };
+  // Set addPostStatus back to null after user close the post success modal
+  const setDefaultAddPostStatus = () => props.setDefaultStatusAction();
   console.log(props, "POST SCREEN");
+  console.log(openModal.postSuccessModal, "MODAL STATE");
   if (isLoading) {
     return <ActivityIndicator size='large' color={colors.theme} />;
   }
+
   return (
     <View style={styles.container}>
       <ProgressSteps
         borderWidth={4}
-        activeStepIconBorderColor={colors.theme}
-        completedProgressBarColor={colors.theme}
-        completedStepIconColor={colors.theme}
-        activeLabelColor={colors.theme}
-        activeStepNumColor={colors.theme}
+        activeStepIconBorderColor={colors.darkGreen}
+        completedProgressBarColor={colors.darkGreen}
+        completedStepIconColor={colors.darkGreen}
+        activeLabelColor={colors.darkGreen}
+        activeStepNumColor={colors.darkGreen}
         activeStep={currentStep}
       >
         <ProgressStep
@@ -222,7 +235,6 @@ const PostItem = props => {
           nextBtnStyle={styles.nextButton}
           nextBtnTextStyle={styles.btnTextStyle}
           nextBtnDisabled={imageList.length == 0 ? true : false}
-          // onNext={() => setCurrentStep(1)}
         >
           <View style={styles.content}>
             <PhotoComponent
@@ -245,7 +257,6 @@ const PostItem = props => {
           nextBtnDisabled={
             categoryList.length == 0 || title == null ? true : false
           }
-          // onNext={() => setCurrentStep(2)}
         >
           <View style={styles.content}>
             <DetailComponent
@@ -265,7 +276,6 @@ const PostItem = props => {
           previousBtnStyle={styles.prevButton}
           previousBtnTextStyle={styles.btnTextStyle}
           nextBtnDisabled={city == null ? true : false}
-          // onNext={() => setCurrentStep(3)}
         >
           <View style={styles.content}>
             <LocationComponent
@@ -294,6 +304,51 @@ const PostItem = props => {
           </View>
         </ProgressStep>
       </ProgressSteps>
+      <Modal
+        animationType='slide'
+        transparent={false}
+        visible={openModal.postSuccessModal}
+      >
+        <View style={styles.postSuccessModalContainer}>
+          <View style={styles.successTextContainer}>
+            <Text style={styles.postSuccessText}>
+              Your post has been successfull added!
+            </Text>
+          </View>
+          {props.state.posts.addPostStatus ? (
+            <View style={styles.postSuccessInfo}>
+              <Image
+                source={{
+                  uri: props.state.posts.addPostPayload[0].imgPathList[0].url
+                }}
+                style={styles.postSuccessImage}
+              />
+              <Text style={[fonts.subHeading, styles.postSuccessTitle]}>
+                {props.state.posts.addPostPayload[0].title}
+              </Text>
+            </View>
+          ) : null}
+          <ButtonModule
+            style={styles.buttons}
+            onPress={() => {
+              setDefaultAddPostStatus();
+              closeModal("postSuccessModal");
+            }}
+          >
+            <Text style={styles.btnTextStyle}>POST ANOTHER</Text>
+          </ButtonModule>
+          <ButtonModule
+            style={styles.buttons}
+            onPress={() => {
+              setDefaultAddPostStatus();
+              closeModal("postSuccessModal");
+              props.navigation.navigate("HistoryTab");
+            }}
+          >
+            <Text style={styles.btnTextStyle}>DONE</Text>
+          </ButtonModule>
+        </View>
+      </Modal>
     </View>
   );
 };
@@ -302,7 +357,8 @@ PostItem.navigationOptions = {
   headerTitle: "Post",
   headerStyle: {
     backgroundColor: colors.theme
-  }
+  },
+  headerTintColor: colors.white
 };
 
 const styles = StyleSheet.create({
@@ -321,22 +377,62 @@ const styles = StyleSheet.create({
     padding: 7,
     width: Dimensions.get("window").width / 4 + 10,
     borderRadius: 5,
-    backgroundColor: colors.theme,
+    backgroundColor: colors.darkGreen,
     color: colors.white
   },
   prevButton: {
     padding: 7,
     width: Dimensions.get("window").width / 4 + 10,
     borderRadius: 5,
-    backgroundColor: colors.theme
+    backgroundColor: colors.darkGreen
   },
   btnTextStyle: {
     textAlign: "center",
     color: colors.white,
     fontSize: 15
   },
-  modalContainer: {
+  postSuccessModalContainer: {
     flex: 1
+    // paddingTop: 22
+    // justifyContent: "center",
+    // alignItems: "center",
+  },
+  successTextContainer: {
+    width: "100%",
+    backgroundColor: colors.theme,
+    height: 70,
+    paddingTop: 30,
+    paddingBottom: 6,
+    marginBottom: 20,
+    borderBottomWidth: 1,
+    borderBottomColor: colors.invisible
+  },
+  postSuccessText: {
+    textAlign: "center",
+    color: colors.white,
+    fontSize: 16
+  },
+  postSuccessInfo: {
+    marginBottom: 20,
+    paddingVertical: 10
+  },
+  postSuccessImage: {
+    alignSelf: "center",
+    height: 200,
+    width: "90%"
+  },
+  postSuccessTitle: {
+    textAlign: "center",
+    marginTop: 7,
+    width: "90%"
+  },
+  buttons: {
+    alignSelf: "center",
+    width: "60%",
+    marginTop: 10,
+    backgroundColor: colors.darkGreen,
+    paddingVertical: 15,
+    borderRadius: 5
   }
 });
 
@@ -346,4 +442,10 @@ const mapStateToProps = state => {
   };
 };
 
-export default connect(mapStateToProps)(PostItem);
+const mapDispatchToProps = dispatch => {
+  return {
+    setDefaultStatusAction: () => dispatch({ type: AFTER_POST_SUCCESS })
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(PostItem);

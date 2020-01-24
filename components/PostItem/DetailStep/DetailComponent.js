@@ -147,7 +147,7 @@ const styles = StyleSheet.create({
     marginRight: 5,
     marginBottom: 5,
     borderRadius: 15,
-    backgroundColor: colors.mainGreen
+    backgroundColor: colors.tomato
   },
   tagText: {
     color: colors.white,
