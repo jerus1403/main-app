@@ -23,51 +23,22 @@ import { GetUserData } from "../../utils/utils";
 import * as profilePictureAction from "../../store/actions/profile";
 
 const ChangeProfilePictureModal = props => {
+  const userId = props.state.attributes.userId;
   const dispatch = useDispatch();
   [pickedImage, setImage] = useState(null);
   [isLoading, setLoading] = useState(false);
-  [userId, setUserId] = useState();
   [fetchRes, setFetch] = useState();
+  const profileData = props.state.attributes;
 
   useEffect(() => {
-    const getUserId = async () => {
-      setLoading(true);
-      const data = await GetUserData();
-      if (data) {
-        const jsonData = JSON.parse(data);
-        const cognitoUserId = jsonData.userData.accessToken.payload.username;
-        setUserId(cognitoUserId);
-      }
-    };
-    getUserId();
-    if (userId) {
-      console.log(userId, "USER ID");
-      const bodyObj = {
-        user_id: userId,
-        type: "jpg"
-      };
-      // const fetchImage = () => {
-      const url =
-        "https://yr19pxohlc.execute-api.us-east-1.amazonaws.com/dev/getUserProfileImageURL";
-      const options = {
-        method: "POST",
-        body: JSON.stringify(bodyObj)
-      };
-      fetch(url, options)
-        .then(res => {
-          console.log(res.status, "RESPONSE");
-        })
-        .catch(err => {
-          console.log(err, "ERROR FETCHING");
-        });
-      setLoading(false);
-      // };
-      // fetchImage();
-    }
-  }, [userId]);
-
-  // console.log(fetchRes, "FETCH RESULT");
-
+    getProfileImage();
+  }, [dispatch, getProfileImage]);
+  //Dispatching get user profile image
+  const getProfileImage = useCallback(async () => {
+    setLoading(true);
+    await dispatch(profilePictureAction.getProfilePicture(userId));
+    setLoading(false);
+  }, [setLoading, dispatch]);
   //Ask Permission for Camera
   const cameraPermission = async () => {
     const result = await Permissions.askAsync(
@@ -97,8 +68,22 @@ const ChangeProfilePictureModal = props => {
     if (!hasCameraPermission) {
       return;
     }
-    const cameraImage = await ImagePicker.launchCameraAsync();
-    console.log(cameraImage, "CAMERA IMAGE");
+    const cameraImage = await ImagePicker.launchCameraAsync({ base64: true });
+    if (!cameraImage.cancelled) {
+      const imageName = cameraImage.uri.split("/").pop();
+      const imageArray = imageName.split(".");
+      const imageType = imageArray[imageArray.length - 1];
+      setLoading(true);
+      const imageObj = {
+        id: cameraImage.base64,
+        type: imageType,
+        url: cameraImage.uri,
+        filename: `${userId}.${imageType}`
+      };
+      setImage(imageObj.url);
+      dispatch(profilePictureAction.postProfilePicture(userId, imageObj));
+      setLoading(false);
+    }
   };
 
   //Select Photo from Gallery Handler
@@ -108,37 +93,40 @@ const ChangeProfilePictureModal = props => {
       return;
     }
     const image = await ImagePicker.launchImageLibraryAsync({ base64: true });
-    const imageName = image.uri.split("/").pop();
-    const imageArray = imageName.split(".");
-    const imageType = imageArray[imageArray.length - 1];
-    if (!image.cancelled && userId) {
-      setImage(image.uri);
+    if (!image.cancelled) {
+      const imageName = image.uri.split("/").pop();
+      const imageArray = imageName.split(".");
+      const imageType = imageArray[imageArray.length - 1];
+      setLoading(true);
       const imageObject = {
-        data: image.base64,
-        name: `${userId}.${imageType}`,
+        id: image.base64,
         type: imageType,
-        uri: image.uri
+        url: image.uri,
+        filename: `${userId}.${imageType}`
       };
-      const result = await dispatch(
-        profilePictureAction.postProfilePicture(imageObject)
-      );
-      console.log(result, "image");
-      console.log(imageObject, "IMAGE OBJECT");
+      setImage(imageObject.url);
+      dispatch(profilePictureAction.postProfilePicture(userId, imageObject));
+      setLoading(false);
     }
   };
-
   return (
     <KeyboardAvoidingView style={styles.screen}>
       <Text style={styles.header}>Profile picture</Text>
       <View>
-        {!pickedImage && !isLoading ? (
+        {isLoading ? (
+          <ActivityIndicator color={colors.theme} size='large' />
+        ) : !profileData.profileImage && !profileData.getProfileImgStatus ? (
           <Text>No image picked yet</Text>
-        ) : isLoading ? (
-          <ActivityIndicator color={colors.theme} size='small' />
         ) : (
           <Image
             style={styles.profileImage}
-            source={{ uri: pickedImage ? pickedImage : "" }}
+            source={{
+              uri: profileData.profileImage
+                ? profileData.profileImage.url
+                : profileData.getProfileImgStatus
+                ? profileData.getProfileImgSuccess.url
+                : ""
+            }}
           />
         )}
       </View>
@@ -195,4 +183,10 @@ styles = StyleSheet.create({
   }
 });
 
-export default ChangeProfilePictureModal;
+const mapStateToProps = state => {
+  return {
+    state: state
+  };
+};
+
+export default connect(mapStateToProps)(ChangeProfilePictureModal);

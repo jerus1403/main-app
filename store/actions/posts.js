@@ -6,7 +6,11 @@ import {
   GET_USER_POST_FAILED,
   GET_USER_POST_SUCCESS
 } from "../types/types";
-import { POST_API, DELETE_POST_API } from "react-native-dotenv";
+import {
+  POST_API,
+  GET_USER_POST_API,
+  DELETE_POST_API
+} from "react-native-dotenv";
 
 export const addPost = (
   postId,
@@ -46,7 +50,6 @@ export const addPost = (
       post: post,
       imageList: imageList
     };
-    console.log(bodyData, "BODY DATA");
     const response = await fetch(POST_API, {
       method: "POST",
       mode: "cors",
@@ -70,7 +73,6 @@ export const addPost = (
         });
       }
     }
-    console.log(responseData, "RESPONSE DATA");
   };
 };
 
@@ -108,9 +110,8 @@ export const deletePost = postObject => {
 
 export const getUserPost = userId => {
   return async dispatch => {
-    const response = await fetch(
-      `https://yr19pxohlc.execute-api.us-east-1.amazonaws.com/dev/get-user-posts/${userId}`
-    );
+    const url = GET_USER_POST_API + userId;
+    const response = await fetch(url);
     const responseData = await response.json();
     if (!responseData) {
       const error = { message: "Something wrong with the internet!" };

@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useCallback } from "react";
+import { ADD_PROFILE_API, GET_PROFILE_IMG_API } from "react-native-dotenv";
 import {
   StyleSheet,
   Text,
@@ -15,14 +16,18 @@ import {
 import { connect, useDispatch, useSelector } from "react-redux";
 import { Ionicons } from "@expo/vector-icons";
 
+import { LOG_OUT } from "../../store/types/types";
+
 import * as authActions from "../../store/actions/auth";
+import * as profilePictureAction from "../../store/actions/profile";
+import Avatar from "../../assets/avatar.png";
 
 import { colors } from "../../styleUtility/colors";
 
 const Profile = props => {
   //REDUCER STATE
-  const { attributes } = props.authState;
-
+  const { attributes } = props.state;
+  const userId = attributes.userId;
   const dispatch = useDispatch();
   [isLoading, setLoading] = useState(false);
   [name, setName] = useState();
@@ -33,100 +38,94 @@ const Profile = props => {
 
   const logUserOut = () => {
     dispatch(authActions.SignOutUser(props.navigation));
+    props.setDefaultAttributesAction();
   };
 
   useEffect(() => {
     props.navigation.setParams({
       logOutButton: logUserOut
     });
-    //Get User Attributes
-    const getUserAttributes = async () => {
-      setLoading(true);
-      const result = await authActions.retrieveUserData(
-        setLoading,
-        setName,
-        setEmail,
-        setAddress,
-        setBirthdate,
-        setProfileImage
-      );
-      if (result) {
-        // console.log(result, "RESULT");
-      }
-    };
     getUserAttributes();
-    console.log(props, "PROFILE");
-  }, []);
-  if (profileImage) {
-    // console.log(profileImage, "PROFILE IMAGE");
-  }
-  // console.log(attributes.picture, "PROFILE ATTRIBUTE IMG");
-  return (
-    <ScrollView style={styles.container}>
-      {isLoading ? (
-        <View style={styles.indicator}>
-          <ActivityIndicator size='large' color={colors.theme} />
-        </View>
-      ) : (
+  }, [getUserAttributes]);
+
+  const getUserAttributes = useCallback(async () => {
+    setLoading(true);
+    await dispatch(profilePictureAction.getProfilePicture(userId));
+    await authActions.retrieveUserData(
+      setName,
+      setEmail,
+      setAddress,
+      setBirthdate
+    );
+    setLoading(false);
+  }, [setLoading, dispatch]);
+
+  if (isLoading) {
+    return (
+      <View style={styles.indicator}>
+        <ActivityIndicator size='large' color={colors.theme} />
+      </View>
+    );
+  } else {
+    return (
+      <ScrollView style={styles.container}>
         <View>
           <ImageBackground style={styles.backgroundSection}>
-            {attributes.picture == null && profileImage ? (
-              <View style={styles.userImageContainer}>
-                <View style={styles.userImageFrame}>
+            <View style={styles.userImageContainer}>
+              <View style={styles.userImageFrame}>
+                {attributes.getProfileImgStatus ||
+                attributes.postProfileImageStatus ? (
                   <Image
                     source={{
-                      uri: `https://profile-image-main-app.s3.amazonaws.com/f829c9af-0fc7-4245-8df3-52b77857abbc.jpg`
+                      uri: attributes.profileImage
+                        ? attributes.profileImage.url
+                        : attributes.getProfileImgStatus
+                        ? attributes.getProfileImgSuccess.url
+                        : ""
                     }}
                     style={styles.userImage}
                   />
-                </View>
-
-                <Text style={styles.name}>
-                  {attributes.name === null && name ? name : attributes.name}
-                </Text>
+                ) : (
+                  <Image source={Avatar} style={styles.userImage} />
+                )}
               </View>
-            ) : (
-              <View style={styles.userImageContainer}>
-                <View style={styles.userImageFrame}>
-                  <Image
-                    source={{
-                      uri: `https://profile-image-main-app.s3.amazonaws.com/f829c9af-0fc7-4245-8df3-52b77857abbc.jpg`
-                    }}
-                    style={styles.userImage}
-                  />
-                </View>
-                <Text style={styles.name}>
-                  {attributes.name === null && name ? name : attributes.name}
-                </Text>
-              </View>
-            )}
+              <Text style={styles.name}>
+                {attributes.name ? attributes.name : name ? name : ""}
+              </Text>
+            </View>
           </ImageBackground>
           <View style={styles.accountSettingSection}>
             <View style={styles.listItem}>
               <Text style={styles.label}>Birthday</Text>
               <Text>
-                {attributes.birthdate === null && birthdate
+                {attributes.birthdate
+                  ? attributes.birthdate
+                  : birthdate
                   ? birthdate
-                  : attributes.birthdate}
+                  : ""}
               </Text>
             </View>
             <View style={styles.listItem}>
               <Text style={styles.label}>Address</Text>
               <Text>
-                {attributes.address === null && address
+                {attributes.address
+                  ? attributes.address
+                  : address
                   ? address
-                  : attributes.address}
+                  : ""}
               </Text>
             </View>
             <View style={styles.listItem}>
               <Text style={styles.label}>Email</Text>
-              <Text>{email ? email : ""}</Text>
+              <Text>
+                {attributes.email ? attributes.email : email ? email : ""}
+              </Text>
             </View>
           </View>
         </View>
-      )}
-    </ScrollView>
-  );
+      </ScrollView>
+    );
+  }
 };
 
 Profile.navigationOptions = ({ navigation }) => ({
@@ -182,19 +181,22 @@ const styles = StyleSheet.create({
     top: 50
   },
   userImageFrame: {
+    alignSelf: "center",
     padding: 5,
     backgroundColor: colors.white,
     borderRadius: 10,
     borderWidth: 1,
-    borderColor: colors.lightBlack
+    borderColor: colors.lightBlack,
+    height: 160,
+    width: 160
   },
   userImage: {
-    height: 160,
-    width: 160,
+    height: "100%",
+    width: "100%",
     borderRadius: 10
   },
   name: {
-    // position: "relative",
+    marginTop: 5,
     alignSelf: "center",
     fontSize: 20,
     fontWeight: "bold"
@@ -228,8 +230,14 @@ const styles = StyleSheet.create({
 
 const mapStateToProps = state => {
   return {
-    authState: state
+    state: state
   };
 };
 
-export default connect(mapStateToProps)(Profile);
+const mapDispatchToProps = dispatch => {
+  return {
+    setDefaultAttributesAction: () => dispatch({ type: LOG_OUT })
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Profile);

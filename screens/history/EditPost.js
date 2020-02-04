@@ -41,7 +41,7 @@ const EditPost = props => {
     await dispatch(posts.deletePost(postObject));
     props.navigation.navigate("HistoryTab");
   };
-  console.log(props, "EDIT SCREEN");
+
   return (
     <ScrollView style={styles.container}>
       <ImageSectionModule

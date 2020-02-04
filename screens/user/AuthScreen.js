@@ -135,7 +135,6 @@ const AuthScreen = props => {
     [dispatchCodeState]
   );
 
-  // console.log(props.authState.auth, "AUTH REDUCER - AUTH SCREEEN");
   return (
     <KeyboardAvoidingView style={styles.screen}>
       <Card style={styles.authContainer}>

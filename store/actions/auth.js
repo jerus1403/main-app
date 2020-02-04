@@ -201,9 +201,6 @@ export const addAttribute = (value, type) => {
           } else if (type === "address") {
             dispatch(changeValue(CHANGE_ADDRESS, value));
           }
-          // else if (type === "picture") {
-          //   dispatch(changeValue(CHANGE_PICTURE, value));
-          // }
           console.log(
             "Attribtue result: " + Object.prototype.valueOf(attributeList)
           );
@@ -214,7 +211,6 @@ export const addAttribute = (value, type) => {
 };
 
 export const retrieveUserData = (
-  setLoading,
   setName,
   setEmail,
   setAddress,
@@ -236,11 +232,11 @@ export const retrieveUserData = (
           //Get user Attributes
           cognitoUser.getUserAttributes((err, userData) => {
             if (err) {
-              setLoading(false);
+              // setLoading(false);
               alert(err.message);
               return;
             }
-            setLoading(false);
+            // setLoading(false);
             userData.map(item => {
               if (item.getName() === "name" && setName) {
                 setName(item.getValue());
@@ -251,9 +247,6 @@ export const retrieveUserData = (
               } else if (item.getName() === "address" && setAddress) {
                 setAddress(item.getValue());
               }
-              // else if (item.getName() === "picture" && setProfileImage) {
-              //   setProfileImage(item.getValue());
-              // }
             });
           });
         });

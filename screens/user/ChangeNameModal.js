@@ -21,14 +21,13 @@ import * as authActions from "../../store/actions/auth";
 const ChangeNameModal = props => {
   const dispatch = useDispatch();
   [isSubmitLoading, setSubmitLoading] = useState(false);
-  [isLoading, setLoading] = useState(false);
   [value, onChangeText] = useState("");
   [name, setName] = useState();
 
   useEffect(() => {
     //Get User Attributes
     const getUserData = async () => {
-      await authActions.retrieveUserData(setLoading, setName);
+      await authActions.retrieveUserData(setName);
     };
     getUserData();
   });

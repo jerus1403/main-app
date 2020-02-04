@@ -33,7 +33,7 @@ const History = props => {
     setRefreshing(true);
     await dispatch(posts.getUserPost(userId));
     setRefreshing(false);
-  }, [dispatch, setRefreshing]);
+  }, [userId, dispatch, setRefreshing]);
 
   const renderUserPosts = () => {
     return userPosts.map(item => {
