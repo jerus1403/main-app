@@ -21,20 +21,13 @@ import * as authActions from "../../store/actions/auth";
 const VerifyBirthdayModal = props => {
   const dispatch = useDispatch();
   [isSubmitLoading, setSubmitLoading] = useState(false);
-  [isLoading, setLoading] = useState(false);
   [value, onChangeText] = useState("");
   [birthdate, setBirthdate] = useState();
 
   useEffect(() => {
     //Get User Attributes
     const getUserData = async () => {
-      await authActions.retrieveUserData(
-        setLoading,
-        null,
-        null,
-        null,
-        setBirthdate
-      );
+      await authActions.retrieveUserData(null, null, null, setBirthdate);
     };
     getUserData();
   });

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useDispatch, connect } from "react-redux";
 import {
   StyleSheet,
   Text,
@@ -10,12 +11,13 @@ import {
   Dimensions
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import { connect } from "react-redux";
 import MapView from "react-native-maps";
 
 import { GetUserData } from "../utils/utils";
+import * as Profile from "../store/actions/profile";
 
 const Home = props => {
+  const dispatch = useDispatch();
   // [token, setToken] = useState(null);
   // [tokenData, setTokenData] = useState({});
   const mapRegion = {
@@ -29,7 +31,6 @@ const Home = props => {
     const convertedData = JSON.parse(data);
     const { expiredToken, userData } = convertedData;
     const date = new Date(expiredToken);
-    console.log(convertedData, "USER DATA");
   };
   const getTime = async () => {
     const data = await GetUserData();
@@ -38,13 +39,11 @@ const Home = props => {
     const expToken = new Date(expiredToken);
     const date = new Date().getTime();
     const exp = new Date(date - expToken);
-    console.log(new Date().getTime(), "TODAY");
-    console.log(expiredToken, "DATE");
   };
 
   useEffect(() => {
-    console.log(props, "HOME");
-  }, [props]);
+    dispatch(Profile.getUserId());
+  }, [dispatch]);
 
   return (
     <View style={styles.container}>

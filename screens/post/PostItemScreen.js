@@ -213,8 +213,6 @@ const PostItem = props => {
   };
   // Set addPostStatus back to null after user close the post success modal
   const setDefaultAddPostStatus = () => props.setDefaultStatusAction();
-  console.log(props, "POST SCREEN");
-  console.log(openModal.postSuccessModal, "MODAL STATE");
   if (isLoading) {
     return <ActivityIndicator size='large' color={colors.theme} />;
   }

@@ -21,20 +21,13 @@ import * as authActions from "../../store/actions/auth";
 const VerifyAddressModal = props => {
   const dispatch = useDispatch();
   [isSubmitLoading, setSubmitLoading] = useState(false);
-  [isLoading, setLoading] = useState(false);
   [value, onChangeText] = useState("");
   [address, setAddress] = useState();
 
   useEffect(() => {
     //Get User Attributes
     const getUserData = async () => {
-      await authActions.retrieveUserData(
-        setLoading,
-        null,
-        null,
-        setAddress,
-        null
-      );
+      await authActions.retrieveUserData(null, null, setAddress, null);
     };
     getUserData();
   });

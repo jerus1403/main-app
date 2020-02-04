@@ -1,4 +1,11 @@
-import { CHANGE_PICTURE, GET_USER_ID } from "../types/types";
+import { ADD_PROFILE_API, GET_PROFILE_IMG_API } from "react-native-dotenv";
+import {
+  CHANGE_PICTURE_SUCCESS,
+  CHANGE_PICTURE_FAILED,
+  GET_USER_ID,
+  GET_PROFILE_IMG_SUCCESS,
+  GET_PROFILE_IMG_FAILED
+} from "../types/types";
 import { GetUserData } from "../../utils/utils";
 
 export const getUserId = () => {
@@ -10,35 +17,48 @@ export const getUserId = () => {
   };
 };
 
-export const changeProfilePicture = result => ({
-  type: CHANGE_PICTURE,
-  payload: result
-});
-
-export const postProfilePicture = imageData => {
+export const postProfilePicture = (userId, imageObject) => {
   return async dispatch => {
-    const url =
-      "https://yr19pxohlc.execute-api.us-east-1.amazonaws.com/dev/requestUploadURL";
-    const data = JSON.stringify(imageData);
+    const data = {
+      userId,
+      imageObject
+    };
+    const bodyData = JSON.stringify(data);
     const options = {
       method: "POST",
-      body: data
+      body: bodyData
     };
-    dispatch(changeProfilePicture(imageData.uri));
-    const response = await fetch(url, options);
-    return response;
+
+    const response = await fetch(ADD_PROFILE_API, options);
+    if (!response) {
+      alert("Please check your internet connection");
+    } else {
+      if (response.status !== 200) {
+        dispatch({ type: CHANGE_PICTURE_FAILED, payload: response.Error });
+      } else if (response.status === 200) {
+        dispatch({ type: CHANGE_PICTURE_SUCCESS, payload: imageObject });
+      }
+    }
+    // const jsonResponse = await response.json();
   };
 };
 
 export const getProfilePicture = userId => {
   return async dispatch => {
-    const url =
-      "https://yr19pxohlc.execute-api.us-east-1.amazonaws.com/dev/getUserProfileImageURL";
-    const options = {
-      method: "GET",
-      body: userId
-    };
-    const response = await fetch(url, options);
-    return response;
+    const url = GET_PROFILE_IMG_API + userId;
+    const response = await fetch(url);
+    const jsonResponse = await response.json();
+    if (!response) {
+      alert("Please check your internet connection");
+    } else {
+      if (response.status !== 200) {
+        dispatch({ type: GET_PROFILE_IMG_FAILED, payload: jsonResponse.Error });
+      } else if (response.status === 200) {
+        dispatch({
+          type: GET_PROFILE_IMG_SUCCESS,
+          payload: jsonResponse.result
+        });
+      }
+    }
   };
 };
