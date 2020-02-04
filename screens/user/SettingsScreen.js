@@ -17,6 +17,7 @@ import {
 import { Ionicons } from "@expo/vector-icons";
 
 import { colors } from "../../styleUtility/colors";
+import { fonts } from "../../styleUtility/fonts";
 
 const SettingsScreen = props => {
   const dispatch = useDispatch();
@@ -97,17 +98,18 @@ SettingsScreen.navigationOptions = ({ navigation }) => ({
         style={styles.backButton}
         onPress={() => navigation.navigate("Profile")}
       >
-        <Ionicons name='ios-arrow-back' size={20} color={colors.white}>
-          {" "}
-          Profile
-        </Ionicons>
+        <Ionicons
+          name='ios-arrow-back'
+          size={25}
+          color={colors.white}
+        ></Ionicons>
       </TouchableOpacity>
     );
   },
   headerStyle: {
-    backgroundColor: colors.theme,
-    color: colors.white
-  }
+    backgroundColor: colors.theme
+  },
+  headerTitleStyle: fonts.screenHeader
 });
 
 const styles = StyleSheet.create({
@@ -116,7 +118,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.white
   },
   backButton: {
-    marginLeft: 15
+    paddingHorizontal: 15
   },
   subTitle: {
     fontSize: 18,

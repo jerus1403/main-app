@@ -16,5 +16,18 @@ export const fonts = StyleSheet.create({
   text: {
     fontSize: 15,
     fontWeight: "400"
+  },
+  screenHeader: {
+    fontWeight: "700",
+    fontSize: 22,
+    color: "white"
+  },
+  screenBtnText: {
+    fontSize: 14,
+    fontWeight: "400",
+    color: "white"
+  },
+  screenBtnContainer: {
+    marginHorizontal: 7
   }
 });

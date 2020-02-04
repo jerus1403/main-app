@@ -29,7 +29,7 @@ import MapSectionModule from "../../components/UI/MapSectionModule";
 import ButtonModule from "../../components/UI/ButtonModule";
 // import DeleteWarningModal from "../../components/UI/Modal";
 
-const EditPost = props => {
+const PostViewScreen = props => {
   const dispatch = useDispatch();
   [isViewerVisible, setViewer] = useState(false);
   [currentImgIndex, setIndex] = useState();
@@ -61,7 +61,10 @@ const EditPost = props => {
         city={postObject.city}
       />
       <View style={styles.buttonContainer}>
-        <ButtonModule style={styles.editButton}>
+        <ButtonModule
+          style={styles.editButton}
+          onPress={() => props.navigation.navigate("PostEditScreen")}
+        >
           <Text style={[fonts.text, styles.editButtonText]}>EDIT</Text>
         </ButtonModule>
         <ButtonModule
@@ -195,26 +198,32 @@ const styles = StyleSheet.create({
   },
   deleteButtonsContainer: {
     flexDirection: "row"
+  },
+  backButton: {
+    paddingHorizontal: 15
   }
 });
 
-EditPost.navigationOptions = ({ navigation }) => ({
+PostViewScreen.navigationOptions = ({ navigation }) => ({
   headerTitle: navigation.getParam("postObject").title,
   headerLeft: () => {
     return (
-      <TouchableOpacity onPress={() => navigation.navigate("History")}>
-        <Ionicons name='ios-arrow-back' size={20} color={colors.white}>
-          {" "}
-          Back
-        </Ionicons>
+      <TouchableOpacity
+        style={styles.backButton}
+        onPress={() => navigation.navigate("History")}
+      >
+        <Ionicons
+          name='ios-arrow-back'
+          size={25}
+          color={colors.white}
+        ></Ionicons>
       </TouchableOpacity>
     );
   },
   headerStyle: {
-    backgroundColor: colors.theme,
-    color: colors.white
+    backgroundColor: colors.theme
   },
-  headerTintColor: colors.white
+  headerTitleStyle: fonts.screenHeader
 });
 
-export default EditPost;
+export default PostViewScreen;

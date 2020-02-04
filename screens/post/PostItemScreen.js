@@ -200,7 +200,7 @@ const PostItem = props => {
         rate
       )
     );
-    setLoading(false);
+
     setImgArray([]);
     setCategory([]);
     setTitle();
@@ -209,7 +209,7 @@ const PostItem = props => {
     setLongitude();
     setCity();
     setRate();
-    // props.navigation.navigate("HistoryTab");
+    setLoading(false);
   };
   // Set addPostStatus back to null after user close the post success modal
   const setDefaultAddPostStatus = () => props.setDefaultStatusAction();
@@ -356,7 +356,7 @@ PostItem.navigationOptions = {
   headerStyle: {
     backgroundColor: colors.theme
   },
-  headerTintColor: colors.white
+  headerTitleStyle: fonts.screenHeader
 };
 
 const styles = StyleSheet.create({
