@@ -14,6 +14,7 @@ import {
 } from "react-native";
 
 import { colors } from "../../styleUtility/colors";
+import { fonts } from "../../styleUtility/fonts";
 import * as posts from "../../store/actions/posts";
 import PostTile from "../../components/History/PostTile";
 
@@ -59,7 +60,13 @@ const History = props => {
   };
 
   if (refreshing) {
-    return <ActivityIndicator size='large' color={colors.theme} />;
+    return (
+      <ActivityIndicator
+        style={styles.spinnder}
+        size='large'
+        color={colors.theme}
+      />
+    );
   }
   if (getUserPostStatus == true && userPosts.length == 0) {
     return (
@@ -122,7 +129,7 @@ History.navigationOptions = {
   headerStyle: {
     backgroundColor: colors.theme
   },
-  headerTintColor: colors.white
+  headerTitleStyle: fonts.screenHeader
 };
 
 const styles = StyleSheet.create({
@@ -130,7 +137,12 @@ const styles = StyleSheet.create({
     fontSize: 20,
     textAlign: "center"
   },
-  container: {}
+  container: {},
+  spinnder: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center"
+  }
 });
 
 const mapStateToProps = state => {

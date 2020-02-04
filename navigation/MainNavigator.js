@@ -6,17 +6,8 @@ import AuthLoadingScreen from "../screens/AuthLoadingScreen";
 import { SettingStack } from "./SettingNavigator";
 import { AuthStack } from "./AuthNavigator";
 import { TabNavigator } from "./BottomTabNavigator";
-import EditPost from "../screens/history/EditPost";
+import { EditPostStack } from "./PostNavigator";
 // import PostItemScreen from "../screens/post/PostItemScreen";
-
-const EditPostStack = createStackNavigator(
-  {
-    EditPostScreen: EditPost
-  },
-  {
-    mode: "modal"
-  }
-);
 
 const MainNavigator = createStackNavigator(
   {

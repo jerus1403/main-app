@@ -23,6 +23,7 @@ import * as profilePictureAction from "../../store/actions/profile";
 import Avatar from "../../assets/avatar.png";
 
 import { colors } from "../../styleUtility/colors";
+import { fonts } from "../../styleUtility/fonts";
 
 const Profile = props => {
   //REDUCER STATE
@@ -133,15 +134,16 @@ Profile.navigationOptions = ({ navigation }) => ({
   headerStyle: {
     backgroundColor: colors.theme
   },
-  headerTintColor: colors.white,
+  headerTitleStyle: fonts.screenHeader,
   headerRight: () => {
     const { params = {} } = navigation.state;
     return (
-      <Button
-        title='Log Out'
+      <TouchableOpacity
+        style={fonts.screenBtnContainer}
         onPress={params.logOutButton}
-        color={colors.white}
-      />
+      >
+        <Text style={fonts.screenBtnText}>Log Out</Text>
+      </TouchableOpacity>
     );
   },
   headerLeft: () => {

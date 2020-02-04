@@ -10,6 +10,7 @@ import {
 } from "react-native";
 
 import { colors } from "../styleUtility/colors";
+import { fonts } from "../styleUtility/fonts";
 
 const Inbox = props => {
   return (
@@ -24,7 +25,7 @@ Inbox.navigationOptions = {
   headerStyle: {
     backgroundColor: colors.theme
   },
-  headerTintColor: colors.white
+  headerTitleStyle: fonts.screenHeader
 };
 
 const styles = StyleSheet.create({

@@ -13,12 +13,13 @@ import {
   FlatList,
   KeyboardAvoidingView,
   ActivityIndicator,
-  Alert
+  Alert,
+  TouchableOpacity
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 
 import { colors } from "../../styleUtility/colors";
-
+import { fonts } from "../../styleUtility/fonts";
 import { GetUserData } from "../../utils/utils";
 import * as profilePictureAction from "../../store/actions/profile";
 
@@ -148,7 +149,29 @@ const ChangeProfilePictureModal = props => {
   );
 };
 
-styles = StyleSheet.create({
+ChangeProfilePictureModal.navigationOptions = ({ navigation }) => ({
+  headerTitle: "Profile Picture",
+  headerLeft: () => {
+    return (
+      <TouchableOpacity
+        style={styles.backButton}
+        onPress={() => navigation.goBack()}
+      >
+        <Ionicons
+          name='ios-arrow-back'
+          size={25}
+          color={colors.white}
+        ></Ionicons>
+      </TouchableOpacity>
+    );
+  },
+  headerStyle: {
+    backgroundColor: colors.theme
+  },
+  headerTitleStyle: fonts.screenHeader
+});
+
+const styles = StyleSheet.create({
   screen: {
     flex: 1,
     alignItems: "center",
@@ -161,6 +184,9 @@ styles = StyleSheet.create({
     width: 180,
     borderRadius: 180 / 2,
     marginBottom: 20
+  },
+  backButton: {
+    paddingHorizontal: 15
   },
   header: {
     fontSize: 30,

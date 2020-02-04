@@ -11,11 +11,13 @@ import {
   FlatList,
   KeyboardAvoidingView,
   ActivityIndicator,
-  Alert
+  Alert,
+  TouchableOpacity
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 
 import { colors } from "../../styleUtility/colors";
+import { fonts } from "../../styleUtility/fonts";
 import * as authActions from "../../store/actions/auth";
 
 const VerifyBirthdayModal = props => {
@@ -61,7 +63,29 @@ const VerifyBirthdayModal = props => {
   );
 };
 
-styles = StyleSheet.create({
+VerifyBirthdayModal.navigationOptions = ({ navigation }) => ({
+  headerTitle: "Verify Birthdate",
+  headerLeft: () => {
+    return (
+      <TouchableOpacity
+        style={styles.backButton}
+        onPress={() => navigation.goBack()}
+      >
+        <Ionicons
+          name='ios-arrow-back'
+          size={25}
+          color={colors.white}
+        ></Ionicons>
+      </TouchableOpacity>
+    );
+  },
+  headerStyle: {
+    backgroundColor: colors.theme
+  },
+  headerTitleStyle: fonts.screenHeader
+});
+
+const styles = StyleSheet.create({
   screen: {
     flex: 1,
     alignItems: "center",
@@ -73,6 +97,9 @@ styles = StyleSheet.create({
     textAlign: "center",
     marginTop: 30,
     marginBottom: 25
+  },
+  backButton: {
+    paddingHorizontal: 15
   },
   input: {
     height: 40,

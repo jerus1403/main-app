@@ -29,7 +29,7 @@ const PostTile = ({
       style={styles.container}
       key={postId}
       onPress={() =>
-        navigation.navigate("EditPost", {
+        navigation.navigate("PostViewScreen", {
           postId: postId,
           postObject: postObject
         })

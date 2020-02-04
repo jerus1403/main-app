@@ -11,11 +11,13 @@ import {
   FlatList,
   KeyboardAvoidingView,
   ActivityIndicator,
-  Alert
+  Alert,
+  TouchableOpacity
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 
 import { colors } from "../../styleUtility/colors";
+import { fonts } from "../../styleUtility/fonts";
 import * as authActions from "../../store/actions/auth";
 
 const ChangeNameModal = props => {
@@ -61,12 +63,37 @@ const ChangeNameModal = props => {
   );
 };
 
-styles = StyleSheet.create({
+ChangeNameModal.navigationOptions = ({ navigation }) => ({
+  headerTitle: "Change Name",
+  headerLeft: () => {
+    return (
+      <TouchableOpacity
+        style={styles.backButton}
+        onPress={() => navigation.goBack()}
+      >
+        <Ionicons
+          name='ios-arrow-back'
+          size={25}
+          color={colors.white}
+        ></Ionicons>
+      </TouchableOpacity>
+    );
+  },
+  headerStyle: {
+    backgroundColor: colors.theme
+  },
+  headerTitleStyle: fonts.screenHeader
+});
+
+const styles = StyleSheet.create({
   screen: {
     flex: 1,
     alignItems: "center",
     backgroundColor: colors.lightWhite,
     paddingTop: 40
+  },
+  backButton: {
+    paddingHorizontal: 15
   },
   header: {
     fontSize: 30,
