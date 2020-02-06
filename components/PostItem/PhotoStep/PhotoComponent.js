@@ -35,6 +35,7 @@ const PhotoComponent = ({
   takePhotoHandler,
   selectPhotoHandler
 }) => {
+  console.log(imageList, "LIST PHOTO");
   [isViewerVisible, setViewer] = useState(false);
   [currentImgIndex, setIndex] = useState();
   [isPhotoButtonModalVisible, setPhotoButtonModal] = useState(false);

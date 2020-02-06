@@ -20,13 +20,11 @@ import {
 import { Ionicons } from "@expo/vector-icons";
 import { colors } from "../../styleUtility/colors";
 import { fonts } from "../../styleUtility/fonts";
+import PostItemScreen from "../../screens/post/PostItemScreen";
 
-const PostEditScreen = () => {
-  return (
-    <View>
-      <Text>POST EDIT SCREEN</Text>
-    </View>
-  );
+const PostEditScreen = props => {
+  const postObject = props.navigation.getParam("postObject");
+  return <PostItemScreen postObject={postObject} />;
 };
 
 const styles = StyleSheet.create({
@@ -55,10 +53,9 @@ PostEditScreen.navigationOptions = ({ navigation }) => ({
   },
   headerLeft: null,
   headerStyle: {
-    backgroundColor: colors.theme,
-    color: colors.white
+    backgroundColor: colors.theme
   },
-  headerTintColor: colors.white
+  headerTitleStyle: fonts.screenHeader
 });
 
 export default PostEditScreen;

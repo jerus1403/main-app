@@ -53,7 +53,7 @@ const ImageListModule = ({
       setImageOptionModal(false);
     }
   };
-
+  console.log(imageList, "LIST MODULE");
   return (
     <View style={styles.container}>
       <View style={styles.list}>
