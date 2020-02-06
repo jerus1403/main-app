@@ -8,6 +8,7 @@ import InboxScreen from "../screens/InboxScreen";
 import PostItemScreen from "../screens/post/PostItemScreen";
 import HistoryScreen from "../screens/history/HistoryScreen";
 import ProfileScreen from "../screens/user/ProfileScreen";
+import PostTabScreen from "../screens/post/PostTabScreen";
 import { colors } from "../styleUtility/colors";
 
 const InboxStack = createStackNavigator({
@@ -18,7 +19,7 @@ const InboxStack = createStackNavigator({
 
 const PostStack = createStackNavigator({
   Post: {
-    screen: PostItemScreen
+    screen: PostTabScreen
   }
 });
 

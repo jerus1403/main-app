@@ -63,9 +63,9 @@ const PostViewScreen = props => {
       <View style={styles.buttonContainer}>
         <ButtonModule
           style={styles.editButton}
-          onPress={() =>
-            props.navigation.navigate("PostEditScreen", { postObject })
-          }
+          onPress={() => {
+            props.navigation.navigate("PostEditScreen", { postObject });
+          }}
         >
           <Text style={[fonts.text, styles.editButtonText]}>EDIT</Text>
         </ButtonModule>

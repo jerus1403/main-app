@@ -1,47 +1,51 @@
 import React, { useState, useReducer, useCallback, useEffect } from "react";
-import { useDispatch, connect, getState } from "react-redux";
 import {
   StyleSheet,
   Text,
   ScrollView,
   TextInput,
-  RefreshControl,
   View,
-  Image,
   Button,
   FlatList,
-  ActivityIndicator,
-  TouchableOpacity,
+  Alert,
   Dimensions,
+  ActivityIndicator,
   Modal,
-  Platform,
-  TouchableHighlight
+  Image,
+  TouchableOpacity
 } from "react-native";
+import { useDispatch, connect, getState } from "react-redux";
+import { ProgressSteps, ProgressStep } from "react-native-progress-steps";
 import * as ImagePicker from "expo-image-picker";
 import * as Permissions from "expo-permissions";
+import { ImageBrowser } from "expo-multiple-media-imagepicker";
 
-import { Ionicons } from "@expo/vector-icons";
+import { AFTER_POST_SUCCESS } from "../../store/types/types";
+
 import { colors } from "../../styleUtility/colors";
 import { fonts } from "../../styleUtility/fonts";
+import * as posts from "../../store/actions/posts";
+
 import PhotoComponent from "../../components/PostItem/PhotoStep/PhotoComponent";
 import DetailComponent from "../../components/PostItem/DetailStep/DetailComponent";
-import PostItemScreen from "../post/PostItemScreen";
+import LocationComponent from "../../components/PostItem/LocationStep/LocationComponent";
+import RateComponent from "../../components/PostItem/RateStep/RateComponent";
+import ButtonModule from "../../components/UI/ButtonModule";
+import InfoSectionModule from "../../components/UI/InfoSectionModule";
 
-const PostEditScreen = props => {
-  const postObject = props.navigation.getParam("postObject");
+import PostItemScreen from "./PostItemScreen";
 
+const PostTabScreen = props => {
   const userId = props.state.attributes.userId;
 
-  [imageList, setImgArray] = useState(postObject.imgPathList);
-  [categoryList, setCategory] = useState(postObject.categoryList);
-  [title, setTitle] = useState(postObject.title);
-  [description, setDescription] = useState(
-    postObject.description ? postObject.description : null
-  );
-  [latitude, setLatitude] = useState(postObject.latitude);
-  [longitude, setLongitude] = useState(postObject.longitude);
-  [city, setCity] = useState(postObject.city);
-  [rate, setRate] = useState(postObject.rate);
+  [imageList, setImgArray] = useState([]);
+  [categoryList, setCategory] = useState([]);
+  [title, setTitle] = useState(null);
+  [description, setDescription] = useState(null);
+  [latitude, setLatitude] = useState(null);
+  [longitude, setLongitude] = useState(null);
+  [city, setCity] = useState(null);
+  [rate, setRate] = useState(null);
 
   return (
     <PostItemScreen
@@ -66,20 +70,7 @@ const PostEditScreen = props => {
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    paddingHorizontal: 12
-  },
-  closeButton: {
-    marginRight: 7
-  },
-  closeBtnText: {
-    color: colors.white
-  }
-});
-
-PostEditScreen.navigationOptions = ({ navigation }) => ({
+PostTabScreen.navigationOptions = ({ navigation }) => ({
   headerTitle: "Edit Post",
   headerRight: () => {
     return (
@@ -98,10 +89,23 @@ PostEditScreen.navigationOptions = ({ navigation }) => ({
   headerTitleStyle: fonts.screenHeader
 });
 
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    paddingHorizontal: 12
+  },
+  closeButton: {
+    marginRight: 7
+  },
+  closeBtnText: {
+    color: colors.white
+  }
+});
+
 const mapStateToProps = state => {
   return {
     state: state
   };
 };
 
-export default connect(mapStateToProps)(PostEditScreen);
+export default connect(mapStateToProps)(PostTabScreen);
