@@ -49,7 +49,7 @@ const ThumbnailModule = ({ imageList, removePhoto, setViewer, setIndex }) => {
 
 const styles = StyleSheet.create({
   container: {
-    marginTop: 30,
+    marginTop: 20,
     marginBottom: 5,
     borderRadius: 5
   },
