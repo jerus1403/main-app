@@ -38,6 +38,13 @@ const ImageListModule = ({
   [photoId, setPhotoId] = useState();
   [currentPhotoIndex, setPhotoIndex] = useState(null);
 
+  useEffect(() => {
+    let isMouted = true;
+    return () => {
+      isMouted = false;
+    };
+    console.log(isMouted, "IMAGE LIST COMPONENT MOUNT");
+  }, [setPhotoIndex, setImageOptionModal, setPhotoId]);
   // Open Option Modal when an image was pressed
   const openPhotoModal = (id, index) => {
     setImageOptionModal(true);
@@ -46,11 +53,10 @@ const ImageListModule = ({
   };
 
   // Close Photo Option Modal
-  const closeModal = type => {
+  const closeModal = () => {
     setImageOptionModal(false);
   };
-  console.log(isImageOptionModalVisible, "MODAL LIST MODULE");
-  console.log(currentPhotoIndex, "INDEX LIST MODULE");
+
   return (
     <View style={styles.container}>
       <View style={styles.list}>

@@ -28,18 +28,21 @@ import { fonts } from "../../../styleUtility/fonts";
 const PhotoComponent = ({
   imageList,
   setImgArray,
-  reducer,
   toggleModal,
   openModal,
-  closeModal,
   takePhotoHandler,
   selectPhotoHandler
 }) => {
-  // console.log(imageList, " PHOTO COMPONENT");
   [isViewerVisible, setViewer] = useState(false);
   [currentImgIndex, setIndex] = useState();
-  [isPhotoButtonModalVisible, setPhotoButtonModal] = useState(false);
 
+  useEffect(() => {
+    let isMouted = true;
+    return () => {
+      isMouted = false;
+    };
+    console.log(isMouted, "PHOTO COMPONENT MOUNT");
+  }, []);
   //Remove photo method from List
   const removePhoto = id => {
     let newList = imageList.filter(el => el.id !== id);
@@ -72,7 +75,6 @@ const PhotoComponent = ({
             setCoveredPhoto={setCoveredPhoto}
             setViewer={setViewer}
             setIndex={setIndex}
-            isPhotoButtonModalVisible={isPhotoButtonModalVisible}
             openModal={openModal}
             toggleModal={toggleModal}
           />

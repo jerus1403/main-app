@@ -30,22 +30,56 @@ import DetailComponent from "../../components/PostItem/DetailStep/DetailComponen
 import LocationComponent from "../../components/PostItem/LocationStep/LocationComponent";
 import RateComponent from "../../components/PostItem/RateStep/RateComponent";
 import ButtonModule from "../../components/UI/ButtonModule";
-import InfoSectionModule from "../../components/UI/InfoSectionModule";
 
-const PostItem = props => {
+const PostItem = ({
+  userId,
+  imageList,
+  setImgArray,
+  categoryList,
+  setCategory,
+  title,
+  setTitle,
+  description,
+  setDescription,
+  latitude,
+  setLatitude,
+  longitude,
+  setLongitude,
+  city,
+  setCity,
+  rate,
+  setRate,
+  ...props
+}) => {
+  console.log(imageList, "PROPS POST SCREEN");
   const dispatch = useDispatch();
-  const userId = props.state.attributes.userId;
+  // const userId = props.state.attributes.userId;
 
   [isLoading, setLoading] = useState(false);
-  [imageList, setImgArray] = useState([]);
-  [categoryList, setCategory] = useState([]);
-  [title, setTitle] = useState();
-  [description, setDescription] = useState();
-  [latitude, setLatitude] = useState();
-  [longitude, setLongitude] = useState();
-  [city, setCity] = useState();
-  [rate, setRate] = useState();
+  // [imageList, setImgArray] = useState(
+  //   props.postObject ? props.postObject.imgPathList : []
+  // );
+  // [categoryList, setCategory] = useState(
+  //   props.postObject ? props.postObject.categoryList : []
+  // );
+  // [title, setTitle] = useState(
+  //   props.postObject ? props.postObject.title : null
+  // );
+  // [description, setDescription] = useState(
+  //   props.postObject && props.postObject.description
+  //     ? props.postObject.description
+  //     : null
+  // );
+  // [latitude, setLatitude] = useState(
+  //   props.postObject ? props.postObject.latitude : null
+  // );
+  // [longitude, setLongitude] = useState(
+  //   props.postObject ? props.postObject.longitude : null
+  // );
+  // [city, setCity] = useState(props.postObject ? props.postObject.city : null);
+  // [rate, setRate] = useState(props.postObject ? props.postObject.rate : null);
   [currentStep, setCurrentStep] = useState(0);
+
   [openModal, setModal] = useState({
     photoViewerModal: false,
     photoButtonsModal: false,
@@ -61,11 +95,14 @@ const PostItem = props => {
   };
 
   useEffect(() => {
-    let isSubscribed = true;
     if (props.state.posts.addPostStatus) {
       setModal({ ...openModal, postSuccessModal: true });
     }
-    return () => (isSubscribed = false);
+    let isMouted = true;
+    return () => {
+      isMouted = false;
+    };
+    console.log(isMouted, "POST SCREEN MOUNT");
   }, [
     imageList,
     categoryList,
@@ -77,27 +114,6 @@ const PostItem = props => {
     city,
     openModal
   ]);
-
-  // Method: Generate a post ID ---------------------------------------------------------
-  const guidGenerator = () => {
-    var S4 = function() {
-      return (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1);
-    };
-    return (
-      S4() +
-      S4() +
-      "-" +
-      S4() +
-      "-" +
-      S4() +
-      "-" +
-      S4() +
-      "-" +
-      S4() +
-      S4() +
-      S4()
-    );
-  };
 
   // Check if Image exists UTILITY FUNCTION ---------------------------------------------------------
   const checkObject = (obj, list) => {
@@ -134,18 +150,18 @@ const PostItem = props => {
 
   //Take Photo Handler ---------------------------------------------------------
   const takePhotoHandler = async () => {
-    const imgId = guidGenerator();
     const hasCameraPermission = await cameraPermission();
     if (!hasCameraPermission) {
       return;
     }
     const cameraImage = await ImagePicker.launchCameraAsync({ base64: true });
     if (!cameraImage.cancelled) {
+      const uniqueId = cameraImage.base64.slice(0, 50);
       const imageName = cameraImage.uri.split("/").pop();
       const imageArray = imageName.split(".");
       const imageType = imageArray[imageArray.length - 1];
       const imageObj = {
-        id: imgId,
+        id: uniqueId,
         base64: cameraImage.base64,
         type: imageType,
         url: cameraImage.uri,
@@ -158,7 +174,6 @@ const PostItem = props => {
 
   // Select Photo from Gallery Handler ---------------------------------------------------------
   const selectPhotoHandler = async () => {
-    const imgId = guidGenerator();
     const hasGalleryPermission = await galleryPermission();
     if (!hasGalleryPermission) {
       return;
@@ -168,11 +183,12 @@ const PostItem = props => {
     });
     closeModal("photoButtonsModal");
     if (!image.cancelled) {
+      const uniqueId = image.base64.slice(0, 50);
       const imageName = image.uri.split("/").pop();
       const imageArray = imageName.split(".");
       const imageType = imageArray[imageArray.length - 1];
       const imageObj = {
-        id: imgId,
+        id: uniqueId,
         base64: image.base64,
         type: imageType,
         url: image.uri,
@@ -400,9 +416,6 @@ const styles = StyleSheet.create({
   },
   postSuccessModalContainer: {
     flex: 1
-    // paddingTop: 22
-    // justifyContent: "center",
-    // alignItems: "center",
   },
   successTextContainer: {
     width: "100%",
