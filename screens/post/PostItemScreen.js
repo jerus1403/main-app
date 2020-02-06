@@ -33,7 +33,6 @@ import ButtonModule from "../../components/UI/ButtonModule";
 import InfoSectionModule from "../../components/UI/InfoSectionModule";
 
 const PostItem = props => {
-  console.log(props, "POST SCREEN");
   const dispatch = useDispatch();
   const userId = props.state.attributes.userId;
 
@@ -62,13 +61,11 @@ const PostItem = props => {
   };
 
   useEffect(() => {
-    if (props.postObject) {
-      // imageList = imageList.concat(props.postObject.imgPathList);
-      // setImgArray(imageList);
-    }
+    let isSubscribed = true;
     if (props.state.posts.addPostStatus) {
       setModal({ ...openModal, postSuccessModal: true });
     }
+    return () => (isSubscribed = false);
   }, [
     imageList,
     categoryList,
@@ -77,7 +74,8 @@ const PostItem = props => {
     latitude,
     longitude,
     rate,
-    city
+    city,
+    openModal
   ]);
 
   // Method: Generate a post ID ---------------------------------------------------------
@@ -224,10 +222,10 @@ const PostItem = props => {
   };
   // Set addPostStatus back to null after user close the post success modal
   const setDefaultAddPostStatus = () => props.setDefaultStatusAction();
+
   if (isLoading) {
     return <ActivityIndicator size='large' color={colors.theme} />;
   }
-
   return (
     <View style={styles.container}>
       <ProgressSteps

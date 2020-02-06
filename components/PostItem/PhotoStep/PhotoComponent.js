@@ -35,7 +35,7 @@ const PhotoComponent = ({
   takePhotoHandler,
   selectPhotoHandler
 }) => {
-  console.log(imageList, "LIST PHOTO");
+  // console.log(imageList, " PHOTO COMPONENT");
   [isViewerVisible, setViewer] = useState(false);
   [currentImgIndex, setIndex] = useState();
   [isPhotoButtonModalVisible, setPhotoButtonModal] = useState(false);
@@ -109,7 +109,8 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: "column",
     justifyContent: "center",
-    alignItems: "center"
+    alignItems: "center",
+    paddingTop: 20
   },
   buttons: {
     alignSelf: "center",

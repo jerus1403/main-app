@@ -36,24 +36,21 @@ const ImageListModule = ({
 }) => {
   [isImageOptionModalVisible, setImageOptionModal] = useState(false);
   [photoId, setPhotoId] = useState();
-  [currentPhotoIndex, setPhotoIndex] = useState();
+  [currentPhotoIndex, setPhotoIndex] = useState(null);
 
   // Open Option Modal when an image was pressed
-  const openPhotoModal = (id, index, type) => {
-    if (type === "imageOption" && id && index) {
-      setImageOptionModal(true);
-      setPhotoId(id);
-      setPhotoIndex(index);
-    }
+  const openPhotoModal = (id, index) => {
+    setImageOptionModal(true);
+    setPhotoId(id);
+    setPhotoIndex(index);
   };
 
   // Close Photo Option Modal
   const closeModal = type => {
-    if (type === "imageOption") {
-      setImageOptionModal(false);
-    }
+    setImageOptionModal(false);
   };
-  console.log(imageList, "LIST MODULE");
+  console.log(isImageOptionModalVisible, "MODAL LIST MODULE");
+  console.log(currentPhotoIndex, "INDEX LIST MODULE");
   return (
     <View style={styles.container}>
       <View style={styles.list}>
@@ -65,7 +62,7 @@ const ImageListModule = ({
                 style={[styles.imageContainer, shadow.shadow_one]}
                 onPress={() => {
                   setIndex(index);
-                  openPhotoModal(item.id, index, "imageOption");
+                  openPhotoModal(item.id, index);
                 }}
               >
                 <Image style={styles.postImage} source={{ uri: item.url }} />
@@ -109,7 +106,6 @@ const ImageListModule = ({
 const styles = StyleSheet.create({
   container: {
     marginTop: 5,
-    paddingBottom: 10,
     flex: 1,
     width: "100%"
   },
@@ -119,8 +115,8 @@ const styles = StyleSheet.create({
     flexWrap: "wrap"
   },
   imageContainer: {
-    marginRight: 7,
-    marginBottom: 10
+    marginRight: 7
+    // marginBottom: 10
   },
   postImage: {
     height: 60,

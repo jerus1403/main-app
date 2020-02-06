@@ -31,7 +31,7 @@ const ImageOptionModal = ({
       >
         <TouchableHighlight
           style={styles.background}
-          onPress={() => closeModal("imageOption")}
+          onPress={() => closeModal()}
           underlayColor={"transparent"}
         >
           <View />
@@ -42,7 +42,7 @@ const ImageOptionModal = ({
               title='View'
               onPress={() => {
                 setViewer(true);
-                closeModal("imageOption");
+                closeModal();
               }}
             />
           </TouchableOpacity>
@@ -51,7 +51,7 @@ const ImageOptionModal = ({
               title='Set as Cover'
               onPress={() => {
                 setCoveredPhoto(currentPhotoIndex);
-                closeModal("imageOption");
+                closeModal();
               }}
             />
           </TouchableOpacity>
@@ -61,12 +61,12 @@ const ImageOptionModal = ({
               color={colors.theme}
               onPress={() => {
                 removePhoto(photoId);
-                closeModal("imageOption");
+                closeModal();
               }}
             />
           </TouchableOpacity>
           <TouchableOpacity style={styles.buttons}>
-            <Button title='Cancel' onPress={() => closeModal("imageOption")} />
+            <Button title='Cancel' onPress={() => closeModal()} />
           </TouchableOpacity>
         </View>
       </Modal>
