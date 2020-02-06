@@ -33,6 +33,7 @@ import ButtonModule from "../../components/UI/ButtonModule";
 import InfoSectionModule from "../../components/UI/InfoSectionModule";
 
 const PostItem = props => {
+  console.log(props, "POST SCREEN");
   const dispatch = useDispatch();
   const userId = props.state.attributes.userId;
 
@@ -61,6 +62,10 @@ const PostItem = props => {
   };
 
   useEffect(() => {
+    if (props.postObject) {
+      // imageList = imageList.concat(props.postObject.imgPathList);
+      // setImgArray(imageList);
+    }
     if (props.state.posts.addPostStatus) {
       setModal({ ...openModal, postSuccessModal: true });
     }
@@ -74,6 +79,27 @@ const PostItem = props => {
     rate,
     city
   ]);
+
+  // Method: Generate a post ID ---------------------------------------------------------
+  const guidGenerator = () => {
+    var S4 = function() {
+      return (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1);
+    };
+    return (
+      S4() +
+      S4() +
+      "-" +
+      S4() +
+      "-" +
+      S4() +
+      "-" +
+      S4() +
+      "-" +
+      S4() +
+      S4() +
+      S4()
+    );
+  };
 
   // Check if Image exists UTILITY FUNCTION ---------------------------------------------------------
   const checkObject = (obj, list) => {
@@ -110,6 +136,7 @@ const PostItem = props => {
 
   //Take Photo Handler ---------------------------------------------------------
   const takePhotoHandler = async () => {
+    const imgId = guidGenerator();
     const hasCameraPermission = await cameraPermission();
     if (!hasCameraPermission) {
       return;
@@ -120,7 +147,8 @@ const PostItem = props => {
       const imageArray = imageName.split(".");
       const imageType = imageArray[imageArray.length - 1];
       const imageObj = {
-        id: cameraImage.base64,
+        id: imgId,
+        base64: cameraImage.base64,
         type: imageType,
         url: cameraImage.uri,
         filename: imageName
@@ -132,6 +160,7 @@ const PostItem = props => {
 
   // Select Photo from Gallery Handler ---------------------------------------------------------
   const selectPhotoHandler = async () => {
+    const imgId = guidGenerator();
     const hasGalleryPermission = await galleryPermission();
     if (!hasGalleryPermission) {
       return;
@@ -145,7 +174,8 @@ const PostItem = props => {
       const imageArray = imageName.split(".");
       const imageType = imageArray[imageArray.length - 1];
       const imageObj = {
-        id: image.base64,
+        id: imgId,
+        base64: image.base64,
         type: imageType,
         url: image.uri,
         filename: imageName
@@ -162,26 +192,7 @@ const PostItem = props => {
       }
     }
   };
-  // Method: Generate a post ID ---------------------------------------------------------
-  const guidGenerator = () => {
-    var S4 = function() {
-      return (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1);
-    };
-    return (
-      S4() +
-      S4() +
-      "-" +
-      S4() +
-      "-" +
-      S4() +
-      "-" +
-      S4() +
-      "-" +
-      S4() +
-      S4() +
-      S4()
-    );
-  };
+
   // Method: Submit a post ---------------------------------------------------------
   const submitPost = async () => {
     setLoading(true);

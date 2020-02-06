@@ -29,6 +29,7 @@ export const addPost = (
     imageList.map(item => {
       const imgUrl = `https://post-images-main-app.s3.amazonaws.com/user/${userId}/post/${postId}/${item.filename}`;
       const imgObj = {
+        id: item.id,
         url: imgUrl,
         filename: item.filename
       };

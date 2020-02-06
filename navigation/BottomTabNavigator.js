@@ -45,6 +45,7 @@ export const TabNavigator = createBottomTabNavigator(
   {
     defaultNavigationOptions: ({ navigation }) => ({
       tabBarIcon: ({ focused, tintColor }) => {
+        // console.log(navigation, "NAVIGATION");
         const { routeName } = navigation.state;
         let IconComponent = Ionicons;
         let iconName;
@@ -53,6 +54,7 @@ export const TabNavigator = createBottomTabNavigator(
         } else if (routeName === "InboxTab") {
           iconName = `ios-chatboxes`;
         } else if (routeName === "PostTab") {
+          navigation.navigate("PostItemScreen", { type: "default" });
           iconName = `md-add-circle`;
         } else if (routeName === "HistoryTab") {
           iconName = `ios-time`;
