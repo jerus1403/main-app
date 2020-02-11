@@ -86,6 +86,8 @@ const PostItem = ({
     postSuccessModal: false
   });
 
+  [isMounted, setIsMounted] = useState(false);
+
   const toggleModal = modal => {
     setModal({ ...openModal, [modal]: !openModal[modal] });
   };
@@ -98,11 +100,8 @@ const PostItem = ({
     if (props.state.posts.addPostStatus) {
       setModal({ ...openModal, postSuccessModal: true });
     }
-    let isMouted = true;
-    return () => {
-      isMouted = false;
-    };
-    console.log(isMouted, "POST SCREEN MOUNT");
+    console.log(isMounted, "POST SCREEN COMPONENT");
+    setIsMounted(true);
   }, [
     imageList,
     categoryList,
@@ -112,7 +111,8 @@ const PostItem = ({
     longitude,
     rate,
     city,
-    openModal
+    openModal,
+    isMounted
   ]);
 
   // Check if Image exists UTILITY FUNCTION ---------------------------------------------------------
