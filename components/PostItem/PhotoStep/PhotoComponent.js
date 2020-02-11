@@ -35,14 +35,12 @@ const PhotoComponent = ({
 }) => {
   [isViewerVisible, setViewer] = useState(false);
   [currentImgIndex, setIndex] = useState();
+  [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
-    let isMouted = true;
-    return () => {
-      isMouted = false;
-    };
-    console.log(isMouted, "PHOTO COMPONENT MOUNT");
-  }, []);
+    console.log(isMounted, "PHOTO COMPONENT");
+    setIsMounted(true);
+  }, [isMounted]);
   //Remove photo method from List
   const removePhoto = id => {
     let newList = imageList.filter(el => el.id !== id);
