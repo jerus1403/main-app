@@ -1,4 +1,10 @@
-import React, { useState, useReducer, useCallback, useEffect } from "react";
+import React, {
+  useState,
+  useReducer,
+  useCallback,
+  useEffect,
+  useRef
+} from "react";
 import {
   StyleSheet,
   Text,
@@ -11,7 +17,8 @@ import {
   Dimensions,
   ActivityIndicator,
   Modal,
-  Image
+  Image,
+  TouchableOpacity
 } from "react-native";
 import { useDispatch, connect, getState } from "react-redux";
 import { ProgressSteps, ProgressStep } from "react-native-progress-steps";
@@ -30,63 +37,76 @@ import DetailComponent from "../../components/PostItem/DetailStep/DetailComponen
 import LocationComponent from "../../components/PostItem/LocationStep/LocationComponent";
 import RateComponent from "../../components/PostItem/RateStep/RateComponent";
 import ButtonModule from "../../components/UI/ButtonModule";
+import ImageViewerModal from "../../components/UI/ImageViewerModal";
 
-const PostItem = ({
-  userId,
-  imageList,
-  setImgArray,
-  categoryList,
-  setCategory,
-  title,
-  setTitle,
-  description,
-  setDescription,
-  latitude,
-  setLatitude,
-  longitude,
-  setLongitude,
-  city,
-  setCity,
-  rate,
-  setRate,
-  ...props
-}) => {
-  console.log(imageList, "PROPS POST SCREEN");
+const PostItem = props => {
+  const postObject = props.navigation.getParam("postObject");
+  const componentIsMounted = useRef(true);
   const dispatch = useDispatch();
-  // const userId = props.state.attributes.userId;
+  const userId = props.state.attributes.userId;
+
+  const initialState = {
+    imageList: postObject ? postObject.imgPathList : [],
+    categoryList: postObject ? postObject.categoryList : [],
+    title: postObject ? postObject.title : null,
+    description:
+      postObject && postObject.description ? postObject.description : null,
+    latitude: postObject ? postObject.latitude : null,
+    longitude: postObject ? postObject.longitude : null,
+    city: postObject ? postObject.city : null,
+    rate: postObject ? postObject.rate : null
+  };
+
+  [imageList, setImgArray] = useState(initialState.imageList);
+  [categoryList, setCategory] = useState(initialState.categoryList);
+  [title, setTitle] = useState(initialState.title);
+  [description, setDescription] = useState(initialState.description);
+  [latitude, setLatitude] = useState(initialState.latitude);
+  [longitude, setLongitude] = useState(initialState.longitude);
+  [city, setCity] = useState(initialState.city);
+  [rate, setRate] = useState(initialState.rate);
 
   [isLoading, setLoading] = useState(false);
-  // [imageList, setImgArray] = useState(
-  //   props.postObject ? props.postObject.imgPathList : []
-  // );
-  // [categoryList, setCategory] = useState(
-  //   props.postObject ? props.postObject.categoryList : []
-  // );
-  // [title, setTitle] = useState(
-  //   props.postObject ? props.postObject.title : null
-  // );
-  // [description, setDescription] = useState(
-  //   props.postObject && props.postObject.description
-  //     ? props.postObject.description
-  //     : null
-  // );
-  // [latitude, setLatitude] = useState(
-  //   props.postObject ? props.postObject.latitude : null
-  // );
-  // [longitude, setLongitude] = useState(
-  //   props.postObject ? props.postObject.longitude : null
-  // );
-  // [city, setCity] = useState(props.postObject ? props.postObject.city : null);
-  // [rate, setRate] = useState(props.postObject ? props.postObject.rate : null);
   [currentStep, setCurrentStep] = useState(0);
-
   [openModal, setModal] = useState({
     photoViewerModal: false,
     photoButtonsModal: false,
-    postSuccessModal: false
+    postSuccessModal: false,
+    imageOptionModal: false
+    // viewerModal: false
   });
 
-  [isMounted, setIsMounted] = useState(false);
+  // [isViewerVisible, setViewer] = useState(false);
+  [currentImgIndex, setIndex] = useState();
+
+  // [isImageOptionModalVisible, setImageOptionModal] = useState(false);
+  [photoId, setPhotoId] = useState();
+  [currentPhotoIndex, setPhotoIndex] = useState(null);
+
+  //Remove photo method from List
+  const removePhoto = id => {
+    let newList = imageList.filter(el => el.id !== id);
+    setImgArray([...newList]);
+  };
+
+  //Set covered photo
+  const setCoveredPhoto = indexB => {
+    let temp = imageList[0];
+    imageList[0] = imageList[indexB];
+    imageList[indexB] = temp;
+    setImgArray([...imageList]);
+  };
+
+  const openPhotoModal = (modal, id, index) => {
+    setModal({ ...openModal, [modal]: true });
+    setPhotoId(id);
+    setPhotoIndex(index);
+  };
+
+  // Close Photo Option Modal
+  // const closePhotoModal = (modal) => {
+  //   setModal({ ...openModal, [modal]: false });
+  // };
 
   const toggleModal = modal => {
     setModal({ ...openModal, [modal]: !openModal[modal] });
@@ -97,11 +117,17 @@ const PostItem = ({
   };
 
   useEffect(() => {
+    console.log(props, "POST NAVIGATION");
+    console.log(componentIsMounted, "POST SCREEN");
+    // if (props.navigation.state.routeName !== "Post") {
+    //   componentIsMounted.current = true;
+    // }
     if (props.state.posts.addPostStatus) {
       setModal({ ...openModal, postSuccessModal: true });
     }
-    console.log(isMounted, "POST SCREEN COMPONENT");
-    setIsMounted(true);
+    return () => {
+      componentIsMounted.current = false;
+    };
   }, [
     imageList,
     categoryList,
@@ -112,7 +138,8 @@ const PostItem = ({
     rate,
     city,
     openModal,
-    isMounted
+    toggleModal,
+    currentImgIndex
   ]);
 
   // Check if Image exists UTILITY FUNCTION ---------------------------------------------------------
@@ -207,6 +234,25 @@ const PostItem = ({
     }
   };
 
+  const guidGenerator = () => {
+    var S4 = function() {
+      return (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1);
+    };
+    return (
+      S4() +
+      S4() +
+      "-" +
+      S4() +
+      "-" +
+      S4() +
+      "-" +
+      S4() +
+      "-" +
+      S4() +
+      S4() +
+      S4()
+    );
+  };
   // Method: Submit a post ---------------------------------------------------------
   const submitPost = async () => {
     setLoading(true);
@@ -261,13 +307,31 @@ const PostItem = ({
         >
           <View style={styles.content}>
             <PhotoComponent
+              removePhoto={removePhoto}
+              setCoveredPhoto={setCoveredPhoto}
               imageList={imageList}
-              setImgArray={setImgArray}
+              // isViewerVisible={isViewerVisible}
+              setModal={setModal}
+              currentImgIndex={currentImgIndex}
+              setIndex={setIndex}
+              openPhotoModal={openPhotoModal}
+              closeModal={closeModal}
+              // isImageOptionModalVisible={isImageOptionModalVisible}
+              // setImageOptionModal={setImageOptionModal}
+              photoId={photoId}
+              setPhotoId={setPhotoId}
+              // setImgArray={setImgArray}
               toggleModal={toggleModal}
               openModal={openModal}
               closeModal={closeModal}
               takePhotoHandler={takePhotoHandler}
               selectPhotoHandler={selectPhotoHandler}
+            />
+            <ImageViewerModal
+              isModalOpen={openModal.photoViewerModal}
+              imageList={imageList}
+              closeModal={closeModal}
+              currentImgIndex={currentImgIndex}
             />
           </View>
         </ProgressStep>
@@ -365,7 +429,7 @@ const PostItem = ({
             onPress={() => {
               setDefaultAddPostStatus();
               closeModal("postSuccessModal");
-              props.navigation.navigate("HistoryTab");
+              props.navigation.navigate("HistoryScreen");
             }}
           >
             <Text style={styles.btnTextStyle}>DONE</Text>
@@ -376,12 +440,25 @@ const PostItem = ({
   );
 };
 
-PostItem.navigationOptions = {
-  headerTitle: "Post",
-  headerStyle: {
-    backgroundColor: colors.theme
-  },
-  headerTitleStyle: fonts.screenHeader
+PostItem.navigationOptions = ({ navigation }) => {
+  return {
+    headerTitle: navigation.state.params === undefined ? "Post" : "Edit Post",
+    headerRight: () => {
+      return (
+        <TouchableOpacity
+          onPress={() => navigation.goBack()}
+          style={styles.closeButton}
+        >
+          <Text style={styles.closeBtnText}>Close</Text>
+        </TouchableOpacity>
+      );
+    },
+    headerLeft: null,
+    headerStyle: {
+      backgroundColor: colors.theme
+    },
+    headerTitleStyle: fonts.screenHeader
+  };
 };
 
 const styles = StyleSheet.create({
@@ -389,9 +466,15 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    width: Dimensions.get("window").width
+    width: Dimensions.get("window").width,
+    paddingHorizontal: 12
   },
-
+  closeButton: {
+    marginRight: 7
+  },
+  closeBtnText: {
+    color: colors.white
+  },
   content: {
     alignSelf: "center",
     width: "90%"

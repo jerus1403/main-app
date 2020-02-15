@@ -1,4 +1,15 @@
 import React from "react";
+import {
+  Modal,
+  StyleSheet,
+  Text,
+  ScrollView,
+  Image,
+  TextInput,
+  View,
+  Button,
+  TouchableOpacity
+} from "react-native";
 import { createBottomTabNavigator } from "react-navigation-tabs";
 import { createStackNavigator } from "react-navigation-stack";
 import { Ionicons } from "@expo/vector-icons";
@@ -6,9 +17,8 @@ import { Ionicons } from "@expo/vector-icons";
 import HomeScreen from "../screens/HomeScreen";
 import InboxScreen from "../screens/InboxScreen";
 import PostItemScreen from "../screens/post/PostItemScreen";
-import HistoryScreen from "../screens/history/HistoryScreen";
+import { HistoryStack } from "../navigation/HistoryStack";
 import ProfileScreen from "../screens/user/ProfileScreen";
-import PostTabScreen from "../screens/post/PostTabScreen";
 import { colors } from "../styleUtility/colors";
 
 const InboxStack = createStackNavigator({
@@ -19,12 +29,8 @@ const InboxStack = createStackNavigator({
 
 const PostStack = createStackNavigator({
   Post: {
-    screen: PostTabScreen
+    screen: PostItemScreen
   }
-});
-
-const HistoryStack = createStackNavigator({
-  History: { screen: HistoryScreen }
 });
 
 const ProfileStack = createStackNavigator({
@@ -36,12 +42,24 @@ const ProfileStack = createStackNavigator({
 export const TabNavigator = createBottomTabNavigator(
   {
     Home: { screen: HomeScreen },
-    InboxTab: { screen: InboxStack },
-    PostTab: PostStack,
-    HistoryTab: { screen: HistoryStack },
-    Profile: {
-      screen: ProfileStack
-    }
+    InboxTab: InboxStack,
+    PostTab: {
+      screen: () => null,
+      navigationOptions: ({ navigation }) => ({
+        tabBarIcon: ({ focused, tintColor }) => {
+          return (
+            <TouchableOpacity
+              style={styles.postButton}
+              onPress={() => navigation.navigate("Post")}
+            >
+              <Ionicons name='ios-create' size={45} color={colors.theme} />
+            </TouchableOpacity>
+          );
+        }
+      })
+    },
+    HistoryTab: HistoryStack,
+    Profile: ProfileStack
   },
   {
     defaultNavigationOptions: ({ navigation }) => ({
@@ -54,21 +72,33 @@ export const TabNavigator = createBottomTabNavigator(
           iconName = `ios-home`;
         } else if (routeName === "InboxTab") {
           iconName = `ios-chatboxes`;
-        } else if (routeName === "PostTab") {
-          navigation.navigate("PostItemScreen", { type: "default" });
-          iconName = `md-add-circle`;
+          // }
+          // else if (routeName === "PostTab") {
+          //   iconName = `md-add-circle`;
         } else if (routeName === "HistoryTab") {
           iconName = `ios-time`;
         } else if (routeName === "Profile") {
           iconName = `md-person`;
         }
         return <IconComponent name={iconName} size={32} color={tintColor} />;
-      }
+      },
+      unmountOnBlur: true
     }),
     tabBarOptions: {
       activeTintColor: colors.darkGreen,
       inactiveTintColor: colors.fadedGrey,
       showLabel: false
-    }
+    },
+    lazy: false
   }
 );
+
+const styles = StyleSheet.create({
+  postButton: {
+    width: "100%",
+    height: "100%",
+    flex: 1,
+    justifyContent: "flex-end",
+    alignItems: "center"
+  }
+});

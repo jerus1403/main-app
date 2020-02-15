@@ -6,17 +6,19 @@ import AuthLoadingScreen from "../screens/AuthLoadingScreen";
 import { SettingStack } from "./SettingNavigator";
 import { AuthStack } from "./AuthNavigator";
 import { TabNavigator } from "./BottomTabNavigator";
-import { EditPostStack } from "./PostNavigator";
-// import PostItemScreen from "../screens/post/PostItemScreen";
+import { HistoryStack } from "./HistoryStack";
+// import PostViewScreen from "../screens/history/PostViewScreen";
+import PostItemScreen from "../screens/post/PostItemScreen";
 
 const MainNavigator = createStackNavigator(
   {
-    Tab: TabNavigator,
-    Settings: SettingStack,
-    EditPost: EditPostStack
+    Tab: { screen: TabNavigator, navigationOptions: { header: null } },
+    Settings: { screen: SettingStack, navigationOptions: { header: null } },
+    HistoryStack: HistoryStack,
+    Post: PostItemScreen
   },
   {
-    headerMode: "none"
+    mode: "modal"
   }
 );
 

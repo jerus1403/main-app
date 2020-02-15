@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   Modal,
   Text,
@@ -18,16 +18,20 @@ import { colors } from "../../styleUtility/colors";
 
 const ImageViewerModal = ({
   imageList,
-  isViewerVisible,
-  setViewer,
+  isModalOpen,
+  closeModal,
   currentImgIndex
 }) => {
+  useEffect(() => {
+    console.log(imageList, "VIEWER LIST");
+    console.log(currentImgIndex, "VIEWER INDEX");
+  }, [imageList, isModalOpen, currentImgIndex]);
   return (
     <View style={styles.container}>
-      <Modal visible={isViewerVisible} transparent={true}>
+      <Modal visible={isModalOpen} transparent={true}>
         <ImageViewer
           imageUrls={imageList}
-          onSwipeDown={() => setViewer(false)}
+          onSwipeDown={() => closeModal("photoViewerModal")}
           enableSwipeDown={true}
           index={currentImgIndex}
         />

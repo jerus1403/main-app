@@ -39,7 +39,11 @@ const PostViewScreen = props => {
   const deletePost = async () => {
     setDelete(false);
     await dispatch(posts.deletePost(postObject));
-    props.navigation.navigate("HistoryTab");
+    props.navigation.navigate("HistoryScreen");
+  };
+
+  const closeModal = () => {
+    setViewer(false);
   };
 
   return (
@@ -64,7 +68,7 @@ const PostViewScreen = props => {
         <ButtonModule
           style={styles.editButton}
           onPress={() => {
-            props.navigation.navigate("PostEditScreen", { postObject });
+            props.navigation.navigate("Post", { postObject });
           }}
         >
           <Text style={[fonts.text, styles.editButtonText]}>EDIT</Text>
@@ -123,9 +127,9 @@ const PostViewScreen = props => {
         </Modal>
       </View>
       <ImageViewerModal
-        isViewerVisible={isViewerVisible}
+        isModalOpen={isViewerVisible}
         imageList={postObject.imgPathList}
-        setViewer={setViewer}
+        closeModal={closeModal}
         currentImgIndex={currentImgIndex}
       />
     </ScrollView>
@@ -212,7 +216,7 @@ PostViewScreen.navigationOptions = ({ navigation }) => ({
     return (
       <TouchableOpacity
         style={styles.backButton}
-        onPress={() => navigation.navigate("History")}
+        onPress={() => navigation.navigate("HistoryScreen")}
       >
         <Ionicons
           name='ios-arrow-back'

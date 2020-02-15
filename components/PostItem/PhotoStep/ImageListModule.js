@@ -29,35 +29,31 @@ const ImageListModule = ({
   takePhotoHandler,
   removePhoto,
   setCoveredPhoto,
-  setViewer,
+  setModal,
   setIndex,
   openModal,
-  toggleModal
+  toggleModal,
+  openPhotoModal,
+  closeModal,
+  isImageOptionModalVisible,
+  photoId,
+  currentPhotoIndex
 }) => {
-  [isImageOptionModalVisible, setImageOptionModal] = useState(false);
-  [photoId, setPhotoId] = useState();
-  [currentPhotoIndex, setPhotoIndex] = useState(null);
-  [isMounted, setIsMounted] = useState(false);
+  // [isImageOptionModalVisible, setImageOptionModal] = useState(false);
+  // [photoId, setPhotoId] = useState();
+  // [currentPhotoIndex, setPhotoIndex] = useState(null);
 
-  useEffect(() => {
-    console.log(isMounted, "LIST COMPONENT");
-    setIsMounted(true);
-    // return () => {
-    //   setIsMounted(false, "LIST COMPONENT");
-    // };
-  }, [isMounted]);
   // Open Option Modal when an image was pressed
-  const openPhotoModal = (id, index) => {
-    setImageOptionModal(true);
-    setPhotoId(id);
-    setPhotoIndex(index);
-  };
+  // const openPhotoModal = (id, index) => {
+  //   setImageOptionModal(true);
+  //   setPhotoId(id);
+  //   setPhotoIndex(index);
+  // };
 
-  // Close Photo Option Modal
-  const closeModal = () => {
-    setImageOptionModal(false);
-  };
-
+  // // Close Photo Option Modal
+  // const closeModal = () => {
+  //   setImageOptionModal(false);
+  // };
   return (
     <View style={styles.container}>
       <View style={styles.list}>
@@ -69,7 +65,7 @@ const ImageListModule = ({
                 style={[styles.imageContainer, shadow.shadow_one]}
                 onPress={() => {
                   setIndex(index);
-                  openPhotoModal(item.id, index);
+                  openPhotoModal("imageOptionModal", item.id, index);
                 }}
               >
                 <Image style={styles.postImage} source={{ uri: item.url }} />
@@ -91,21 +87,6 @@ const ImageListModule = ({
           </TouchableOpacity>
         ) : null}
       </View>
-      <TakePhotoButtonModal
-        openModal={openModal}
-        selectPhotoHandler={selectPhotoHandler}
-        takePhotoHandler={takePhotoHandler}
-        toggleModal={toggleModal}
-      />
-      <ImageOptionModal
-        isImageOptionModalVisible={isImageOptionModalVisible}
-        photoId={photoId}
-        currentPhotoIndex={currentPhotoIndex}
-        closeModal={closeModal}
-        removePhoto={removePhoto}
-        setCoveredPhoto={setCoveredPhoto}
-        setViewer={setViewer}
-      />
     </View>
   );
 };
