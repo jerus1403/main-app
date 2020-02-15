@@ -22,38 +22,44 @@ import { colors } from "../../../styleUtility/colors";
 import ThumbnailModule from "./ThumbnailModule";
 import ImageListModule from "./ImageListModule";
 import ImageViewerModal from "../../UI/ImageViewerModal";
+import TakePhotoButtonModal from "../PhotoStep/TakePhotoButtonModal";
+import ImageOptionModal from "../PhotoStep/ImageOptionModal";
 import ButtonModule from "../../UI/ButtonModule";
 import { fonts } from "../../../styleUtility/fonts";
 
 const PhotoComponent = ({
   imageList,
-  setImgArray,
   toggleModal,
   openModal,
   takePhotoHandler,
-  selectPhotoHandler
+  selectPhotoHandler,
+  // isViewerVisible,
+  setModal,
+  // currentImgIndex,
+  setIndex,
+  openPhotoModal,
+  closeModal,
+  removePhoto,
+  setCoveredPhoto,
+  // isImageOptionModalVisible,
+  photoId
 }) => {
-  [isViewerVisible, setViewer] = useState(false);
-  [currentImgIndex, setIndex] = useState();
-  [isMounted, setIsMounted] = useState(false);
+  // [isViewerVisible, setViewer] = useState(false);
+  // [currentImgIndex, setIndex] = useState();
 
-  useEffect(() => {
-    console.log(isMounted, "PHOTO COMPONENT");
-    setIsMounted(true);
-  }, [isMounted]);
-  //Remove photo method from List
-  const removePhoto = id => {
-    let newList = imageList.filter(el => el.id !== id);
-    setImgArray([...newList]);
-  };
+  // //Remove photo method from List
+  // const removePhoto = id => {
+  //   let newList = imageList.filter(el => el.id !== id);
+  //   setImgArray([...newList]);
+  // };
 
-  //Set covered photo
-  const setCoveredPhoto = indexB => {
-    let temp = imageList[0];
-    imageList[0] = imageList[indexB];
-    imageList[indexB] = temp;
-    setImgArray([...imageList]);
-  };
+  // //Set covered photo
+  // const setCoveredPhoto = indexB => {
+  //   let temp = imageList[0];
+  //   imageList[0] = imageList[indexB];
+  //   imageList[indexB] = temp;
+  //   setImgArray([...imageList]);
+  // };
 
   return (
     <View>
@@ -62,26 +68,47 @@ const PhotoComponent = ({
           <ThumbnailModule
             imageList={imageList}
             removePhoto={removePhoto}
-            setViewer={setViewer}
+            toggleModal={toggleModal}
+            openModal={openModal}
             setIndex={setIndex}
           />
           <ImageListModule
+            // isImageOptionModalVisible={isImageOptionModalVisible}
+            openPhotoModal={openPhotoModal}
+            closeModal={closeModal}
+            photoId={photoId}
+            currentPhotoIndex={currentPhotoIndex}
             imageList={imageList}
             selectPhotoHandler={selectPhotoHandler}
             takePhotoHandler={takePhotoHandler}
             removePhoto={removePhoto}
             setCoveredPhoto={setCoveredPhoto}
-            setViewer={setViewer}
+            // setModal={setModal}
             setIndex={setIndex}
             openModal={openModal}
             toggleModal={toggleModal}
           />
-          <ImageViewerModal
+          <TakePhotoButtonModal
+            openModal={openModal}
+            selectPhotoHandler={selectPhotoHandler}
+            takePhotoHandler={takePhotoHandler}
+            toggleModal={toggleModal}
+          />
+          <ImageOptionModal
+            openModal={openModal}
+            photoId={photoId}
+            currentPhotoIndex={currentPhotoIndex}
+            closeModal={closeModal}
+            removePhoto={removePhoto}
+            setCoveredPhoto={setCoveredPhoto}
+            toggleModal={toggleModal}
+          />
+          {/* <ImageViewerModal
             isViewerVisible={isViewerVisible}
             imageList={imageList}
             setViewer={setViewer}
             currentImgIndex={currentImgIndex}
-          />
+          /> */}
         </View>
       ) : (
         <View style={styles.buttonContainer}>

@@ -18,12 +18,13 @@ import { Ionicons } from "@expo/vector-icons";
 
 import { shadow, colors } from "../../../styleUtility/colors";
 
-const ThumbnailModule = ({ imageList, removePhoto, setViewer, setIndex }) => {
+const ThumbnailModule = ({ imageList, removePhoto, toggleModal, setIndex }) => {
+  // console.log(imageList, "THUMBNAIL");
   return (
     <TouchableOpacity
       onPress={() => {
         setIndex(0);
-        setViewer(true);
+        toggleModal("photoViewerModal");
       }}
       style={[styles.container, shadow.shadow_one]}
     >

@@ -14,24 +14,25 @@ import {
 import { colors } from "../../../styleUtility/colors";
 
 const ImageOptionModal = ({
-  isImageOptionModalVisible,
+  openModal,
   closeModal,
   photoId,
   currentPhotoIndex,
   removePhoto,
   setCoveredPhoto,
-  setViewer
+  toggleModal
 }) => {
+  console.log(openModal, "MODAL");
   return (
     <View style={styles.container}>
       <Modal
         animationType='slide'
         transparent={true}
-        visible={isImageOptionModalVisible}
+        visible={openModal.imageOptionModal}
       >
         <TouchableHighlight
           style={styles.background}
-          onPress={() => closeModal()}
+          onPress={() => closeModal("imageOptionModal")}
           underlayColor={"transparent"}
         >
           <View />
@@ -41,8 +42,8 @@ const ImageOptionModal = ({
             <Button
               title='View'
               onPress={() => {
-                setViewer(true);
-                closeModal();
+                toggleModal("photoViewerModal");
+                closeModal("imageOptionModal");
               }}
             />
           </TouchableOpacity>
@@ -51,7 +52,7 @@ const ImageOptionModal = ({
               title='Set as Cover'
               onPress={() => {
                 setCoveredPhoto(currentPhotoIndex);
-                closeModal();
+                closeModal("imageOptionModal");
               }}
             />
           </TouchableOpacity>
@@ -61,12 +62,15 @@ const ImageOptionModal = ({
               color={colors.theme}
               onPress={() => {
                 removePhoto(photoId);
-                closeModal();
+                closeModal("imageOptionModal");
               }}
             />
           </TouchableOpacity>
           <TouchableOpacity style={styles.buttons}>
-            <Button title='Cancel' onPress={() => closeModal()} />
+            <Button
+              title='Cancel'
+              onPress={() => closeModal("imageOptionModal")}
+            />
           </TouchableOpacity>
         </View>
       </Modal>
