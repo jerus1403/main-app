@@ -951,6 +951,13 @@
   resolved "https://registry.yarnpkg.com/@types/websql/-/websql-0.0.27.tgz#621a666a7f02018e7cbb4abab956a25736c27d71"
   integrity sha1-Yhpman8CAY58u0q6uVaiVzbCfXE=
 
+"@unimodules/core@^2.0.0":
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/@unimodules/core/-/core-2.0.1.tgz#e5d760aa1a01885871d2d5c3f1fd3404552e5fcb"
+  integrity sha512-evbJUEAf8TvIfzR2/T9npWuqyYE8042qvmE7uWF+uDAt8KclMS9g7clbNTEG1ck5ov9AYWMMgohFaPfDCkJicw==
+  dependencies:
+    compare-versions "^3.4.0"
+
 "@unimodules/core@~4.0.0":
   version "4.0.0"
   resolved "https://registry.yarnpkg.com/@unimodules/core/-/core-4.0.0.tgz#898dafa5a121e7d6d7d4acd9c0c38d12f7da5b19"
@@ -2494,6 +2501,20 @@ expo-location@~7.0.0:
   dependencies:
     invariant "^2.2.4"
 
+expo-media-library@^5.0.1:
+  version "5.0.1"
+  resolved "https://registry.yarnpkg.com/expo-media-library/-/expo-media-library-5.0.1.tgz#f7f3b7fa0808eac224cd966583253380f0af2d1d"
+  integrity sha512-b5DHS+Ga8dyhw1+xQDB7Dafiea1jd91iOXbaE8LWg+awUDXTh6Ss14KMh8WI2mE3DVbBkcuLPTQ9NXlM2Oz67Q==
+
+expo-multiple-media-imagepicker@^1.2.1:
+  version "1.2.1"
+  resolved "https://registry.yarnpkg.com/expo-multiple-media-imagepicker/-/expo-multiple-media-imagepicker-1.2.1.tgz#a9b21a775747d7ced54581179a5bf91202c10902"
+  integrity sha512-kjUy5lYvY9YK1ukOEKnoiRgYA9FWsYp57qelw8c26RA8GEi0+fRC1mBvBAM7GJj9AYFFYfnydUua6P87UF7N2g==
+  dependencies:
+    "@unimodules/core" "^2.0.0"
+    expo-media-library "^5.0.1"
+    react-native-safe-area-view "^0.14.6"
+
 expo-permissions@~7.0.0:
   version "7.0.0"
   resolved "https://registry.yarnpkg.com/expo-permissions/-/expo-permissions-7.0.0.tgz#f4135c3cf8e49c673a9a714459a1eb2b40fe2092"
@@ -3537,9 +3558,9 @@ lodash.throttle@^4.1.1:
   integrity sha1-wj6RtxAkKscMN/HhzaknTMOb8vQ=
 
 lodash@^4.17.11, lodash@^4.17.13, lodash@^4.17.14, lodash@^4.17.15, lodash@^4.17.4, lodash@^4.17.5, lodash@^4.3.0, lodash@^4.5.0, lodash@^4.6.0, lodash@^4.6.1:
-  version "4.17.15"
-  resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.15.tgz#b447f6670a0455bbfeedd11392eff330ea097548"
-  integrity sha512-8xOcRHvCjnocdS5cpwXQXVzmmh5e5+saE2QGoeQmbKmRS6J3VQppPOIt0MnmE+4xlZoumy0GPG0D0MVIQbNA1A==
+  version "4.17.21"
+  resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.21.tgz#679591c564c3bffaae8454cf0b3df370c3d6911c"
+  integrity sha512-v2kDEe57lecTulaDIuNTPy3Ry4gLGJ6Z1O3vE1krgXZNrsQ+LFTGHVxVjcXPs17LhbZVGedAJv8XZ1tvj5FvSg==
 
 loose-envify@^1.0.0, loose-envify@^1.1.0, loose-envify@^1.3.1, loose-envify@^1.4.0:
   version "1.4.0"
@@ -4810,6 +4831,11 @@ react-native-safe-area-view@^0.14.1, react-native-safe-area-view@^0.14.6:
   integrity sha512-tOxHGQUN83MTmQB4ghoQkibqOdGiX4JQEmeyEv96MKWO/x8T2PJv84ECUos9hD3blPRQwVwSpAid1PPPhrVEaw==
   dependencies:
     debounce "^1.2.0"
+
+react-native-swipe-list-view@^2.1.3:
+  version "2.5.0"
+  resolved "https://registry.yarnpkg.com/react-native-swipe-list-view/-/react-native-swipe-list-view-2.5.0.tgz#4740f595aa3253ccd2c8e44131f83bc957f57ddb"
+  integrity sha512-HTsVaxA3an6myShlLroTyDZo/AOrZ6HJr+EwCaGRE2YuGdM/cFHoYfsuslOEEig5GenTw8DILUB8kqYWQ5lJtA==
 
 react-native-tab-view@^2.9.0:
   version "2.10.0"
